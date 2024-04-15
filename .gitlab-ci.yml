@@ -1,12 +1,14 @@
 image: maven:latest
 
 stages:
-  # - linting
+  - linting
   - test
   - build
 
-#linting: todo: add mvn dependency (e.g spotless)
-
+linting:
+  stage: linting
+  script:
+    - mvn spotless:check
 test:
   stage: test
   script:
