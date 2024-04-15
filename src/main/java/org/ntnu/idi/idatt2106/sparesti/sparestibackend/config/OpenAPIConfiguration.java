@@ -1,4 +1,3 @@
-/* (C)2024 */
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
