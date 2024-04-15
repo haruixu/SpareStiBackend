@@ -6,10 +6,9 @@ spring:
   application:
     name: SpareStiBackend
   datasource:
-    # Konfig av username og passord funker ikke her. Se heller compose.yml
-    username: user
-    password: password
-    url: jdbc:mysql://localhost:3306/SpareSti
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    url: ${MYSQL_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

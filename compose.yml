@@ -3,8 +3,8 @@ services:
     image: 'mysql:8.0'
     environment:
       - 'MYSQL_DATABASE=SpareSti'
-      - 'MYSQL_PASSWORD=password'
-      - 'MYSQL_ROOT_PASSWORD=password'
-      - 'MYSQL_USER=user'
+      - 'MYSQL_PASSWORD=${MYSQL_PASSWORD}'
+      - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+      - 'MYSQL_USER=${MYSQL_USERNAME}'
     ports:
       - '3306:3306'
