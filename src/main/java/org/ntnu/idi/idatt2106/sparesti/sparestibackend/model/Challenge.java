@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Entity
 @Embeddable
 @Data
 @EqualsAndHashCode
