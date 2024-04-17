@@ -28,6 +28,10 @@ public class Goal {
   @NotNull
   private BigDecimal goal;
 
+  @Column(nullable = false)
+  @NotNull
+  private String description;
+
   @CreationTimestamp
   private LocalDateTime createdOn;
 
