@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenRequest;
@@ -16,8 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Pattern;
-
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -31,7 +30,8 @@ public class AuthenticationService {
             throws UserAlreadyExistsException {
         if (!isPasswordStrong(request.getPassword())) {
             throw new BadInputException(
-              "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
+                    "Password must be at least 8 characters long, include numbers, upper and lower"
+                            + " case letters, and at least one special character");
         }
         if (userService.userExists(request.getUsername())) {
             throw new UserAlreadyExistsException(
@@ -60,8 +60,10 @@ public class AuthenticationService {
      * @return true if the password meets the criteria, false otherwise
      */
     private boolean isPasswordStrong(String password) {
-        // Example criteria: at least 8 characters, including numbers, letters and at least one special character
-        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+        // Example criteria: at least 8 characters, including numbers, letters and at least one
+        // special character
+        String passwordPattern =
+                "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
         return Pattern.compile(passwordPattern).matcher(password).matches();
     }
 
