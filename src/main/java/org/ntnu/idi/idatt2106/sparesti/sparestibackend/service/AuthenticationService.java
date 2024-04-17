@@ -7,8 +7,8 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResp
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.InvalidTokenException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
