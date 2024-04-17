@@ -1,8 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
@@ -13,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Embeddable
 @Data
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
 public class Goal {
 
   @Column(nullable = false)
@@ -26,11 +25,14 @@ public class Goal {
 
   @Column(nullable = false)
   @NotNull
-  private BigDecimal goal;
+  private BigDecimal target;
 
   @Column(nullable = false)
   @NotNull
   private String description;
+
+  @Column(nullable = false, name = "ORDER")
+  private Long order;
 
   @CreationTimestamp
   private LocalDateTime createdOn;

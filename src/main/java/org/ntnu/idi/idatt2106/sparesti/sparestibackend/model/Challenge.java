@@ -25,7 +25,7 @@ public class Challenge {
 
   @Column(nullable = false)
   @NotNull
-  private BigDecimal goal;
+  private BigDecimal target;
 
   @Column(nullable = false)
   @NotNull
