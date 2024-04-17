@@ -71,6 +71,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(
             value = {
                 IllegalArgumentException.class,
+                BadInputException.class,
                 NullPointerException.class,
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
