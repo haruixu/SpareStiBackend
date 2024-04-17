@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Embeddable
 @Data
-public class SavingGoal {
+public class Goal {
 
   @Column(nullable = false)
   @NotNull

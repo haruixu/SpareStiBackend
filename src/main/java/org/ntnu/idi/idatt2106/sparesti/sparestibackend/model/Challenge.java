@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Embeddable
 @Data
-public class SavingChallenge {
+public class Challenge {
 
   @Column(nullable = false)
   @NotNull
