@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.enums;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums;
 
 import lombok.Getter;
 
