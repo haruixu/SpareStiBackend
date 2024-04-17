@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Embeddable
 @Data
+@EqualsAndHashCode
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
 public class Goal implements Comparable<Goal> {
 
@@ -30,8 +32,8 @@ public class Goal implements Comparable<Goal> {
     @NotNull
     private String description;
 
-    @Column(nullable = false, name = "ORDER")
-    private Long order;
+    @Column(nullable = false, name = "PRIORITY")
+    private Long priority;
 
     @CreationTimestamp private LocalDateTime createdOn;
 
@@ -39,6 +41,6 @@ public class Goal implements Comparable<Goal> {
 
     @Override
     public int compareTo(Goal goal) {
-        return Long.compare(this.order, goal.getOrder());
+        return Long.compare(this.priority, goal.getPriority());
     }
 }
