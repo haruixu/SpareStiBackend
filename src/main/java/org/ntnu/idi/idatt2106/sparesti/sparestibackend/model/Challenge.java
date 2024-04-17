@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Embeddable
 @Data
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
 public class Challenge {
 
   @Column(nullable = false)
