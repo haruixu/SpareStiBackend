@@ -1,13 +1,13 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.SortNatural;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +28,15 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated private Role role;
+
+    @ElementCollection
+    @SortNatural
+    @CollectionTable(name = "GOAL")
+    private Set<Goal> goals = new TreeSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "CHALLENGE")
+    private Set<Challenge> challenges = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
