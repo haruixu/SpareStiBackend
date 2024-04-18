@@ -13,11 +13,11 @@ import lombok.Value;
 @Value
 @Builder
 // @JsonIgnoreProperties(ignoreUnknown = true)
-public class GoalDto implements Serializable {
+public class GoalDTO implements Serializable {
     @NotNull @NotEmpty @NotBlank String title;
     @NotNull @PositiveOrZero BigDecimal saved;
     @NotNull @PositiveOrZero BigDecimal target;
     @NotNull @NotEmpty @NotBlank String description;
-    @PositiveOrZero Long priority;
+    @NotNull @PositiveOrZero Long priority;
     @Past LocalDateTime createdOn;
 }
