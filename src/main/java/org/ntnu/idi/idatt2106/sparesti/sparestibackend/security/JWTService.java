@@ -2,7 +2,6 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
@@ -22,7 +21,7 @@ public class JWTService {
     public JWTService() {
         byte[] keyBytes =
                 Base64.getDecoder()
-                        .decode(System.getenv("SECRET_KEY").getBytes(StandardCharsets.UTF_8));
+                        .decode("32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5");
         this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
