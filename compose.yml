@@ -7,11 +7,16 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3306:3306'
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'db', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      timeout: 5s
+      retries: 20
     env_file:
       - .env
   app:
     depends_on:
-      - mysql
+      mysql:
+          condition: service_healthy
     build: .
     # Make app container to wait on mysql container to spin up by restarting it
     restart: always
