@@ -2,9 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.NaturalId;

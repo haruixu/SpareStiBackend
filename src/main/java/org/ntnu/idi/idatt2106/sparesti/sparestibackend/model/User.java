@@ -39,6 +39,10 @@ public class User implements UserDetails {
     @CollectionTable(name = "CHALLENGE")
     private Set<Challenge> challenges = new HashSet<>();
 
+    @ElementCollection
+    @CollectionTable(name = "ACCOUNT")
+    private Set<Account> accounts = new HashSet<>();
+
     // Unidirectional many-to-many
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
