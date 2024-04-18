@@ -48,15 +48,15 @@ public class User implements UserDetails {
     @ElementCollection
     @SortNatural
     @CollectionTable(name = "GOAL")
-    private Set<Goal> goals = new TreeSet<>();
+    private final Set<Goal> goals = new TreeSet<>();
 
     @ElementCollection
     @CollectionTable(name = "CHALLENGE")
-    private Set<Challenge> challenges = new HashSet<>();
+    private final Set<Challenge> challenges = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "ACCOUNT")
-    private Set<Account> accounts = new HashSet<>();
+    private final Set<Account> accounts = new HashSet<>();
 
     // Unidirectional many-to-many
     @ManyToMany(fetch = FetchType.EAGER)
@@ -64,7 +64,7 @@ public class User implements UserDetails {
             name = "USER_BADGE",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "BADGE_ID"))
-    private Set<Badge> badges = new HashSet<>();
+    private final Set<Badge> badges = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
