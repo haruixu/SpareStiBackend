@@ -9,7 +9,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 @Embeddable
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

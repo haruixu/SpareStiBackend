@@ -28,7 +28,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    private UserConfig userConfig;
+    @Embedded private UserConfig userConfig;
 
     @ElementCollection
     @SortNatural
