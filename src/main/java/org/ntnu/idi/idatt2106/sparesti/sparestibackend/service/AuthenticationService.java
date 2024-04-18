@@ -118,6 +118,7 @@ public class AuthenticationService {
     }
 
     public AccessTokenResponse refreshAccessToken(String bearerToken) {
+        // TODO: Add config class for handling MalformedJwtException
         String parsedRefreshToken = bearerToken.substring(7);
         User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
         String newJWTAccessToken = jwtService.generateToken(user, 5);

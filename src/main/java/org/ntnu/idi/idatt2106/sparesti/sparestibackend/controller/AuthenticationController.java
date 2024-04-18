@@ -11,7 +11,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.InvalidTokenException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.AuthenticationService;
 import org.slf4j.Logger;
@@ -109,7 +108,7 @@ public class AuthenticationController {
      */
     @PostMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
-            @RequestHeader("Authorization") String bearerToken) throws InvalidTokenException {
+            @RequestHeader("Authorization") String bearerToken) {
         LOGGER.info("Received renew token request for: {}", bearerToken);
         return ResponseEntity.ok(authenticationService.refreshAccessToken(bearerToken));
     }
