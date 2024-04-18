@@ -38,7 +38,7 @@ public class Goal implements Comparable<Goal> {
 
     @CreationTimestamp private LocalDateTime createdOn;
 
-    @Transient private double completion;
+    @Transient private BigDecimal completion;
 
     @Override
     public int compareTo(Goal goal) {

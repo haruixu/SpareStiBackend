@@ -39,5 +39,5 @@ public class Challenge {
     @Column(nullable = false, name = "TYPE")
     private ChallengeType type;
 
-    @Transient private double completion;
+    @Transient private BigDecimal completion;
 }
