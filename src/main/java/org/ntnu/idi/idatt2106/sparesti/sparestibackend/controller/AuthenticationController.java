@@ -17,14 +17,19 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.AuthenticationSer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller used for registering and logging in a user and returning
  * access and refresh tokens
  *
  * @author Lars N, Harry X.
- * @version - 1.0 - 17.4.24
+ * @version 1.0 - 17.4.24
  */
 @RestController
 @CrossOrigin

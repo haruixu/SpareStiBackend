@@ -1,9 +1,17 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
