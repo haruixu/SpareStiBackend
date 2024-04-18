@@ -1,11 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Value;
 
