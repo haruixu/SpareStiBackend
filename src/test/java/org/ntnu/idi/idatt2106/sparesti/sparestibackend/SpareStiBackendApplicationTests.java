@@ -14,7 +14,9 @@ class SpareStiBackendApplicationTests {
 
     @Rule
     public EnvironmentVariablesRule environmentVariablesRule =
-            new EnvironmentVariablesRule("SYSTEM_KEY", "32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5");
+            new EnvironmentVariablesRule(
+                    "SYSTEM_KEY",
+                    "32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5");
 
     @Test
     void contextLoads() {}

@@ -1,7 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import java.util.regex.Pattern;
-
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenRequest;
@@ -37,13 +36,13 @@ public class AuthenticationService {
             throws UserAlreadyExistsException {
         if (!(isUsernameValid(request.getUsername()))) {
             throw new BadInputException(
-            "The username can only contain letters, numbers and underscore, " +
-              "with the first character being a letter. " +
-              "The length must be between 3 and 30 characters");
+                    "The username can only contain letters, numbers and underscore, "
+                            + "with the first character being a letter. "
+                            + "The length must be between 3 and 30 characters");
         }
         if (userService.userExists(request.getUsername())) {
             throw new UserAlreadyExistsException(
-              "User with username: " + request.getUsername() + " already exists");
+                    "User with username: " + request.getUsername() + " already exists");
         }
         if (!isPasswordStrong(request.getPassword())) {
             throw new BadInputException(
@@ -54,7 +53,12 @@ public class AuthenticationService {
                 User.builder()
                         .username(request.getUsername())
                         .password(passwordEncoder.encode(request.getPassword()))
-                        .userConfig(UserConfig.builder().role(Role.USER).experience(Experience.LOW).motivation(Motivation.LOW).build())
+                        .userConfig(
+                                UserConfig.builder()
+                                        .role(Role.USER)
+                                        .experience(Experience.LOW)
+                                        .motivation(Motivation.LOW)
+                                        .build())
                         .build();
         userService.save(user);
         String jwtAccessToken = jwtService.generateToken(user, 5);
@@ -66,8 +70,7 @@ public class AuthenticationService {
     }
 
     private boolean isUsernameValid(String username) {
-        String usernamePattern =
-          "^[A-Za-z][A-Za-z0-9_]{2,29}$";
+        String usernamePattern = "^[A-Za-z][A-Za-z0-9_]{2,29}$";
         return Pattern.compile(usernamePattern).matcher(username).matches();
     }
 
@@ -87,9 +90,11 @@ public class AuthenticationService {
     }
 
     public LoginRegisterResponse login(AuthenticationRequest request) {
-        if (!userService.userExists(request.getUsername()) || !matches(request.getPassword(), userService.findUserByUsername(request.getUsername()).getPassword())) {
-            throw new BadInputException(
-              "Username or password is incorrect");
+        if (!userService.userExists(request.getUsername())
+                || !matches(
+                        request.getPassword(),
+                        userService.findUserByUsername(request.getUsername()).getPassword())) {
+            throw new BadInputException("Username or password is incorrect");
         }
 
         manager.authenticate(
