@@ -2,12 +2,13 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Represents different types of challenges and their associated monetary values for each consumption.
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum ChallengeType {
     CIGAR(20),
     CLOTHING(200),
