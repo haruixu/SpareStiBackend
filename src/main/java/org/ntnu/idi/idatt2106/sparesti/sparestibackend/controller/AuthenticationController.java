@@ -43,15 +43,28 @@ public class AuthenticationController {
      * @throws BadInputException If the username is invalid or the password is too weak
      * @throws UserAlreadyExistsException If the username is already taken
      */
-    @Operation(summary = "Register user", description = "Register a new user with a username and password", responses = {
-        @ApiResponse(responseCode = "200", description = "Successfully registered user", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = LoginRegisterResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "Invalid username or weak password"),
-        @ApiResponse(responseCode = "409", description = "Username already exists") })
+    @Operation(
+            summary = "Register user",
+            description = "Register a new user with a username and password",
+            responses = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successfully registered user",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginRegisterResponse.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Invalid username or weak password"),
+                @ApiResponse(responseCode = "409", description = "Username already exists")
+            })
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
-            @Parameter(description = "Username and password") @NonNull @RequestBody AuthenticationRequest authRequest) throws
-        BadInputException, UserAlreadyExistsException {
+            @Parameter(description = "Username and password") @NonNull @RequestBody
+                    AuthenticationRequest authRequest)
+            throws BadInputException, UserAlreadyExistsException {
         LOGGER.info("Received register request for: {}", authRequest);
         return ResponseEntity.ok(authenticationService.register(authRequest));
     }
@@ -62,14 +75,23 @@ public class AuthenticationController {
      * @return ResponseEntity containing access and refresh tokens upon successful login
      * @throws BadInputException If the username or password is incorrect
      */
-    @Operation(summary = "Log in user", description = "Log in user with username and password", responses = {
-        @ApiResponse(responseCode = "200", description = "Successful log in", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = LoginRegisterResponse.class)) }),
-        @ApiResponse(responseCode = "400", description = "Incorrect username or password")})
+    @Operation(
+            summary = "Log in user",
+            description = "Log in user with username and password",
+            responses = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successful log in",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginRegisterResponse.class))
+                        }),
+                @ApiResponse(responseCode = "400", description = "Incorrect username or password")
+            })
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
-            @NonNull @RequestBody AuthenticationRequest authRequest)
-    throws BadInputException {
+            @NonNull @RequestBody AuthenticationRequest authRequest) throws BadInputException {
         LOGGER.info("Received login request for: {}", authRequest);
         return ResponseEntity.ok(authenticationService.login(authRequest));
     }
@@ -82,8 +104,7 @@ public class AuthenticationController {
      */
     @PostMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
-        @RequestHeader("Authorization") String bearerToken)
-    throws InvalidTokenException {
+            @RequestHeader("Authorization") String bearerToken) throws InvalidTokenException {
         LOGGER.info("Received renew token request for: {}", bearerToken);
         return ResponseEntity.ok(authenticationService.refreshAccessToken(bearerToken));
     }

@@ -80,9 +80,7 @@ public class AuthenticationService {
 
     public AccessTokenResponse refreshAccessToken(String bearerToken) {
         String parsedRefreshToken = bearerToken.substring(7);
-        User user =
-                userService.findUserByUsername(
-                        jwtService.extractUsername(parsedRefreshToken));
+        User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
         String newJWTAccessToken = jwtService.generateToken(user, 5);
         return AccessTokenResponse.builder().accessToken(newJWTAccessToken).build();
     }
