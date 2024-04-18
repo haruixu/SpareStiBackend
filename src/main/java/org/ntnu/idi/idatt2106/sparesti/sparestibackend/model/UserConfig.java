@@ -1,7 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
