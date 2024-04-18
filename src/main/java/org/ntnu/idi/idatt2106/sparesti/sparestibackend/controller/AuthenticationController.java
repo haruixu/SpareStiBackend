@@ -25,21 +25,21 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
             @NonNull @RequestBody AuthenticationRequest authRequest) {
-        LOGGER.debug("Received register request for: {}", authRequest);
+        LOGGER.info("Received register request for: {}", authRequest);
         return ResponseEntity.ok(authenticationService.register(authRequest));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
             @NonNull @RequestBody AuthenticationRequest authRequest) {
-        LOGGER.debug("Received login request for: {}", authRequest);
+        LOGGER.info("Received login request for: {}", authRequest);
         return ResponseEntity.ok(authenticationService.login(authRequest));
     }
 
     @PostMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
             @NonNull @RequestBody AccessTokenRequest accessTokenRequest) {
-        LOGGER.debug("Received renew token request for: {}", accessTokenRequest);
+        LOGGER.info("Received renew token request for: {}", accessTokenRequest);
         return ResponseEntity.ok(authenticationService.refreshAccessToken(accessTokenRequest));
     }
 }
