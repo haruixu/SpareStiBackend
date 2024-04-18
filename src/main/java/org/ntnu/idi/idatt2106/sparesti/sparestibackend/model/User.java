@@ -2,6 +2,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
 import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
