@@ -33,6 +33,7 @@ public class Goal implements Comparable<Goal> {
     private String description;
 
     @Column(nullable = false, name = "PRIORITY")
+    @NotNull
     private Long priority;
 
     @CreationTimestamp private LocalDateTime createdOn;
