@@ -1,6 +1,5 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
