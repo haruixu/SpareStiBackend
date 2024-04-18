@@ -3,11 +3,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.InvalidTokenException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -80,18 +78,12 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AccessTokenResponse refreshAccessToken(AccessTokenRequest request) {
+    public AccessTokenResponse refreshAccessToken(String bearerToken) {
+        String parsedRefreshToken = bearerToken.substring(7);
         User user =
                 userService.findUserByUsername(
-                        jwtService.extractUsername(request.getRefreshToken()));
-        String newJWTAccessToken;
-
-        if (jwtService.isTokenValid(request.getRefreshToken(), user)) {
-            newJWTAccessToken = jwtService.generateToken(user, 5);
-        } else {
-            throw new InvalidTokenException("Token is invalid");
-        }
-
+                        jwtService.extractUsername(parsedRefreshToken));
+        String newJWTAccessToken = jwtService.generateToken(user, 5);
         return AccessTokenResponse.builder().accessToken(newJWTAccessToken).build();
     }
 }
