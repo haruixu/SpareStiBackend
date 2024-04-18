@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
 
 @Embeddable
 @Data
@@ -33,6 +34,10 @@ public class Challenge {
     private String description;
 
     @CreationTimestamp private LocalDateTime createdOn;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "TYPE")
+    private ChallengeType type;
 
     @Transient private double completion;
 }
