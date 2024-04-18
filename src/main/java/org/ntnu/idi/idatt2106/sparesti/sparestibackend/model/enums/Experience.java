@@ -3,7 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum UserMotivation {
+public enum Experience {
     VERY_HIGH(5),
     HIGH(4),
     MIDDLE(3),
@@ -12,7 +12,7 @@ public enum UserMotivation {
 
     private final int val;
 
-    UserMotivation(int val) {
+    Experience(int val) {
         this.val = val;
     }
 }
