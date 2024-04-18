@@ -4,15 +4,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,147 +28,168 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringRunner.class)
 class AuthenticationControllerTest {
 
-  @Autowired
-  private WebApplicationContext context;
+    @Autowired private WebApplicationContext context;
 
-  private MockMvc mvc;
+    private MockMvc mvc;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-  @BeforeEach
-  public void setup() {
-    mvc = MockMvcBuilders.webAppContextSetup(context).build();
-  }
+    @BeforeEach
+    public void setup() {
+        mvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
 
-  @Test
-  void testRegisterUser() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "testPassword123!");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testRegisterUser() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "testPassword123!");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest))
-      .andExpect(status().isOk());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
+                .andExpect(status().isOk());
+    }
 
-  @Test
-  void testRegisterUserWithWeakPassword() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "pass");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testRegisterUserWithWeakPassword() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "pass");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest))
-      .andExpect(status().isBadRequest());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+    }
 
-  @Test
-  void testRegisterUserWithUsernameThatAlreadyExists() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "testPassword123!");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testRegisterUserWithUsernameThatAlreadyExists() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "testPassword123!");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest));
+        mvc.perform(
+                MockMvcRequestBuilders.post("/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest));
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest))
-      .andExpect(status().isConflict());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
+                .andExpect(status().isConflict());
+    }
 
-  @Test
-  void testLoginWithValidCredentials() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "testPassword123!");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testLoginWithValidCredentials() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "testPassword123!");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest));
+        mvc.perform(
+                MockMvcRequestBuilders.post("/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest));
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/login")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest))
-      .andExpect(status().isOk());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
+                .andExpect(status().isOk());
+    }
 
-  @Test
-  void testLoginWithWrongUsername() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "testPassword123!");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testLoginWithWrongUsername() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "testPassword123!");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    AuthenticationRequest authenticationRequestWrong = new AuthenticationRequest("testUsername2", "testPassword123!");
-    String jsonRequestWrong = objectMapper.writeValueAsString(authenticationRequestWrong);
+        AuthenticationRequest authenticationRequestWrong =
+                new AuthenticationRequest("testUsername2", "testPassword123!");
+        String jsonRequestWrong = objectMapper.writeValueAsString(authenticationRequestWrong);
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-      .contentType(MediaType.APPLICATION_JSON)
-      .accept(MediaType.APPLICATION_JSON)
-      .content(jsonRequest));
+        mvc.perform(
+                MockMvcRequestBuilders.post("/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest));
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/login")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequestWrong))
-      .andExpect(status().isBadRequest());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequestWrong))
+                .andExpect(status().isBadRequest());
+    }
 
-  @Test
-  void testLoginWithWrongPassword() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "testPassword123!");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testLoginWithWrongPassword() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "testPassword123!");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    AuthenticationRequest authenticationRequestWrong = new AuthenticationRequest("testUsername", "testPassword123!2");
-    String jsonRequestWrong = objectMapper.writeValueAsString(authenticationRequestWrong);
+        AuthenticationRequest authenticationRequestWrong =
+                new AuthenticationRequest("testUsername", "testPassword123!2");
+        String jsonRequestWrong = objectMapper.writeValueAsString(authenticationRequestWrong);
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-      .contentType(MediaType.APPLICATION_JSON)
-      .accept(MediaType.APPLICATION_JSON)
-      .content(jsonRequest));
+        mvc.perform(
+                MockMvcRequestBuilders.post("/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest));
 
-    mvc.perform(MockMvcRequestBuilders.post("/auth/login")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequestWrong))
-      .andExpect(status().isBadRequest());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequestWrong))
+                .andExpect(status().isBadRequest());
+    }
 
-  @Test
-  void testPostValidRefreshToken() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest("testUsername", "testPassword123!");
-    String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+    @Test
+    void testPostValidRefreshToken() throws Exception {
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest("testUsername", "testPassword123!");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
-    MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/auth/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .content(jsonRequest))
-      .andReturn();
+        MvcResult result =
+                mvc.perform(
+                                MockMvcRequestBuilders.post("/auth/register")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .accept(MediaType.APPLICATION_JSON)
+                                        .content(jsonRequest))
+                        .andReturn();
 
-    String responseBody = result.getResponse().getContentAsString();
-    JsonNode responseJson = objectMapper.readTree(responseBody);
-    String refreshToken = responseJson.get("refreshToken").asText();
+        String responseBody = result.getResponse().getContentAsString();
+        JsonNode responseJson = objectMapper.readTree(responseBody);
+        String refreshToken = responseJson.get("refreshToken").asText();
 
-    mvc.perform(MockMvcRequestBuilders.get("/auth/renewToken")
-        .header("Authorization", "Bearer " + refreshToken))
-      .andExpect(status().isOk());
-  }
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/auth/renewToken")
+                                .header("Authorization", "Bearer " + refreshToken))
+                .andExpect(status().isOk());
+    }
 
-  //TODO: Fix testPostInvalidRefreshToken test. Also make reusable methods for repeating code in tests.
+    // TODO: Fix testPostInvalidRefreshToken test. Also make reusable methods for repeating code in
+    // tests.
 
-  /*
-  @Test
-  void testPostInvalidRefreshToken() throws Exception {
-    String refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlcm5hbWUxMjM0NTYiLCJpYXQiOjE3MTM0NTU2NzIsImV4cCI6MTcxMzQ1NTk3Mn0.ublWYKuMvfbO3P5rUSAJAY_xbKCpnvaUQkcTCMB1n48";
+    /*
+    @Test
+    void testPostInvalidRefreshToken() throws Exception {
+      String refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlcm5hbWUxMjM0NTYiLCJpYXQiOjE3MTM0NTU2NzIsImV4cCI6MTcxMzQ1NTk3Mn0.ublWYKuMvfbO3P5rUSAJAY_xbKCpnvaUQkcTCMB1n48";
 
-    mvc.perform(MockMvcRequestBuilders.get("/auth/renewToken")
-        .header("Authorization", "Bearer " + refreshToken))
-      .andExpect(status().isForbidden());
-  }
-   */
+      mvc.perform(MockMvcRequestBuilders.get("/auth/renewToken")
+          .header("Authorization", "Bearer " + refreshToken))
+        .andExpect(status().isForbidden());
+    }
+     */
 }
