@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SortNatural;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +28,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    @Enumerated private Role role;
+    @Embedded private UserConfig userConfig;
 
     @ElementCollection
     @SortNatural
@@ -42,7 +41,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(userConfig.getRole().name()));
     }
 
     @Override
