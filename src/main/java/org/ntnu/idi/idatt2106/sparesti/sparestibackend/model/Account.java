@@ -13,7 +13,6 @@ import org.hibernate.annotations.NaturalId;
 public class Account {
 
     @NotNull
-    @NaturalId
     @Column(updatable = false, nullable = false)
     private String accNumber;
 
