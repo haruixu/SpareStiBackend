@@ -1,11 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Value;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
@@ -15,7 +13,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType
  */
 @Value
 @Builder
-//@JsonIgnoreProperties(ignoreUnknown = true)
+// @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChallengeDTO implements Serializable {
     @NotNull @NotEmpty @NotBlank String title;
     @NotNull BigDecimal saved;
