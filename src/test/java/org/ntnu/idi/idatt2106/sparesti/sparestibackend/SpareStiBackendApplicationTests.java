@@ -1,22 +1,19 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import uk.org.webcompere.systemstubs.rules.EnvironmentVariablesRule;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(locations = "classpath:application-test.yml")
 @ActiveProfiles("test")
 class SpareStiBackendApplicationTests {
 
-    @Rule
-    public EnvironmentVariablesRule environmentVariablesRule =
-            new EnvironmentVariablesRule(
-                    "SYSTEM_KEY",
-                    "32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5");
+    static {
+        System.setProperty("SECRET_EY", "foo");
+    }
 
     @Test
     void contextLoads() {}
