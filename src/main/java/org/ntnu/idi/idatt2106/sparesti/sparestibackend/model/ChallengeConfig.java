@@ -1,9 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import lombok.EqualsAndHashCode;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
@@ -15,6 +12,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType
 @EqualsAndHashCode
 public class ChallengeConfig {
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "TYPE")
     private ChallengeType type;
 
