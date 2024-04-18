@@ -1,9 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
@@ -17,12 +14,16 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 @AllArgsConstructor
 @Data
 public class UserConfig {
+
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Motivation motivation;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Experience experience;
 
