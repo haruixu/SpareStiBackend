@@ -3,11 +3,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.InvalidTokenException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
@@ -15,8 +13,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +22,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
@@ -122,18 +117,11 @@ public class AuthenticationService {
         return passwordEncoder.matches(inputPassword, storedPassword);
     }
 
-    public AccessTokenResponse refreshAccessToken(AccessTokenRequest request) {
-        User user =
-                userService.findUserByUsername(
-                        jwtService.extractUsername(request.getRefreshToken()));
-        String newJWTAccessToken;
-
-        if (jwtService.isTokenValid(request.getRefreshToken(), user)) {
-            newJWTAccessToken = jwtService.generateToken(user, 5);
-        } else {
-            throw new InvalidTokenException("Token is invalid");
-        }
-
+    public AccessTokenResponse refreshAccessToken(String bearerToken) {
+        // TODO: Add config class for handling MalformedJwtException
+        String parsedRefreshToken = bearerToken.substring(7);
+        User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
+        String newJWTAccessToken = jwtService.generateToken(user, 5);
         return AccessTokenResponse.builder().accessToken(newJWTAccessToken).build();
     }
 }
