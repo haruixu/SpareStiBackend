@@ -39,6 +39,14 @@ public class User implements UserDetails {
     @CollectionTable(name = "CHALLENGE")
     private Set<Challenge> challenges = new HashSet<>();
 
+    // Unidirectional many-to-many
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "USER_BADGE",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "BADGE_ID"))
+    private Set<Badge> badges = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(userConfig.getRole().name()));
