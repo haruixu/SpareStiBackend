@@ -1,5 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +11,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginRegisterResponse {
-    private String accessToken;
-    private String refreshToken;
+    @NotNull Long id;
+    @NotNull @NotBlank @NotEmpty String accessToken;
+    @NotNull @NotBlank @NotEmpty private String refreshToken;
 }
