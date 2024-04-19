@@ -8,10 +8,12 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResp
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,12 +72,11 @@ public class AuthenticationService {
         userService.save(user);
         String jwtAccessToken = jwtService.generateToken(user, 5);
         String jwtRefreshToken = jwtService.generateToken(user, 30);
-        return LoginRegisterResponse.builder()
-                .accessToken(jwtAccessToken)
-                .refreshToken(jwtRefreshToken)
-                .build();
+        LoginRegisterResponse loginRegisterResponse = RegisterMapper.INSTANCE.toDTO(user);
+        loginRegisterResponse.setAccessToken(jwtAccessToken);
+        loginRegisterResponse.setRefreshToken(jwtRefreshToken);
+        return loginRegisterResponse;
     }
-
     private boolean isUsernameValid(String username) {
         String usernamePattern = "^[A-Za-z][A-Za-z0-9_]{2,29}$";
         return Pattern.compile(usernamePattern).matcher(username).matches();
@@ -120,10 +121,10 @@ public class AuthenticationService {
         User user = userService.findUserByUsername(request.getUsername());
         String jwtAccessToken = jwtService.generateToken(user, 5);
         String jwtRefreshToken = jwtService.generateToken(user, 30);
-        return LoginRegisterResponse.builder()
-                .accessToken(jwtAccessToken)
-                .refreshToken(jwtRefreshToken)
-                .build();
+        LoginRegisterResponse loginRegisterResponse = RegisterMapper.INSTANCE.toDTO(user);
+        loginRegisterResponse.setAccessToken(jwtAccessToken);
+        loginRegisterResponse.setRefreshToken(jwtRefreshToken);
+        return loginRegisterResponse;
     }
 
     /**
