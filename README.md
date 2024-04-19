@@ -36,6 +36,8 @@ make build
 ```
 make run
 ```
+The application is now running on port 8080. 
+
 To exit the application, use CTRL+C. You can rerun the application using 
 ```make run``` again.
 
