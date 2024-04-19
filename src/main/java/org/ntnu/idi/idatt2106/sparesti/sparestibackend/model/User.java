@@ -1,7 +1,13 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
-import java.util.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,9 +30,25 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(nullable = false)
+    private String firstName;
+
+    @NotNull
+    @Column(nullable = false)
+    private String lastName;
+
     @NaturalId private String username;
 
+    @NotNull
+    @Column(nullable = false)
     private String password;
+
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    @Email
+    private String email;
 
     @Embedded private UserConfig userConfig;
 

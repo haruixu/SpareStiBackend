@@ -11,10 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ActiveProfiles("test")
 class SpareStiBackendApplicationTests {
 
-    static {
-        System.setProperty("SECRET_EY", "foo");
-    }
-
     @Test
     void contextLoads() {}
 }
