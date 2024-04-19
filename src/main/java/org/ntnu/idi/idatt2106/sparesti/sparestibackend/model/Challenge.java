@@ -33,7 +33,9 @@ public class Challenge {
     @NotNull
     private String description;
 
-    @CreationTimestamp private LocalDateTime createdOn;
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    private LocalDateTime createdOn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "TYPE")
