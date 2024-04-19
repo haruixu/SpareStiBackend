@@ -229,6 +229,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <environmentVariables>
+            <!-- secret used only for testing -->
             <SECRET_KEY>32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5</SECRET_KEY>
           </environmentVariables>
         </configuration>
