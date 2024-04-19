@@ -38,7 +38,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @NaturalId private String username;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    private String username;
 
     @NotNull
     @Column(nullable = false)
