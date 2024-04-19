@@ -23,6 +23,6 @@ public class UserConfigService {
             throw new ConfigNotFoundException("No user config found for user with id " + id);
         }
 
-        return UserConfigMapper.INSTANCE.userConfigToUserConfigResponse(user.getUserConfig());
+        return UserConfigMapper.INSTANCE.toUserConfigResponse(user.getUserConfig());
     }
 }
