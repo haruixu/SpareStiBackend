@@ -3,6 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
@@ -27,7 +28,7 @@ public class AuthenticationService {
     private final JWTService jwtService;
     private final AuthenticationManager manager;
 
-    public LoginRegisterResponse register(AuthenticationRequest request)
+    public LoginRegisterResponse register(RegisterRequest request)
             throws UserAlreadyExistsException {
         if (!(isUsernameValid(request.getUsername()))) {
             throw new BadInputException(
@@ -35,9 +36,24 @@ public class AuthenticationService {
                             + "with the first character being a letter. "
                             + "The length must be between 3 and 30 characters");
         }
-        if (userService.userExists(request.getUsername())) {
+        if (!isEmailValid(request.getEmail())) {
+            throw new BadInputException("The email address is invalid.");
+        }
+        if (!isNameValid(request.getFirstName())) {
+            throw new BadInputException(
+                    "The first name: '" + request.getFirstName() + "' is invalid.");
+        }
+        if (!isNameValid(request.getFirstName())) {
+            throw new BadInputException(
+                    "The last name: '" + request.getLastName() + "' is invalid.");
+        }
+        if (userService.userExistsByUsername(request.getUsername())) {
             throw new UserAlreadyExistsException(
                     "User with username: " + request.getUsername() + " already exists");
+        }
+        if (userService.userExistByEmail(request.getEmail())) {
+            throw new UserAlreadyExistsException(
+                    "User with email: " + request.getEmail() + " already exists");
         }
         if (!isPasswordStrong(request.getPassword())) {
             throw new BadInputException(
@@ -46,8 +62,11 @@ public class AuthenticationService {
         }
         User user =
                 User.builder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
                         .username(request.getUsername())
                         .password(passwordEncoder.encode(request.getPassword()))
+                        .email(request.getEmail())
                         .userConfig(
                                 UserConfig.builder()
                                         .role(Role.USER)
@@ -69,6 +88,17 @@ public class AuthenticationService {
         return Pattern.compile(usernamePattern).matcher(username).matches();
     }
 
+    public boolean isEmailValid(String email) {
+        String emailPattern = "^(.+)@(\\S+)$";
+        return Pattern.compile(emailPattern).matcher(email).matches();
+    }
+
+    public boolean isNameValid(String name) {
+        System.out.println("name: " + name);
+        String namePattern = "^[a-zA-Z ,.'-]+$";
+        return Pattern.compile(namePattern).matcher(name).matches();
+    }
+
     /**
      * Checks if a password meets the strength criteria.
      *
@@ -85,7 +115,7 @@ public class AuthenticationService {
     }
 
     public LoginRegisterResponse login(AuthenticationRequest request) {
-        if (!userService.userExists(request.getUsername())
+        if (!userService.userExistsByUsername(request.getUsername())
                 || !matches(
                         request.getPassword(),
                         userService.findUserByUsername(request.getUsername()).getPassword())) {

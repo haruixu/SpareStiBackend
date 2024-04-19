@@ -25,7 +25,11 @@ public class UserService {
                                         "User with username: " + username + " not found"));
     }
 
-    public boolean userExists(String username) {
+    public boolean userExistsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean userExistByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

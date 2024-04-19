@@ -1,17 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -39,9 +30,25 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(nullable = false)
+    private String firstName;
+
+    @NotNull
+    @Column(nullable = false)
+    private String lastName;
+
     @NaturalId private String username;
 
+    @NotNull
+    @Column(nullable = false)
     private String password;
+
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    @Email
+    private String email;
 
     @Embedded private UserConfig userConfig;
 

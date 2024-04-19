@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
@@ -37,7 +38,7 @@ public class AuthenticationController {
 
     /**
      * Registers a new user with a given username and password
-     * @param authRequest Wrapper for username and password
+     * @param registerRequest Wrapper for username and password
      * @return ResponseEntity containing access and refresh tokens upon successful registration
      * @throws BadInputException If the username is invalid or the password is too weak
      * @throws UserAlreadyExistsException If the username is already taken
@@ -62,10 +63,10 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
             @Parameter(description = "Username and password") @NonNull @RequestBody
-                    AuthenticationRequest authRequest)
+                    RegisterRequest registerRequest)
             throws BadInputException, UserAlreadyExistsException {
-        LOGGER.info("Received register request for: {}", authRequest);
-        return ResponseEntity.ok(authenticationService.register(authRequest));
+        LOGGER.info("Received register request for: {}", registerRequest);
+        return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
     /**
