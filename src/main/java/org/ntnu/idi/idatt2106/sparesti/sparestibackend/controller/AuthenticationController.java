@@ -75,9 +75,7 @@ public class AuthenticationController {
             })
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
-            @Parameter(description = "Username and password") @Valid @RequestBody
-                    RegisterRequest registerRequest,
-            BindingResult bindingResult)
+            @Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult)
             throws BadInputException, UserAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
@@ -114,8 +112,7 @@ public class AuthenticationController {
             })
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
-            @Parameter(description = "Username and password") @NonNull @Valid @RequestBody
-                    AuthenticationRequest authRequest,
+            @NonNull @Valid @RequestBody AuthenticationRequest authRequest,
             BindingResult bindingResult)
             throws BadInputException {
         if (bindingResult.hasErrors()) {
@@ -150,7 +147,9 @@ public class AuthenticationController {
     @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @GetMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
-            @RequestHeader("Authorization") String bearerToken) {
+            @Parameter(description = "Authorization header with bearer token")
+                    @RequestHeader("Authorization")
+                    String bearerToken) {
         LOGGER.info("Received renew token request for: {}", bearerToken);
         AccessTokenResponse responseContent = authenticationService.refreshAccessToken(bearerToken);
         LOGGER.info("Successfully renewed access token");
