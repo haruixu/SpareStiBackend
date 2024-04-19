@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService;
@@ -23,4 +24,7 @@ public class UserConfigController {
         UserConfigResponse userConfig = userConfigService.getUserConfig(id);
         return ResponseEntity.ok(userConfig);
     }
+
+    @PostMapping
+    public ResponseEntity<UserConfigResponse> postUserConfig(@PathVariable("id") Long id, @RequestBody )
 }

@@ -1,10 +1,9 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import lombok.Value;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 /**
