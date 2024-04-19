@@ -14,11 +14,22 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service responsible for registering a new user, logging in an existing user and refreshing
+ * a users access token
+ *
+ * @author Harry L.X. & Lars M.L.N
+ * @version 1.0
+ * @since 17.4.24
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -28,8 +39,19 @@ public class AuthenticationService {
     private final JWTService jwtService;
     private final AuthenticationManager manager;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+
+    /**
+     * Registers a new, valid user. For a user to be valid, they have to
+     * have a valid and unique username, a valid and unique email, valid first name and last names,
+     * and a strong password.
+     * @param request Wrapper for user information used for registering
+     * @return Jwt tokens for the registered user
+     * @throws BadInputException If the user information is invalid (username, first/last names, email) of if password is weak
+     * @throws UserAlreadyExistsException If username or email have been taken
+     */
     public LoginRegisterResponse register(RegisterRequest request)
-            throws UserAlreadyExistsException {
+            throws BadInputException, UserAlreadyExistsException {
         if (!(isUsernameValid(request.getUsername()))) {
             throw new BadInputException(
                     "The username can only contain letters, numbers and underscore, "
@@ -43,7 +65,7 @@ public class AuthenticationService {
             throw new BadInputException(
                     "The first name: '" + request.getFirstName() + "' is invalid.");
         }
-        if (!isNameValid(request.getFirstName())) {
+        if (!isNameValid(request.getLastName())) {
             throw new BadInputException(
                     "The last name: '" + request.getLastName() + "' is invalid.");
         }
@@ -60,6 +82,8 @@ public class AuthenticationService {
                     "Password must be at least 8 characters long, include numbers, upper and lower"
                             + " case letters, and at least one special character");
         }
+
+        logger.info("Creating user");
         User user =
                 User.builder()
                         .firstName(request.getFirstName())
@@ -74,7 +98,9 @@ public class AuthenticationService {
                                         .motivation(Motivation.LOW)
                                         .build())
                         .build();
+        logger.info("Saving user");
         userService.save(user);
+        logger.info("Generating tokens");
         String jwtAccessToken = jwtService.generateToken(user, 5);
         String jwtRefreshToken = jwtService.generateToken(user, 30);
         return LoginRegisterResponse.builder()
@@ -83,16 +109,41 @@ public class AuthenticationService {
                 .build();
     }
 
+    /**
+     * Checks if username is valid.
+     * Valid username starts with a letter.
+     * Valid characters are letters, numbers and underscore.
+     * Length must be between 3 and 30 characters.
+     * @param username Username
+     * @return True, if username is valid. Else, returns false.
+     */
     private boolean isUsernameValid(String username) {
         String usernamePattern = "^[A-Za-z][A-Za-z0-9_]{2,29}$";
         return Pattern.compile(usernamePattern).matcher(username).matches();
     }
 
+    /**
+     * Checks if email is invalid.
+     * Valid email must start with letters, numbers, underscore, '+', '&', '*', '-'
+     * Valid email can include must include '@'
+     * Must include a period after '@'
+     * Must have letters after period of length 2-7 characters
+     * @param email Email
+     * @return True, if email is valid.
+     */
     public boolean isEmailValid(String email) {
-        String emailPattern = "^(.+)@(\\S+)$";
+        String emailPattern =
+                "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return Pattern.compile(emailPattern).matcher(email).matches();
     }
 
+    /**
+     * Checks if name is valid
+     * A valid contains can only contain characters, white space,
+     * comma, period, singe quotes and hyphens
+     * @param name Name
+     * @return If name is valid
+     */
     public boolean isNameValid(String name) {
         String namePattern = "^[a-zA-Z ,.'-]+$";
         return Pattern.compile(namePattern).matcher(name).matches();
@@ -113,7 +164,13 @@ public class AuthenticationService {
         return Pattern.compile(passwordPattern).matcher(password).matches();
     }
 
-    public LoginRegisterResponse login(AuthenticationRequest request) {
+    /**
+     * Log in user with credentials (username and password)
+     * @param request Wrapper for username and password
+     * @return Jwt tokens upon successful login
+     * @throws BadInputException if no user has a matching username or password
+     */
+    public LoginRegisterResponse login(AuthenticationRequest request) throws BadInputException {
         if (!userService.userExistsByUsername(request.getUsername())
                 || !matches(
                         request.getPassword(),
@@ -121,10 +178,12 @@ public class AuthenticationService {
             throw new BadInputException("Username or password is incorrect");
         }
 
+        logger.info("Setting authentication context");
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(), request.getPassword()));
         User user = userService.findUserByUsername(request.getUsername());
+        System.out.println("Generating tokens");
         String jwtAccessToken = jwtService.generateToken(user, 5);
         String jwtRefreshToken = jwtService.generateToken(user, 30);
         return LoginRegisterResponse.builder()
@@ -146,7 +205,14 @@ public class AuthenticationService {
         return passwordEncoder.matches(inputPassword, storedPassword);
     }
 
-    public AccessTokenResponse refreshAccessToken(String bearerToken) {
+    /**
+     * Refreshes access token given a valid refresh token
+     * @param bearerToken Stringified HTTP-header (Authorization-header)
+     * @return Access token wrapper if the refresh token is valid
+     * @throws UsernameNotFoundException If the tokens subject matches no existing username
+     */
+    public AccessTokenResponse refreshAccessToken(String bearerToken)
+            throws UsernameNotFoundException {
         // TODO: Add config class for handling MalformedJwtException
         String parsedRefreshToken = bearerToken.substring(7);
         User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
