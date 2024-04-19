@@ -23,5 +23,4 @@ public class UserConfigController {
         UserConfigResponse userConfig = userConfigService.getUserConfig(id);
         return ResponseEntity.ok(userConfig);
     }
-
 }
