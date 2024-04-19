@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -41,8 +42,13 @@ class AuthenticationControllerTest {
 
     @Test
     void testRegisterUser() throws Exception {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("testUsername", "testPassword123!");
+        RegisterRequest authenticationRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
         String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
         mvc.perform(
@@ -55,8 +61,13 @@ class AuthenticationControllerTest {
 
     @Test
     void testRegisterUserWithWeakPassword() throws Exception {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("testUsername", "pass");
+        RegisterRequest authenticationRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "pass",
+                        "testEmail@test.com");
         String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
         mvc.perform(
@@ -69,8 +80,13 @@ class AuthenticationControllerTest {
 
     @Test
     void testRegisterUserWithUsernameThatAlreadyExists() throws Exception {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("testUsername", "testPassword123!");
+        RegisterRequest authenticationRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
         String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
 
         mvc.perform(
@@ -89,29 +105,45 @@ class AuthenticationControllerTest {
 
     @Test
     void testLoginWithValidCredentials() throws Exception {
+        RegisterRequest registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
+
         AuthenticationRequest authenticationRequest =
                 new AuthenticationRequest("testUsername", "testPassword123!");
-        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+
+        String jsonRequest1 = objectMapper.writeValueAsString(registerRequest);
+        String jsonRequest2 = objectMapper.writeValueAsString(authenticationRequest);
 
         mvc.perform(
                 MockMvcRequestBuilders.post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest));
+                        .content(jsonRequest1));
 
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
-                                .content(jsonRequest))
+                                .content(jsonRequest2))
                 .andExpect(status().isOk());
     }
 
     @Test
     void testLoginWithWrongUsername() throws Exception {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("testUsername", "testPassword123!");
-        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+        RegisterRequest registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
+
+        String jsonRequest = objectMapper.writeValueAsString(registerRequest);
 
         AuthenticationRequest authenticationRequestWrong =
                 new AuthenticationRequest("testUsername2", "testPassword123!");
@@ -133,9 +165,15 @@ class AuthenticationControllerTest {
 
     @Test
     void testLoginWithWrongPassword() throws Exception {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("testUsername", "testPassword123!");
-        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+        RegisterRequest registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
+
+        String jsonRequest = objectMapper.writeValueAsString(registerRequest);
 
         AuthenticationRequest authenticationRequestWrong =
                 new AuthenticationRequest("testUsername", "testPassword123!2");
@@ -157,9 +195,14 @@ class AuthenticationControllerTest {
 
     @Test
     void testPostValidRefreshToken() throws Exception {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("testUsername", "testPassword123!");
-        String jsonRequest = objectMapper.writeValueAsString(authenticationRequest);
+        RegisterRequest registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
+        String jsonRequest = objectMapper.writeValueAsString(registerRequest);
 
         MvcResult result =
                 mvc.perform(
