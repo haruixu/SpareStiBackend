@@ -13,7 +13,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,6 +76,7 @@ public class AuthenticationService {
         loginRegisterResponse.setRefreshToken(jwtRefreshToken);
         return loginRegisterResponse;
     }
+
     private boolean isUsernameValid(String username) {
         String usernamePattern = "^[A-Za-z][A-Za-z0-9_]{2,29}$";
         return Pattern.compile(usernamePattern).matcher(username).matches();
