@@ -94,7 +94,6 @@ public class AuthenticationService {
     }
 
     public boolean isNameValid(String name) {
-        System.out.println("name: " + name);
         String namePattern = "^[a-zA-Z ,.'-]+$";
         return Pattern.compile(namePattern).matcher(name).matches();
     }
