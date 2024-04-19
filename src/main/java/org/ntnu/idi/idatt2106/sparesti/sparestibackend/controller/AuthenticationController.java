@@ -101,7 +101,7 @@ public class AuthenticationController {
      * @param bearerToken Bearer token in authorization header
      * @return ResponseEntity containing a new access token
      */
-    @PostMapping("/renewToken")
+    @GetMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
             @RequestHeader("Authorization") String bearerToken) {
         LOGGER.info("Received renew token request for: {}", bearerToken);
