@@ -27,7 +27,9 @@ test:
     paths:
       - target/surefire-reports/
     reports:
-      junit: target/surefire-reports/TEST-no.ntnu.idatt1002.demo.repo.MyEntityRepoTest.xml
+      junit:
+        - target/surefire-reports/TEST-org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller.AuthenticationControllerIntegrationTest.xml
+        - target/surefire-reports/TEST-org.ntnu.idi.idatt2106.sparesti.sparestibackend.SpareStiBackendApplicationTests.xml
       coverage_report:
         coverage_format: cobertura
         path: target/jacoco/coverage-reports/jacoco.xml
