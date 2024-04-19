@@ -2,11 +2,12 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ChallengeTypeConfigMapper {
 
     ChallengeTypeConfigMapper INSTANCE = Mappers.getMapper(ChallengeTypeConfigMapper.class);

@@ -2,12 +2,16 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 
-@Mapper(componentModel = "spring", imports = ApplicationUtil.class)
+@Mapper(
+        componentModel = "spring",
+        imports = ApplicationUtil.class,
+        unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface GoalMapper {
 
     GoalMapper INSTANCE = Mappers.getMapper(GoalMapper.class);
