@@ -25,6 +25,8 @@ public class UserConfigController {
         return ResponseEntity.ok(userConfig);
     }
 
-    @PostMapping
-    public ResponseEntity<UserConfigResponse> postUserConfig(@PathVariable("id") Long id, @RequestBody )
+    /*@PostMapping
+    public ResponseEntity<UserConfigResponse> postUserConfig(@PathVariable("id") Long id) throws UserNotFoundException {
+
+    }*/
 }
