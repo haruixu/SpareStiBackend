@@ -136,7 +136,6 @@ public class AuthenticationController {
                                     schema = @Schema(implementation = AccessTokenResponse.class))
                         })
             })
-    // TODO: Add api response for bad jwt token
     @GetMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
             @RequestHeader("Authorization") String bearerToken) {

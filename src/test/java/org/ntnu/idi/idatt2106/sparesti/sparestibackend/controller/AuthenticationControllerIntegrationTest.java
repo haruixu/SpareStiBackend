@@ -244,17 +244,15 @@ class AuthenticationControllerIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-    // TODO: Fix testPostInvalidRefreshToken test. Also make reusable methods for repeating code in
-    // tests.
-
     /*
     @Test
     void testPostInvalidRefreshToken() throws Exception {
-      String refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlcm5hbWUxMjM0NTYiLCJpYXQiOjE3MTM0NTU2NzIsImV4cCI6MTcxMzQ1NTk3Mn0.ublWYKuMvfbO3P5rUSAJAY_xbKCpnvaUQkcTCMB1n48";
+        String refreshToken =
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlcm5hbWUxMjM0NTYiLCJpYXQiOjE3MTM0NTU2NzIsImV4cCI6MTcxMzQ1NTk3Mn0.ublWYKuMvfbO3P5rUSAJAY_xbKCpnvaUQkcTCMB1n48";
 
-      mvc.perform(MockMvcRequestBuilders.get("/auth/renewToken")
-          .header("Authorization", "Bearer " + refreshToken))
-        .andExpect(status().isForbidden());
-    }
-     */
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/auth/renewToken")
+                                .header("Authorization", "Bearer " + refreshToken))
+                .andExpect(status().isForbidden());
+    }*/
 }
