@@ -1,6 +1,5 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import java.math.RoundingMode;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -12,7 +11,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 public interface ChallengeMapper {
 
     ChallengeMapper INSTANCE = Mappers.getMapper(ChallengeMapper.class);
-    RoundingMode roundingMode = RoundingMode.HALF_UP;
 
     @Mapping(
             target = "completion",

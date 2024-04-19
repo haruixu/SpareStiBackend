@@ -2,7 +2,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ApplicationUtil {
 
     public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);

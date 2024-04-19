@@ -1,26 +1,35 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import java.math.BigDecimal;
-import lombok.EqualsAndHashCode;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Table(
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TYPE"})},
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"USER_ID", "EXPERIENCE", "MOTIVATION"})
+        },
         name = "CHALLENGE_CONFIG")
-@EqualsAndHashCode
 public class ChallengeConfig {
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "TYPE")
-    private ChallengeType type;
+    @NotNull
+    private Experience experience;
 
-    @Column(nullable = false)
-    private BigDecimal baseline;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Motivation motivation;
+
+    @ElementCollection
+    @CollectionTable(name = "CHALLENGETYPE_CONFIG")
+    Set<ChallengeTypeConfig> challengeTypeConfigs = new HashSet<>();
 }
