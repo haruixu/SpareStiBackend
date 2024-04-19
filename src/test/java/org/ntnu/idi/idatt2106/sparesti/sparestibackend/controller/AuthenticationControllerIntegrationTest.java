@@ -158,6 +158,18 @@ class AuthenticationControllerIntegrationTest {
     }
 
     @Test
+    void testRegisterWithBlankUsername() throws Exception {
+        registerRequest.setUsername("");
+        String jsonRequest = objectMapper.writeValueAsString(registerRequest);
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void testLoginWithValidCredentials() throws Exception {
         AuthenticationRequest authenticationRequest =
                 new AuthenticationRequest("testUsername", "testPassword123!");
@@ -218,6 +230,19 @@ class AuthenticationControllerIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonRequestWrong))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testLoginWithBlankUsername() throws Exception {
+        AuthenticationRequest authenticationRequestWrong =
+                new AuthenticationRequest("", "testPassword123!2");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequestWrong);
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
                 .andExpect(status().isBadRequest());
     }
 

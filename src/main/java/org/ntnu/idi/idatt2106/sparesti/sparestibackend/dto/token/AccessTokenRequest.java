@@ -2,9 +2,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -20,5 +20,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AccessTokenRequest {
-    @NonNull @NotBlank @NotEmpty private String refreshToken;
+    @NotNull @NotBlank @NotEmpty private String refreshToken;
 }

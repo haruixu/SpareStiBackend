@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
@@ -104,8 +103,7 @@ public class AuthenticationController {
             })
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
-            @NonNull @Valid @RequestBody AuthenticationRequest authRequest,
-            BindingResult bindingResult)
+            @Valid @RequestBody AuthenticationRequest authRequest, BindingResult bindingResult)
             throws BadInputException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
