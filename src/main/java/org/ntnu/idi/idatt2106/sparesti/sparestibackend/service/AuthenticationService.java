@@ -65,7 +65,7 @@ public class AuthenticationService {
             throw new BadInputException(
                     "The first name: '" + request.getFirstName() + "' is invalid.");
         }
-        if (!isNameValid(request.getFirstName())) {
+        if (!isNameValid(request.getLastName())) {
             throw new BadInputException(
                     "The last name: '" + request.getLastName() + "' is invalid.");
         }
