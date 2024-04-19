@@ -2,7 +2,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * DTO used when returning access token
@@ -12,7 +14,9 @@ import lombok.Data;
  * @since 17.4.24
  */
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 public class AccessTokenResponse {
     private String accessToken;

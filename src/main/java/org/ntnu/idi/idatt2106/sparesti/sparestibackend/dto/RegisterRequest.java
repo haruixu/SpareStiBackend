@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * DTO used when registering a new user
@@ -16,7 +18,9 @@ import lombok.NonNull;
  * @version 1.0
  * @since 17.4.24
  */
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
