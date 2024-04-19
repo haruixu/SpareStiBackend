@@ -17,7 +17,7 @@ linting:
 build:
   stage: build
   script:
-    mvn clean build
+    mvn clean compile
 
 test:
   stage: test
