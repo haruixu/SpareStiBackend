@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class AuthenticationController {
      * @throws BadInputException If the username, first name last name or email is invalid or the password is too weak
      * @throws UserAlreadyExistsException If the username is already taken
      */
+    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @Operation(
             summary = "Register user",
             description =
@@ -64,8 +66,12 @@ public class AuthenticationController {
                         responseCode = "400",
                         description =
                                 "Invalid username, first name, last name or email or weak"
-                                        + " password"),
-                @ApiResponse(responseCode = "409", description = "Username already exists")
+                                        + " password",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "409",
+                        description = "Username already exists",
+                        content = @Content),
             })
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
@@ -88,6 +94,7 @@ public class AuthenticationController {
      * @return ResponseEntity containing access and refresh tokens upon successful login
      * @throws BadInputException If the username or password is incorrect
      */
+    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @Operation(
             summary = "Log in user",
             description = "Log in user with username and password",
@@ -100,11 +107,15 @@ public class AuthenticationController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = LoginRegisterResponse.class))
                         }),
-                @ApiResponse(responseCode = "400", description = "Incorrect username or password")
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Incorrect username or password",
+                        content = @Content)
             })
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
-            @NonNull @Valid @RequestBody AuthenticationRequest authRequest,
+            @Parameter(description = "Username and password") @NonNull @Valid @RequestBody
+                    AuthenticationRequest authRequest,
             BindingResult bindingResult)
             throws BadInputException {
         if (bindingResult.hasErrors()) {
@@ -136,6 +147,7 @@ public class AuthenticationController {
                                     schema = @Schema(implementation = AccessTokenResponse.class))
                         })
             })
+    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @GetMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
             @RequestHeader("Authorization") String bearerToken) {
