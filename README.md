@@ -40,7 +40,7 @@ To exit the application, use CTRL+C. You can rerun the application using
 ```make run``` again.
 
 ### ⌨️ Other commands
-Run ```make help``` to get a short explanation for all available command or take a look at the [Makefile](Makefile) for what each command does programmatically. Some of the commands are also mentioned below: 
+Run ```make help``` to get a short explanation for all available commands or take a look at the [Makefile](Makefile) for what each command does programmatically. Some of the commands are also mentioned below: 
 - ```make test```: Test the application
 - ```make destroy```: Tear down the application
 - ```make format```: Format the source code
