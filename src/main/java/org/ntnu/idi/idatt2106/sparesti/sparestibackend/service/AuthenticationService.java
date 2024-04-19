@@ -48,12 +48,6 @@ public class AuthenticationService {
                 User.builder()
                         .username(request.getUsername())
                         .password(passwordEncoder.encode(request.getPassword()))
-                        .userConfig(
-                                UserConfig.builder()
-                                        .role(Role.USER)
-                                        .experience(Experience.LOW)
-                                        .motivation(Motivation.LOW)
-                                        .build())
                         .build();
         userService.save(user);
         String jwtAccessToken = jwtService.generateToken(user, 5);
