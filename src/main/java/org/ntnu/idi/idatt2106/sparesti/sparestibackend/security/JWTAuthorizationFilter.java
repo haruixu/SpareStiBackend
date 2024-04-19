@@ -15,6 +15,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * Filter chain for JWT token that is executed for every request
+ *
+ * @author Harry L.X & Lars M.L.N
+ * @since 17.4.24
+ */
 @Component
 @RequiredArgsConstructor
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
@@ -22,6 +28,14 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * The JWT filter
+     * @param request HTTP request
+     * @param response HTTP response
+     * @param filterChain Filter chain that executes after JWT filter
+     * @throws ServletException If token is invalid
+     * @throws IOException If token is invalid
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
