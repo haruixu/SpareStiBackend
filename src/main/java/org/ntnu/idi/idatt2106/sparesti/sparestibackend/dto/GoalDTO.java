@@ -3,7 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Value;
 
@@ -20,5 +20,5 @@ public class GoalDTO implements Serializable {
     @NotNull @PositiveOrZero BigDecimal completion;
     @NotNull @NotEmpty @NotBlank String description;
     @NotNull @PositiveOrZero Long priority;
-    @Past LocalDateTime createdOn;
+    @Past ZonedDateTime createdOn;
 }

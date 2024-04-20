@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
@@ -39,7 +39,7 @@ public class Challenge {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "TYPE")

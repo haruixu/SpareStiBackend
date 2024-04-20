@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,7 +44,7 @@ public class Goal implements Comparable<Goal> {
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @Transient @PositiveOrZero private BigDecimal completion;
 
