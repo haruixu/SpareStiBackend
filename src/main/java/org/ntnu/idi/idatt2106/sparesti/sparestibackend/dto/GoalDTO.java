@@ -16,7 +16,7 @@ import lombok.Value;
 public class GoalDTO implements Serializable {
     @NotNull @NotEmpty @NotBlank String title;
     @NotNull @PositiveOrZero BigDecimal saved;
-    @NotNull @PositiveOrZero BigDecimal target;
+    @NotNull @Positive BigDecimal target;
     @NotNull @PositiveOrZero BigDecimal completion;
     @NotNull @NotEmpty @NotBlank String description;
     @NotNull @PositiveOrZero Long priority;

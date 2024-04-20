@@ -2,6 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -21,11 +23,13 @@ public class Goal implements Comparable<Goal> {
 
     @Column(nullable = false)
     @NotNull
+    @Positive
     @ColumnDefault("0.00")
     private BigDecimal saved;
 
     @Column(nullable = false)
     @NotNull
+    @Positive
     private BigDecimal target;
 
     @Column(nullable = false)
@@ -36,9 +40,11 @@ public class Goal implements Comparable<Goal> {
     @NotNull
     private Long priority;
 
-    @CreationTimestamp private LocalDateTime createdOn;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime createdOn;
 
-    @Transient private BigDecimal completion;
+    @Transient @PositiveOrZero private BigDecimal completion;
 
     @Override
     public int compareTo(Goal goal) {

@@ -1,7 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.Value;
@@ -14,6 +14,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChallengeTypeConfigDTO implements Serializable {
     @NotNull ChallengeType type;
-    @NotNull @PositiveOrZero BigDecimal generalAmount;
-    @NotNull @PositiveOrZero BigDecimal specificAmount;
+    @NotNull @Positive BigDecimal generalAmount;
+    @NotNull @Positive BigDecimal specificAmount;
 }
