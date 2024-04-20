@@ -4,14 +4,12 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import lombok.Builder;
 import lombok.Value;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal}
  */
 @Value
-@Builder
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoalDTO implements Serializable {
     @NotNull @NotEmpty @NotBlank String title;
