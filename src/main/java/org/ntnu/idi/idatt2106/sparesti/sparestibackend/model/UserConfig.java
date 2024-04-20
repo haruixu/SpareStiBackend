@@ -7,9 +7,9 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 @Embeddable
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
 @Table(
         uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "ROLE"})},
         name = "USER_CONFIG")

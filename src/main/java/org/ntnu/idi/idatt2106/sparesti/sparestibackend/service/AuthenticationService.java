@@ -197,6 +197,6 @@ public class AuthenticationService {
         String parsedRefreshToken = bearerToken.substring(7);
         User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
         String newJWTAccessToken = jwtService.generateToken(user, 5);
-        return AccessTokenResponse.builder().accessToken(newJWTAccessToken).build();
+        return new AccessTokenResponse(newJWTAccessToken);
     }
 }

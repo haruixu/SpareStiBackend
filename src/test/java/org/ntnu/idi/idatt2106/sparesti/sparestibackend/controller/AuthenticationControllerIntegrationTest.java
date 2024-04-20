@@ -65,7 +65,13 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     void testRegisterUserWithWeakPassword() throws Exception {
-        registerRequest.setPassword("pass");
+        registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "weakPass",
+                        "testEmail@test.com");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
@@ -94,7 +100,13 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     void testRegisterUserWithInvalidEmail() throws Exception {
-        registerRequest.setEmail("mail.mail");
+        registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "invalidMail");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
@@ -113,7 +125,13 @@ class AuthenticationControllerIntegrationTest {
                                 .content(jsonRequest))
                 .andExpect(status().isOk());
 
-        registerRequest.setUsername("testFirstName1");
+        registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "testUsername1",
+                        "testPassword123!",
+                        "testEmail@test.com");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
 
         mvc.perform(
@@ -126,7 +144,13 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     void testRegisterUserWithInvalidFirstName() throws Exception {
-        registerRequest.setFirstName("!#¤%&/()");
+        registerRequest =
+                new RegisterRequest(
+                        "!#¤%&/()",
+                        "testLastName",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
@@ -138,7 +162,13 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     void testRegisterUserWithInvalidLastName() throws Exception {
-        registerRequest.setLastName("!#¤%&/(");
+        registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "!#¤%&/()",
+                        "testUsername",
+                        "testPassword123!",
+                        "testEmail@test.com");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
@@ -150,7 +180,13 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     void testRegisterUserWithInvalidUsername() throws Exception {
-        registerRequest.setUsername("a");
+        registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "a",
+                        "testPassword123!",
+                        "testEmail@test.com");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
