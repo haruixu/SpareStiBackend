@@ -29,9 +29,7 @@ public class JWTService {
      * Constructs an instance of the class that creates the key for signing tokens
      */
     public JWTService() {
-        byte[] keyBytes =
-                Base64.getDecoder()
-                        .decode("32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5");
+        byte[] keyBytes = Base64.getDecoder().decode(System.getenv("SECRET_KEY"));
         this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
