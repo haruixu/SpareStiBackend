@@ -6,14 +6,16 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Embeddable
 @Data
-@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
 public class Goal implements Comparable<Goal> {
 
@@ -23,7 +25,7 @@ public class Goal implements Comparable<Goal> {
 
     @Column(nullable = false)
     @NotNull
-    @Positive
+    @PositiveOrZero
     @ColumnDefault("0.00")
     private BigDecimal saved;
 
