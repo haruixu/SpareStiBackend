@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 
@@ -20,8 +20,7 @@ public class GoalMapperTest {
         ZonedDateTime createdOn = ZonedDateTime.now();
         String description = "description";
 
-        Goal goal =
-                new Goal(title, saved, target, description, 1L, createdOn, completion);
+        Goal goal = new Goal(title, saved, target, description, 1L, createdOn, completion);
         GoalDTO dto = GoalMapper.INSTANCE.toDTO(goal);
         assertEquals(title, dto.getTitle());
         assertEquals(saved, dto.getSaved());
@@ -39,7 +38,7 @@ public class GoalMapperTest {
         BigDecimal saved = new BigDecimal(0);
         BigDecimal target = new BigDecimal(2);
         BigDecimal completion = new BigDecimal(0);
-        ZonedDateTime createdOn= ZonedDateTime.now();
+        ZonedDateTime createdOn = ZonedDateTime.now();
         String description = "description";
 
         GoalDTO dto = new GoalDTO(title, saved, target, completion, description, 1L, createdOn);
