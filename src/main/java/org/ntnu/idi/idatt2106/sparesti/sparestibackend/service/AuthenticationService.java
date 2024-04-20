@@ -89,7 +89,7 @@ public class AuthenticationService {
     }
 
     public boolean isEmailValid(String email) {
-        String emailPattern = "^(.+)@(\\S+)$";
+        String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return Pattern.compile(emailPattern).matcher(email).matches();
     }
 

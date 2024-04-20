@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
+
 /**
  * Global exception handler to handle different types of exceptions across the application. It provides centralized
  * exception handling for various types of exceptions that may occur during the execution of the application.
@@ -75,7 +77,8 @@ public class GlobalExceptionHandler {
                 NullPointerException.class,
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
-                DataIntegrityViolationException.class
+                DataIntegrityViolationException.class,
+                MessagingException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);

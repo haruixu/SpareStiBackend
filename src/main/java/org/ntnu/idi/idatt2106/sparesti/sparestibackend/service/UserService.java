@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.EmailNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +24,15 @@ public class UserService {
                         () ->
                                 new UsernameNotFoundException(
                                         "User with username: " + username + " not found"));
+    }
+
+    public User findUserByEmail(String email) throws EmailNotFoundException {
+        return userRepository
+          .findByEmail(email)
+          .orElseThrow(
+            () ->
+              new EmailNotFoundException(
+                "User with email: " + email + " not found"));
     }
 
     public boolean userExistsByUsername(String username) {
