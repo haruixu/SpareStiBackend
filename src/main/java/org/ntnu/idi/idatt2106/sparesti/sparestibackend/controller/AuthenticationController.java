@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
@@ -46,6 +46,7 @@ public class AuthenticationController {
      * @throws BadInputException If the username, first name last name or email is invalid or the password is too weak
      * @throws UserAlreadyExistsException If the username is already taken
      */
+    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @Operation(
             summary = "Register user",
             description =
@@ -64,14 +65,16 @@ public class AuthenticationController {
                         responseCode = "400",
                         description =
                                 "Invalid username, first name, last name or email or weak"
-                                        + " password"),
-                @ApiResponse(responseCode = "409", description = "Username already exists")
+                                        + " password",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "409",
+                        description = "Username already exists",
+                        content = @Content),
             })
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
-            @Parameter(description = "Username and password") @Valid @RequestBody
-                    RegisterRequest registerRequest,
-            BindingResult bindingResult)
+            @Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult)
             throws BadInputException, UserAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
@@ -88,6 +91,7 @@ public class AuthenticationController {
      * @return ResponseEntity containing access and refresh tokens upon successful login
      * @throws BadInputException If the username or password is incorrect
      */
+    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @Operation(
             summary = "Log in user",
             description = "Log in user with username and password",
@@ -100,12 +104,14 @@ public class AuthenticationController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = LoginRegisterResponse.class))
                         }),
-                @ApiResponse(responseCode = "400", description = "Incorrect username or password")
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Incorrect username or password",
+                        content = @Content)
             })
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
-            @NotNull @Valid @RequestBody AuthenticationRequest authRequest,
-            BindingResult bindingResult)
+            @Valid @RequestBody AuthenticationRequest authRequest, BindingResult bindingResult)
             throws BadInputException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
@@ -136,9 +142,12 @@ public class AuthenticationController {
                                     schema = @Schema(implementation = AccessTokenResponse.class))
                         })
             })
+    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @GetMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
-            @RequestHeader("Authorization") String bearerToken) {
+            @Parameter(description = "Authorization header with bearer token")
+                    @RequestHeader("Authorization")
+                    String bearerToken) {
         LOGGER.info("Received renew token request for: {}", bearerToken);
         AccessTokenResponse responseContent = authenticationService.refreshAccessToken(bearerToken);
         LOGGER.info("Successfully renewed access token");

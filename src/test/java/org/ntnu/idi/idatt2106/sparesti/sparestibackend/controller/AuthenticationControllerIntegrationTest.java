@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,7 +25,6 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(locations = "classpath:application-test.yml")
-@RunWith(SpringRunner.class)
 class AuthenticationControllerIntegrationTest {
 
     @Autowired private WebApplicationContext context;
@@ -194,6 +191,24 @@ class AuthenticationControllerIntegrationTest {
     }
 
     @Test
+    void testRegisterWithBlankUsername() throws Exception {
+        registerRequest =
+                new RegisterRequest(
+                        "testFirstName",
+                        "testLastName",
+                        "        ",
+                        "testPassword123!",
+                        "testEmail@test.com");
+        String jsonRequest = objectMapper.writeValueAsString(registerRequest);
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void testLoginWithValidCredentials() throws Exception {
         AuthenticationRequest authenticationRequest =
                 new AuthenticationRequest("testUsername", "testPassword123!");
@@ -254,6 +269,19 @@ class AuthenticationControllerIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonRequestWrong))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testLoginWithBlankUsername() throws Exception {
+        AuthenticationRequest authenticationRequestWrong =
+                new AuthenticationRequest("  ", "testPassword123!2");
+        String jsonRequest = objectMapper.writeValueAsString(authenticationRequestWrong);
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
                 .andExpect(status().isBadRequest());
     }
 
