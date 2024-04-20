@@ -2,6 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
 
@@ -19,11 +21,14 @@ public class ChallengeTypeConfig {
     /**
      * How much a user spends on this challenge type in a week
      */
+    @Column(nullable = false)
+    @NotNull
     private BigDecimal generalAmount;
 
     /**
      * How much a user spends on this challenge type everytime it spends on this challenge type.
      */
     @Column(nullable = false)
+    @NotNull
     private BigDecimal specificAmount;
 }
