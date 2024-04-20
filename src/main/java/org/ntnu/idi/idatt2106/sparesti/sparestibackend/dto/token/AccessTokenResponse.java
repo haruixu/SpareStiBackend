@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * DTO used when returning access token
  *
@@ -13,6 +15,6 @@ import lombok.*;
  * @since 17.4.24
  */
 @Value
-public class AccessTokenResponse {
+public class AccessTokenResponse implements Serializable {
     @NotNull @NotEmpty @NotBlank String accessToken;
 }

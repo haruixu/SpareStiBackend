@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Value
-public class AuthenticationRequest {
+public class AuthenticationRequest implements Serializable {
     @NotNull @NotBlank @NotEmpty String username;
     @NotNull @NotBlank @NotEmpty String password;
 }
