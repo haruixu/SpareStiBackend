@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import lombok.*;
 
@@ -14,9 +15,9 @@ import lombok.*;
  */
 @Value
 public class RegisterRequest implements Serializable {
-    @NonNull @NotBlank @NotEmpty String firstName;
-    @NonNull @NotBlank @NotEmpty String lastName;
-    @NonNull @NotBlank @NotEmpty String username;
-    @NonNull @NotBlank @NotEmpty String password;
-    @NonNull @NotBlank @NotEmpty String email;
+    @NotNull @NotBlank @NotEmpty String firstName;
+    @NotNull @NotBlank @NotEmpty String lastName;
+    @NotNull @NotBlank @NotEmpty String username;
+    @NotNull @NotBlank @NotEmpty String password;
+    @NotNull @NotBlank @NotEmpty String email;
 }

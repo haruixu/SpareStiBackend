@@ -1,5 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 /**
@@ -11,5 +14,5 @@ import lombok.*;
  */
 @Value
 public class AccessTokenResponse {
-    private String accessToken;
+    @NotNull @NotEmpty @NotBlank String accessToken;
 }

@@ -147,10 +147,7 @@ class AuthenticationControllerIntegrationTest {
         registerRequest =
                 new RegisterRequest(
                         "!#¤%&/()",
-                        "testLastName",
-                        "testUsername",
-                        "testPassword123!",
-                        "testEmail@test.com");
+                        "testLastName", "testUsername", "testPassword123!", "testEmail@test.com");
         jsonRequest = objectMapper.writeValueAsString(registerRequest);
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
