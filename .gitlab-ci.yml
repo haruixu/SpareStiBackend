@@ -5,16 +5,25 @@ stages:
   - test
   - build
 
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+cache:
+  key: "$CI_COMMIT_REF_NAME"
+  paths:
+    - .m2/repository
+
 linting:
   stage: linting
   script:
-    - mvn spotless:check
+    - mvn -T 1C spotless:check
+
 test:
   stage: test
   script:
-    - mvn clean test -Dspotless.check.skip=true
+    - mvn -T 1C test -Dspotless.check.skip=true
 
 build:
   stage: build
   script:
-    mvn clean package -DskipTests -Dspotless.check.skip=true
+    - mvn -T 1C package -Dmaven.test.skip -DskipTests -Dspotless.check.skip=true
