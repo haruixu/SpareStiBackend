@@ -16,14 +16,14 @@ cache:
 linting:
   stage: linting
   script:
-    - mvn -T 1C spotless:check
+    - mvn spotless:check
 
 test:
   stage: test
   script:
-    - mvn -T 1C test -Dspotless.check.skip=true
+    - mvn test -Dspotless.check.skip=true
 
 build:
   stage: build
   script:
-    - mvn -T 1C package -Dmaven.test.skip -DskipTests -Dspotless.check.skip=true
+    - mvn package -Dmaven.test.skip -DskipTests -Dspotless.check.skip=true
