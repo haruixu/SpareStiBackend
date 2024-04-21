@@ -25,6 +25,6 @@ public interface ChallengeMapper {
     @Mapping(
             target = "completion",
             expression =
-                    "java(ApplicationUtil.percent(challengeDTO.getSaved(), challengeDTO.getTarget()))")
+                    "java(ApplicationUtil.percent(challengeDTO.getSaved(),challengeDTO.getTarget()))")
     Challenge toEntity(ChallengeDTO challengeDTO);
 }
