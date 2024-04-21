@@ -1,9 +1,14 @@
-image: maven:latest
+image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
 
 stages:
   - linting
   - test
   - build
+
+cache:
+  key: target-cache
+  paths:
+    - target
 
 linting:
   stage: linting
