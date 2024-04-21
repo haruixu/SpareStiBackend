@@ -17,15 +17,20 @@ cache:
 
 linting:
   stage: linting
+  # No needs - Can run in parallel with other stages
+  needs: []
   script:
+    # One thread per core
     - mvn -T 1C spotless:check
 
 test:
   stage: test
+  needs: []
   script:
-    - mvn -T 1C test -Dspotless.check.skip=true
+    - mvn test -Dspotless.check.skip=true -Dparallel=all -DperCoreThreadCount=true
 
 build:
   stage: build
+  needs: []
   script:
     - mvn -T 1C package -Dmaven.test.skip -Dspotless.check.skip=true
