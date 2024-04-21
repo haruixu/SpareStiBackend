@@ -6,14 +6,12 @@ import lombok.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 @Embeddable
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
         uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "ROLE"})},
         name = "USER_CONFIG")
-@EqualsAndHashCode
 public class UserConfig {
 
     @Enumerated(EnumType.STRING)

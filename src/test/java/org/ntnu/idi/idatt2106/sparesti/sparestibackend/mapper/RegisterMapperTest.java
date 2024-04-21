@@ -1,13 +1,11 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 public class RegisterMapperTest {
@@ -25,7 +23,8 @@ public class RegisterMapperTest {
         assertEquals(request.getUsername(), user.getUsername());
         assertNotEquals(request.getPassword(), user.getPassword());
         assertEquals(request.getEmail(), user.getEmail());
-        assertEquals(new UserConfig(Role.USER, null), user.getUserConfig());
+        assertEquals(0, Role.USER.compareTo(user.getUserConfig().getRole()));
+        assertNull(user.getUserConfig().getChallengeConfig());
     }
 
     @Test
