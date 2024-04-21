@@ -26,13 +26,13 @@ linting:
     policy: pull
   script:
     # One thread per core
-    - mvn -T 1C spotless:check
+    - mvn spotless:check
 
 test:
   stage: test
   needs: []
   script:
-    - mvn test -Dspotless.check.skip=true -Dparallel=all -DperCoreThreadCount=true
+    - mvn test -Dspotless.check.skip=true
 
 build:
   stage: build
@@ -41,4 +41,4 @@ build:
     <<: *global_cache
     policy: pull
   script:
-    - mvn -T 1C package -Dmaven.test.skip -Dspotless.check.skip=true
+    - mvn package -Dmaven.test.skip -Dspotless.check.skip=true
