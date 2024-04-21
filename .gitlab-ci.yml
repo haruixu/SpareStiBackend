@@ -5,14 +5,6 @@ stages:
   - test
   - build
 
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
-
-cache:
-  key: "$CI_COMMIT_REF_NAME"
-  paths:
-    - .m2/repository
-
 linting:
   stage: linting
   script:
