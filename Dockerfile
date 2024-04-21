@@ -4,7 +4,7 @@ COPY pom.xml .
 # build all dependencies - caches dependencies to avoid reinstalling between runs
 RUN mvn dependency:go-offline -B
 COPY src ./src
-RUN mvn -f pom.xml package -DskipTests
+RUN mvn -f pom.xml package -DskipTests -Dspotless.check.skip=true
 
 FROM openjdk:17-slim
 WORKDIR /app
