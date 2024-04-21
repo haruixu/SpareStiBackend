@@ -12,9 +12,9 @@ linting:
 test:
   stage: test
   script:
-    - mvn clean test
+    - mvn clean test -Dspotless.check.skip=true
 
 build:
   stage: build
   script:
-    mvn clean package
+    mvn clean package -DskipTests -Dspotless.check.skip=true
