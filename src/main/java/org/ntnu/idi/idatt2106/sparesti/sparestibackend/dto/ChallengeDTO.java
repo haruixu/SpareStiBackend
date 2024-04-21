@@ -3,7 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Value;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
@@ -20,6 +20,6 @@ public class ChallengeDTO implements Serializable {
     @NotNull @PositiveOrZero BigDecimal target;
     @NotNull @PositiveOrZero BigDecimal completion;
     @NotNull @NotEmpty @NotBlank String description;
-    @PastOrPresent LocalDateTime createdOn;
+    @PastOrPresent ZonedDateTime createdOn;
     @NotNull ChallengeType type;
 }

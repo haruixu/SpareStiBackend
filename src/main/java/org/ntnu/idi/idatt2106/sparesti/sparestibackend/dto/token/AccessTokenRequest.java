@@ -3,10 +3,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.io.Serializable;
+import lombok.*;
 
 /**
  * DTO used when requesting for renewing access token
@@ -15,10 +13,7 @@ import lombok.ToString;
  * @version 1.0
  * @since 17.4.24
  */
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
-public class AccessTokenRequest {
-    @NotNull @NotBlank @NotEmpty private String refreshToken;
+@Value
+public class AccessTokenRequest implements Serializable {
+    @NotNull @NotBlank @NotEmpty String refreshToken;
 }

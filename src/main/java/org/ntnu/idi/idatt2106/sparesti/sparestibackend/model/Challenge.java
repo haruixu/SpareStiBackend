@@ -2,8 +2,10 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
@@ -23,10 +25,12 @@ public class Challenge {
     @Column(nullable = false)
     @NotNull
     @ColumnDefault("0.00")
+    @PositiveOrZero
     private BigDecimal saved;
 
     @Column(nullable = false)
     @NotNull
+    @Positive
     private BigDecimal target;
 
     @Column(nullable = false)
@@ -35,7 +39,7 @@ public class Challenge {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "TYPE")
