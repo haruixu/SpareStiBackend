@@ -18,12 +18,12 @@ public interface GoalMapper {
 
     @Mapping(
             target = "completion",
-            expression = "java( ApplicationUtil.percentage(goal.getSaved(), goal.getTarget()) )")
+            expression = "java( ApplicationUtil.percent(goal.getSaved(), goal.getTarget()) )")
     GoalDTO toDTO(Goal goal);
 
     @Mapping(
             target = "completion",
             expression =
-                    "java( ApplicationUtil.percentage(goalDTO.getSaved(), goalDTO.getTarget()) )")
+                    "java( ApplicationUtil.percent(goalDTO.getSaved(), goalDTO.getTarget()) )")
     Goal toEntity(GoalDTO goalDTO);
 }

@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Data
+@Getter
 @Table(
         uniqueConstraints = {
             @UniqueConstraint(columnNames = {"USER_ID", "EXPERIENCE", "MOTIVATION"})
