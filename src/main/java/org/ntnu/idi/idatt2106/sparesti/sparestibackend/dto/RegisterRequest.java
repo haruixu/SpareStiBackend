@@ -6,8 +6,18 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import lombok.*;
 
+/**
+ * DTO used when registering a new user
+ *
+ * @author Harry L.X & Lars M.L.N
+ * @version 1.0
+ * @since 17.4.24
+ */
 @Value
-public class AuthenticationRequest implements Serializable {
+public class RegisterRequest implements Serializable {
+    @NotNull @NotBlank @NotEmpty String firstName;
+    @NotNull @NotBlank @NotEmpty String lastName;
     @NotNull @NotBlank @NotEmpty String username;
     @NotNull @NotBlank @NotEmpty String password;
+    @NotNull @NotBlank @NotEmpty String email;
 }

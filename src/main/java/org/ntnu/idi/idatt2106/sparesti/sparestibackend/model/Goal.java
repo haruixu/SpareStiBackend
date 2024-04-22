@@ -2,18 +2,26 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Embeddable
 @Data
-@EqualsAndHashCode
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "GOAL")
 public class Goal implements Comparable<Goal> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -21,11 +29,13 @@ public class Goal implements Comparable<Goal> {
 
     @Column(nullable = false)
     @NotNull
+    @PositiveOrZero
     @ColumnDefault("0.00")
     private BigDecimal saved;
 
     @Column(nullable = false)
     @NotNull
+    @Positive
     private BigDecimal target;
 
     @Column(nullable = false)
@@ -33,11 +43,22 @@ public class Goal implements Comparable<Goal> {
     private String description;
 
     @Column(nullable = false, name = "PRIORITY")
+    @NotNull
     private Long priority;
 
-    @CreationTimestamp private LocalDateTime createdOn;
+    @Column(name = "CREATION", updatable = false, nullable = false)
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime createdOn;
 
-    @Transient private double completion;
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime due;
+
+    @Transient @PositiveOrZero private BigDecimal completion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     @Override
     public int compareTo(Goal goal) {
