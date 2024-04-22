@@ -10,13 +10,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
 
-@Embeddable
 @Data
 @EqualsAndHashCode
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
+@Entity
+@Table(name = "CHALLENGE")
 public class Challenge {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -37,13 +40,24 @@ public class Challenge {
     @NotNull
     private String description;
 
+    @Column(nullable = false, name = "CREATION", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private ZonedDateTime createdOn;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "TYPE")
-    private ChallengeType type;
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime completedOn;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime due;
+
+    @Column(name = "TYPE")
+    private String type;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     @Transient private BigDecimal completion;
 }
