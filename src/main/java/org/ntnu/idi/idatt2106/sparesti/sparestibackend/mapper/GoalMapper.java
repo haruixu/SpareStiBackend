@@ -2,6 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
@@ -27,4 +29,11 @@ public interface GoalMapper {
             expression = "java( ApplicationUtil.percent(goalDTO.saved(), goalDTO.target()) )")
     @Mapping(target = "id", source = "goalDTO.id")
     Goal toEntity(GoalDTO goalDTO, User user);
+
+    @Mappings({
+        @Mapping(target = "user", ignore = true),
+        @Mapping(target = "id", ignore = true),
+        @Mapping(target = "createdOn", ignore = true)
+    })
+    Goal updateEntity(@MappingTarget Goal goal, GoalDTO goalDTO);
 }
