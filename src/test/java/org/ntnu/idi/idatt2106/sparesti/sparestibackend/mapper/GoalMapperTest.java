@@ -18,9 +18,10 @@ public class GoalMapperTest {
         BigDecimal target = new BigDecimal(2);
         BigDecimal completion = new BigDecimal(0);
         ZonedDateTime createdOn = ZonedDateTime.now();
+        ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
-        Goal goal = new Goal(title, saved, target, description, 1L, createdOn, completion);
+        Goal goal = new Goal(title, saved, target, description, 1L, createdOn, due, completion);
         GoalDTO dto = GoalMapper.INSTANCE.toDTO(goal);
         assertEquals(title, dto.getTitle());
         assertEquals(saved, dto.getSaved());
@@ -28,6 +29,7 @@ public class GoalMapperTest {
         assertEquals(completion, dto.getCompletion());
         assertEquals(description, dto.getDescription());
         assertEquals(createdOn, goal.getCreatedOn());
+        assertEquals(due, goal.getDue());
         assertEquals(1L, goal.getPriority().longValue());
     }
 
@@ -39,9 +41,10 @@ public class GoalMapperTest {
         BigDecimal target = new BigDecimal(2);
         BigDecimal completion = new BigDecimal(0);
         ZonedDateTime createdOn = ZonedDateTime.now();
+        ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
-        GoalDTO dto = new GoalDTO(title, saved, target, completion, description, 1L, createdOn);
+        GoalDTO dto = new GoalDTO(title, saved, target, completion, description, 1L, createdOn, due);
         Goal goal = GoalMapper.INSTANCE.toEntity(dto);
         assertEquals(title, goal.getTitle());
         assertEquals(saved, goal.getSaved());
@@ -49,6 +52,7 @@ public class GoalMapperTest {
         assertEquals(completion, goal.getCompletion());
         assertEquals(description, goal.getDescription());
         assertEquals(createdOn, goal.getCreatedOn());
+        assertEquals(due, goal.getDue());
         assertEquals(1L, goal.getPriority().longValue());
     }
 }

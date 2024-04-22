@@ -19,6 +19,8 @@ public class ChallengeDTO implements Serializable {
     @NotNull @PositiveOrZero BigDecimal target;
     @NotNull @PositiveOrZero BigDecimal completion;
     @NotNull @NotEmpty @NotBlank String description;
-    @PastOrPresent ZonedDateTime createdOn;
+    @Past ZonedDateTime createdOn;
+    ZonedDateTime completedOn;
+    @Future ZonedDateTime due;
     @NotNull String type;
 }
