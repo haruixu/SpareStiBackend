@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -88,7 +89,8 @@ public class GlobalExceptionHandler {
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
                 DataIntegrityViolationException.class,
-                MessagingException.class
+                MessagingException.class,
+                MethodArgumentNotValidException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
