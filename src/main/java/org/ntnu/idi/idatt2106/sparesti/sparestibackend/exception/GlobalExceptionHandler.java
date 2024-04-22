@@ -60,7 +60,12 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object does not exist.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = {UserNotFoundException.class, UsernameNotFoundException.class})
+    @ExceptionHandler(
+            value = {
+                UserNotFoundException.class,
+                UsernameNotFoundException.class,
+                GoalNotFoundException.class
+            })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
