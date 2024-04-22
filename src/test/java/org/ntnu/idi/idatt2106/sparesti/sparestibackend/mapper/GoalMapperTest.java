@@ -44,7 +44,8 @@ public class GoalMapperTest {
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
-        GoalDTO dto = new GoalDTO(title, saved, target, completion, description, 1L, createdOn, due);
+        GoalDTO dto =
+                new GoalDTO(title, saved, target, completion, description, 1L, createdOn, due);
         Goal goal = GoalMapper.INSTANCE.toEntity(dto);
         assertEquals(title, goal.getTitle());
         assertEquals(saved, goal.getSaved());
