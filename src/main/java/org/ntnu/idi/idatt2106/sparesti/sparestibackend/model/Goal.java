@@ -57,6 +57,9 @@ public class Goal implements Comparable<Goal> {
 
     @Transient @PositiveOrZero private BigDecimal completion;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime completedOn;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "USER_ID", nullable = false)
     @JsonBackReference

@@ -18,5 +18,6 @@ public record GoalDTO(
         @NotNull @NotEmpty @NotBlank String description,
         @NotNull @PositiveOrZero Long priority,
         @Past ZonedDateTime createdOn,
+        ZonedDateTime completedOn,
         @Future ZonedDateTime due)
         implements Serializable {}
