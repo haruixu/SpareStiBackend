@@ -44,7 +44,9 @@ public class GoalService {
      * @return
      */
     private Goal findGoalByIdAndUser(Long id, User user) {
-        return goalRepository.findByIdAndUser(id, user).orElseThrow(() -> new GoalNotFoundException(id));
+        return goalRepository
+                .findByIdAndUser(id, user)
+                .orElseThrow(() -> new GoalNotFoundException(id));
     }
 
     public void deleteUserGoal(Long id, User user) {
