@@ -74,12 +74,22 @@ public class GoalMapperTest {
         BigDecimal target = new BigDecimal(2);
         BigDecimal completion = new BigDecimal(0);
         ZonedDateTime createdOn = ZonedDateTime.now();
-        ZonedDateTime completedOn= ZonedDateTime.now();
+        ZonedDateTime completedOn = ZonedDateTime.now();
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
         GoalDTO dto =
-                new GoalDTO(1L, title, saved, target, completion, description, 1L, createdOn, completedOn, due);
+                new GoalDTO(
+                        1L,
+                        title,
+                        saved,
+                        target,
+                        completion,
+                        description,
+                        1L,
+                        createdOn,
+                        completedOn,
+                        due);
         Goal goal = GoalMapper.INSTANCE.toEntity(dto, user);
         assertEquals(title, goal.getTitle());
         assertEquals(saved, goal.getSaved());
