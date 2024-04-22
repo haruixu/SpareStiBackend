@@ -38,9 +38,7 @@ public class ChallengeService {
         return ChallengeMapper.INSTANCE.toDTO(privateGetChallenge(challengeId, user));
     }
 
-    public void deleteChallenge(ChallengeDTO challengeDTO, User user) {
-
-    }
+    public void deleteChallenge(ChallengeDTO challengeDTO, User user) {}
 
     private Challenge privateGetChallenge(Long challengeId, User user) {
 
