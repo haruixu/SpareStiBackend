@@ -25,6 +25,7 @@ public class ChangePasswordRequest {
     private LocalDateTime time;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     @Column(unique = true, nullable = false)
     private Long userID;
