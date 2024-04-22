@@ -40,7 +40,7 @@ public class Challenge {
     @NotNull
     private String description;
 
-    @Column(nullable = false, name = "CREATION")
+    @Column(nullable = false, name = "CREATION", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private ZonedDateTime createdOn;
