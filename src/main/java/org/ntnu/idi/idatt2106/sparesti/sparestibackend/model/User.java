@@ -16,7 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @AllArgsConstructor
@@ -52,13 +52,11 @@ public class User implements UserDetails {
 
     @Setter @Embedded private UserConfig userConfig;
 
-    @ElementCollection
+    @OneToMany(mappedBy = "user")
     @SortNatural
-    @CollectionTable(name = "GOAL")
     private final Set<Goal> goals = new TreeSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "CHALLENGE")
+    @OneToMany(mappedBy = "user")
     private final Set<Challenge> challenges = new HashSet<>();
 
     @ElementCollection
