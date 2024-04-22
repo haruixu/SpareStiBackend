@@ -8,6 +8,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputExcepti
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class GoalController {
     @GetMapping
     public ResponseEntity<Page<GoalDTO>> getUserGoals(
             Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
-        logger.info("Received GET request for user goals for user: " + userDetails.getUsername());
+        logger.info("Received GET request for user goals for user: {}", userDetails.getUsername());
         User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.ok(goalService.getUserGoals(user, pageable));
     }
@@ -62,7 +63,7 @@ public class GoalController {
             BindingResult bindingResult) {
         logger.info("Received POST request for goal with id {}", goalDTO.id());
         if (bindingResult.hasErrors()) {
-            throw new BadInputException("Fields in the body cannot be null, blank or empty");
+            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
         logger.info("Saving goal");
