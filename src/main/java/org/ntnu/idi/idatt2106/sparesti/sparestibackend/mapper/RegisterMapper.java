@@ -23,6 +23,5 @@ public interface RegisterMapper {
     })
     User toEntity(RegisterRequest request, Role role, String encodedPassword);
 
-    @Mapping(target = "userId", source = "user.id")
     LoginRegisterResponse toDTO(User user, String accessToken, String refreshToken);
 }

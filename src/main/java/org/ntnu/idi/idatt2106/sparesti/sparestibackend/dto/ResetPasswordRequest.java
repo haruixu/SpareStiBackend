@@ -13,18 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResetPasswordRequest {
-  @NotNull
-  @NotEmpty
-  @NotBlank
-  private String resetID;
+    @NotNull @NotEmpty @NotBlank private String resetID;
 
-  @NotNull
-  @NotEmpty
-  @NotBlank
-  private Long userID;
+    @NotNull @NotEmpty @NotBlank private Long userID;
 
-  @NotNull
-  @NotEmpty
-  @NotBlank
-  private String newPassword;
+    @NotNull @NotEmpty @NotBlank private String newPassword;
 }

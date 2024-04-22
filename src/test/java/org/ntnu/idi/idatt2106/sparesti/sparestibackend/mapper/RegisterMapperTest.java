@@ -35,7 +35,6 @@ public class RegisterMapperTest {
         LoginRegisterResponse response =
                 RegisterMapper.INSTANCE.toDTO(user, accessToken, refreshToken);
 
-        assertEquals(user.getId(), response.getUserId());
         assertEquals(accessToken, response.getAccessToken());
         assertEquals(refreshToken, response.getRefreshToken());
     }

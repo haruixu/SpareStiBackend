@@ -51,11 +51,11 @@ public class UserService {
 
     public User findUserByEmail(String email) throws EmailNotFoundException {
         return userRepository
-          .findByEmail(email)
-          .orElseThrow(
-            () ->
-              new EmailNotFoundException(
-                "User with email: " + email + " not found"));
+                .findByEmail(email)
+                .orElseThrow(
+                        () ->
+                                new EmailNotFoundException(
+                                        "User with email: " + email + " not found"));
     }
 
     /**
@@ -77,8 +77,10 @@ public class UserService {
     }
 
     public void updatePassword(Long userID, String newPassword) {
-        User user = userRepository.findById(userID)
-          .orElseThrow(() -> new BadInputException("User not found"));
+        User user =
+                userRepository
+                        .findById(userID)
+                        .orElseThrow(() -> new BadInputException("User not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

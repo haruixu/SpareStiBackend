@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePasswordRequestRequest {
-  @NotNull @NotEmpty @NotBlank private String email;
+    @NotNull @NotEmpty @NotBlank private String email;
 }
