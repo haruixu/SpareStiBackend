@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigResponse;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
@@ -31,7 +31,7 @@ public class UserConfigMapperTest {
     }
 
     @Test
-    public void testToUserConfigResponse() {
+    public void testToDTO() {
 
         ChallengeConfig challengeConfig =
                 new ChallengeConfig(Experience.MIDDLE, Motivation.MIDDLE, null);
@@ -42,7 +42,7 @@ public class UserConfigMapperTest {
 
         UserConfig userConfig = new UserConfig(Role.USER, challengeConfig);
 
-        UserConfigResponse userConfigResponse = userConfigMapper.toUserConfigResponse(userConfig);
+        UserConfigDTO userConfigResponse = userConfigMapper.toDTO(userConfig);
 
         assertEquals(0, userConfig.getRole().compareTo(Role.USER));
         assertEquals(challengeConfigDTO, userConfigResponse.getChallengeConfig());

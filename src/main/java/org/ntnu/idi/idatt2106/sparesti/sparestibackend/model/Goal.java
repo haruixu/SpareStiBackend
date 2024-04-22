@@ -46,6 +46,9 @@ public class Goal implements Comparable<Goal> {
     @Temporal(TemporalType.TIMESTAMP)
     private ZonedDateTime createdOn;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime due;
+
     @Transient @PositiveOrZero private BigDecimal completion;
 
     @Override

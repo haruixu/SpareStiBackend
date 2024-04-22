@@ -50,7 +50,7 @@ public class User implements UserDetails {
     @Email
     private String email;
 
-    @Embedded private UserConfig userConfig;
+    @Setter @Embedded private UserConfig userConfig;
 
     @ElementCollection
     @SortNatural

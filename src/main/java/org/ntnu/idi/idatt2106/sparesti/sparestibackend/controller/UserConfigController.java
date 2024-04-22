@@ -1,6 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService;
@@ -19,14 +21,18 @@ public class UserConfigController {
     }
 
     @GetMapping
-    public ResponseEntity<UserConfigResponse> getUserConfig(@PathVariable("id") Long id)
+    public ResponseEntity<UserConfigDTO> getUserConfig(@PathVariable("id") Long id)
             throws UserNotFoundException, ConfigNotFoundException {
-        UserConfigResponse userConfig = userConfigService.getUserConfig(id);
+        UserConfigDTO userConfig = userConfigService.getUserConfig(id);
         return ResponseEntity.ok(userConfig);
     }
 
-    /*@PostMapping
-    public ResponseEntity<UserConfigResponse> postUserConfig(@PathVariable("id") Long id) throws UserNotFoundException {
-
-    }*/
+    @PostMapping
+    public ResponseEntity<UserConfigDTO> postUserConfig(
+            @NotNull @PathVariable("id") Long userId,
+            @Valid @RequestBody UserConfigDTO userConfigDTO)
+            throws UserNotFoundException {
+        UserConfigDTO newConfig = userConfigService.updateUserConfig(userId, userConfigDTO);
+        return ResponseEntity.ok(newConfig);
+    }
 }
