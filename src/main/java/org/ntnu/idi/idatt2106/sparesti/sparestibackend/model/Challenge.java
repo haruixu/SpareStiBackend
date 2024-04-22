@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Embeddable
 @Data
 @EqualsAndHashCode
 @Entity
@@ -41,7 +40,7 @@ public class Challenge {
     @NotNull
     private String description;
 
-    @Column(nullable = false, name = "CREATION")
+    @Column(nullable = false, name = "CREATION", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private ZonedDateTime createdOn;

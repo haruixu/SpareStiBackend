@@ -46,7 +46,7 @@ public class Goal implements Comparable<Goal> {
     @NotNull
     private Long priority;
 
-    @Column(name = "CREATION")
+    @Column(name = "CREATION", updatable = false, nullable = false)
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private ZonedDateTime createdOn;
