@@ -21,11 +21,13 @@ public interface ChallengeMapper {
                     "java(ApplicationUtil.percent(challenge.getSaved(), challenge.getTarget()))")
     ChallengeDTO toDTO(Challenge challenge);
 
-    @Mapping(
-            target = "completion",
-            expression =
-                    "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
-    @Mapping(target = "id", source = "challengeDTO.id")
+    @Mappings({
+        @Mapping(target = "id", ignore = true),
+        @Mapping(
+                target = "completion",
+                expression =
+                        "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
+    })
     Challenge toEntity(ChallengeDTO challengeDTO, User user);
 
     @Mappings({
