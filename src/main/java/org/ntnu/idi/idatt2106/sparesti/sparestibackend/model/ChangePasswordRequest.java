@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Entity
 public class ChangePasswordRequest {
 
-  @Id
   @NotNull
   @Column(unique = true, nullable = false)
   private String id;
@@ -27,6 +26,7 @@ public class ChangePasswordRequest {
   @CreationTimestamp
   private LocalDateTime time;
 
+  @Id
   @NotNull
   @Column(unique = true, nullable = false)
   private Long userID;
