@@ -3,6 +3,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.GoalNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
@@ -26,12 +28,12 @@ public class GoalService {
         return goalRepository.findAllByUser(user, pageable).map(GoalMapper.INSTANCE::toDTO);
     }
 
-    public GoalDTO save(GoalDTO goalDTO, User user) {
+    public GoalDTO save(GoalCreateDTO goalDTO, User user) {
         return GoalMapper.INSTANCE.toDTO(
                 goalRepository.save(GoalMapper.INSTANCE.toEntity(goalDTO, user)));
     }
 
-    public GoalDTO update(Long id, GoalDTO goalDTO, User user) {
+    public GoalDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
         Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));

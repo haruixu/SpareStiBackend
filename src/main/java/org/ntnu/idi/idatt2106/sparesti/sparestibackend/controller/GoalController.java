@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,8 +45,13 @@ public class GoalController {
     // TODO: Finne aktive og inaktive mål i request param
     @GetMapping
     public ResponseEntity<Page<GoalDTO>> getUserGoals(
-            Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
-        logger.info("Received GET request for goals of user: " + userDetails.getUsername());
+            Pageable pageable,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Parameter(name = "Flag for whether getting active or inactive saving goals")
+                    @RequestParam(defaultValue = "true")
+                    boolean active) {
+        logger.info("Received GET request for goals of user: {}", userDetails.getUsername());
+        logger.info("Finding active goals: {}", active);
         User user = userService.findUserByUsername(userDetails.getUsername());
         logger.info("Trying to get all user goals");
         return ResponseEntity.ok(goalService.getUserGoals(user, pageable));
@@ -61,10 +69,10 @@ public class GoalController {
 
     @PostMapping
     public ResponseEntity<GoalDTO> createUserGoal(
-            @Valid @RequestBody GoalDTO goalDTO,
+            @Valid @RequestBody GoalCreateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
-        logger.info("Received POST request for goal with id {}", goalDTO.id());
+        logger.info("Received POST request for goal {}", goalDTO);
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
@@ -76,7 +84,7 @@ public class GoalController {
     @PutMapping("/{id}")
     public ResponseEntity<GoalDTO> updateUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
-            @Valid @RequestBody GoalDTO goalDTO,
+            @Valid @RequestBody GoalUpdateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
         logger.info("Received PUT request for goal with id {} with request body {}", id, goalDTO);
