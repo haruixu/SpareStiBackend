@@ -45,6 +45,6 @@ public class UserConfigMapperTest {
         UserConfigDTO userConfigResponse = userConfigMapper.toDTO(userConfig);
 
         assertEquals(0, userConfig.getRole().compareTo(Role.USER));
-        assertEquals(challengeConfigDTO, userConfigResponse.getChallengeConfig());
+        assertEquals(challengeConfigDTO, userConfigResponse.challengeConfig());
     }
 }

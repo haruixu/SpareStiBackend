@@ -41,6 +41,7 @@ public class User implements UserDetails {
     @NaturalId
     private String username;
 
+    @Setter
     @NotNull
     @Column(nullable = false)
     private String password;

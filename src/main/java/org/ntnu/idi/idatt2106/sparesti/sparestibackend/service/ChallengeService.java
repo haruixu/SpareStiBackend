@@ -28,7 +28,7 @@ public class ChallengeService {
     }
 
     public ChallengeDTO updateChallenge(ChallengeDTO challengeDTO, User user) {
-        Challenge challenge = privateGetChallenge(challengeDTO.getId(), user);
+        Challenge challenge = privateGetChallenge(challengeDTO.id(), user);
         Challenge updatedChallenge = ChallengeMapper.INSTANCE.updateEntity(challenge, challengeDTO);
         Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);

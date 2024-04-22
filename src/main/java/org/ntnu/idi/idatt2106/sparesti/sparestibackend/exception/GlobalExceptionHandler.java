@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -86,7 +87,8 @@ public class GlobalExceptionHandler {
                 NullPointerException.class,
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
-                DataIntegrityViolationException.class
+                DataIntegrityViolationException.class,
+                MessagingException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);

@@ -53,11 +53,11 @@ public class GoalMapperTest {
                         completion,
                         user);
         GoalDTO dto = GoalMapper.INSTANCE.toDTO(goal);
-        assertEquals(title, dto.getTitle());
-        assertEquals(saved, dto.getSaved());
-        assertEquals(target, dto.getTarget());
-        assertEquals(completion, dto.getCompletion());
-        assertEquals(description, dto.getDescription());
+        assertEquals(title, dto.title());
+        assertEquals(saved, dto.saved());
+        assertEquals(target, dto.target());
+        assertEquals(completion, dto.completion());
+        assertEquals(description, dto.description());
         assertEquals(createdOn, goal.getCreatedOn());
         assertEquals(due, goal.getDue());
         assertEquals(1L, goal.getPriority().longValue());

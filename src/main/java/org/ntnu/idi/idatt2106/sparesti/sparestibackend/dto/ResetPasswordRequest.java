@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public record AuthenticationRequest(
-        @NotNull @NotBlank @NotEmpty String username, @NotNull @NotBlank @NotEmpty String password)
+public record ResetPasswordRequest(
+        @NotNull @NotEmpty @NotBlank String resetID,
+        @NotNull @NotEmpty @NotBlank Long userID,
+        @NotNull @NotEmpty @NotBlank String newPassword)
         implements Serializable {}
