@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
@@ -78,18 +79,8 @@ public class GoalMapperTest {
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
-        GoalDTO dto =
-                new GoalDTO(
-                        1L,
-                        title,
-                        saved,
-                        target,
-                        completion,
-                        description,
-                        1L,
-                        createdOn,
-                        completedOn,
-                        due);
+        GoalCreateDTO dto =
+                new GoalCreateDTO(title, saved, target, completion, description, 1L, due);
         Goal goal = GoalMapper.INSTANCE.toEntity(dto, user);
         assertEquals(title, goal.getTitle());
         assertEquals(saved, goal.getSaved());
