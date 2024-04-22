@@ -4,7 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .env
-.gitlab-ci-local
 
 ### STS ###
 .apt_generated
@@ -33,4 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-

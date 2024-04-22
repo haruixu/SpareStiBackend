@@ -1,44 +1,20 @@
-# Cache maven docker image in GitLab
-image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
+image: maven:latest
 
 stages:
   - linting
   - test
   - build
 
-# Cache Maven dependencies
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
-
-default:
-  cache: &global_cache
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - .m2/repository
-    policy: pull-push
-
 linting:
   stage: linting
-  # No needs - Can run in parallel with other stages
-  needs: []
-  cache:
-    <<: *global_cache
-    policy: pull
   script:
-    # One thread per core
     - mvn spotless:check
-
 test:
   stage: test
-  needs: []
   script:
-    - mvn clean test -Dspotless.check.skip=true
+    - mvn clean test
 
 build:
   stage: build
-  needs: []
-  cache:
-    <<: *global_cache
-    policy: pull
   script:
-    - mvn clean package -Dmaven.test.skip -Dspotless.check.skip=true
+    mvn clean package

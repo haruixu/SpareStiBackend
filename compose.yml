@@ -7,23 +7,11 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3306:3306'
-    healthcheck:
-      test: ["CMD", 'mysqladmin', 'ping', '-h', 'db', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
-      # Run health check <start_interval> seconds after container start.
-      start_interval: 9s
-      # Proceeding checks are spaced by <interval> seconds
-      interval: 5s
-      # Fail check if it takes longer than 5
-      timeout: 5s
-      # Max 50 tries
-      retries: 50
     env_file:
       - .env
   app:
-    container_name: sparesti-backend
     depends_on:
-      mysql:
-          condition: service_healthy
+      - mysql
     build: .
     # Make app container to wait on mysql container to spin up by restarting it
     restart: always
