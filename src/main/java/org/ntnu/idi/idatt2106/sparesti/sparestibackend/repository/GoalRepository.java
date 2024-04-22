@@ -12,5 +12,5 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
 
     Optional<Goal> findByIdAndUser(Long id, User user);
 
-    Void deleteByIdAndUser(Long id, User user);
+    void deleteByIdAndUser(Long id, User user);
 }

@@ -15,12 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,13 +38,15 @@ public class GoalController {
     private final UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final UserDetailsService userDetailsService;
 
     // TODO: Finne aktive og inaktive mål i request param
     @GetMapping
     public ResponseEntity<Page<GoalDTO>> getUserGoals(
             Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
-        logger.info("Received GET request for user goals for user: " + userDetails.getUsername());
+        logger.info("Received GET request for goals of user: " + userDetails.getUsername());
         User user = userService.findUserByUsername(userDetails.getUsername());
+        logger.info("Trying to get all user goals");
         return ResponseEntity.ok(goalService.getUserGoals(user, pageable));
     }
 
@@ -52,7 +56,8 @@ public class GoalController {
             @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Received GET request for goal with id {}", id);
         User user = userService.findUserByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(goalService.findGoalByIdAndUser(id, user));
+        logger.info("Trying to find goal");
+        return ResponseEntity.ok(goalService.findUserGoal(id, user));
     }
 
     @PostMapping
@@ -65,20 +70,31 @@ public class GoalController {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
-        logger.info("Saving goal");
+        logger.info("Trying to save goal");
         return ResponseEntity.ok(goalService.save(goalDTO, user));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteUserGoal(
-            @Parameter(description = "The ID-number of a goal") @PathVariable Long id) {
-
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}")
+    public ResponseEntity<GoalDTO> updateUserGoal(
+            @Valid @RequestBody GoalDTO goalDTO,
+            @AuthenticationPrincipal UserDetails userDetails,
+            BindingResult bindingResult) {
+        logger.info("Received PUT request for goal {}", goalDTO);
+        if (bindingResult.hasErrors()) {
+            throw new BadInputException("Fields in the body cannot be null, blank or empty");
+        }
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        return ResponseEntity.ok(goalService.update(goalDTO, user));
     }
 
-    /*
-    TODO:
-    - PUT
-    - DELETE
-     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserGoal(
+            @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("Received DELETE request for goal with id {}", id);
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        goalService.deleteUserGoal(id, user);
+        logger.info("Successfully deleted goal");
+        return ResponseEntity.noContent().build();
+    }
 }

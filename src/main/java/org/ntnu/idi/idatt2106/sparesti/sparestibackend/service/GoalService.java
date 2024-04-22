@@ -18,7 +18,7 @@ public class GoalService {
 
     private final GoalRepository goalRepository;
 
-    public GoalDTO findGoalByIdAndUser(Long id, User user) {
+    public GoalDTO findUserGoal(Long id, User user) {
         return GoalMapper.INSTANCE.toDTO(
                 goalRepository
                         .findByIdAndUser(id, user)
@@ -34,8 +34,18 @@ public class GoalService {
                 goalRepository.save(GoalMapper.INSTANCE.toEntity(goalDTO, user)));
     }
 
-    public void deleteById(Long id) {
-        goalRepository.deleteById(id);
+    public GoalDTO update(GoalDTO goalDTO, User user) {
+        Goal currentGoal = findGoalById(goalDTO.id());
+        Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
+        return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));
+    }
+
+    private Goal findGoalById(Long id) {
+        return goalRepository.findById(id).orElseThrow(() -> new GoalNotFoundException(id));
+    }
+
+    public void deleteUserGoal(Long id, User user) {
+        goalRepository.deleteByIdAndUser(id, user);
     }
 
     // Brukt for å testeV
