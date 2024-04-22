@@ -7,21 +7,20 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Data
 @Table(name = "GOAL")
 public class Goal implements Comparable<Goal> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(nullable = false)
@@ -39,8 +38,6 @@ public class Goal implements Comparable<Goal> {
     @Positive
     private BigDecimal target;
 
-    @Column(nullable = false)
-    @NotNull
     private String description;
 
     @Column(nullable = false, name = "PRIORITY")
@@ -50,6 +47,7 @@ public class Goal implements Comparable<Goal> {
     @Column(name = "CREATION", updatable = false, nullable = false)
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Setter(AccessLevel.NONE)
     private ZonedDateTime createdOn;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -60,6 +58,7 @@ public class Goal implements Comparable<Goal> {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "USER_ID", nullable = false)
     @JsonBackReference
+    @Setter(AccessLevel.NONE)
     private User user;
 
     @Override
