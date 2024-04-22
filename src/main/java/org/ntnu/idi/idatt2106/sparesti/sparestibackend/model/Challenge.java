@@ -14,8 +14,13 @@ import org.hibernate.annotations.CreationTimestamp;
 @Embeddable
 @Data
 @EqualsAndHashCode
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
+@Entity
+@Table(name = "CHALLENGE")
 public class Challenge {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -36,15 +41,24 @@ public class Challenge {
     @NotNull
     private String description;
 
+    @Column(nullable = false, name = "CREATION")
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private ZonedDateTime createdOn;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime dueDate;
+    private ZonedDateTime completedOn;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime due;
 
     @Column(name = "TYPE")
     private String type;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     @Transient private BigDecimal completion;
 }

@@ -2,12 +2,17 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 
-@Mapper(componentModel = "spring", imports = ApplicationUtil.class)
+@Mapper(
+        componentModel = "spring",
+        imports = ApplicationUtil.class,
+        unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ChallengeMapper {
 
     ChallengeMapper INSTANCE = Mappers.getMapper(ChallengeMapper.class);
@@ -22,5 +27,6 @@ public interface ChallengeMapper {
             target = "completion",
             expression =
                     "java(ApplicationUtil.percent(challengeDTO.getSaved(),challengeDTO.getTarget()))")
-    Challenge toEntity(ChallengeDTO challengeDTO);
+    @Mapping(target = "id", source = "challengeDTO.id")
+    Challenge toEntity(ChallengeDTO challengeDTO, User user);
 }

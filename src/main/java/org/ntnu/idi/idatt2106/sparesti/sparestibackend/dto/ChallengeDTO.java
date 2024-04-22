@@ -14,6 +14,7 @@ import lombok.Value;
 @Builder
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChallengeDTO implements Serializable {
+    @NotNull Long id;
     @NotNull @NotEmpty @NotBlank String title;
     @NotNull @PositiveOrZero BigDecimal saved;
     @NotNull @PositiveOrZero BigDecimal target;

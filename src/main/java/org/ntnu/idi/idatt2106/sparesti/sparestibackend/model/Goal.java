@@ -12,12 +12,16 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TITLE"})})
+@Entity
+@Table(name = "GOAL")
 public class Goal implements Comparable<Goal> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -42,6 +46,7 @@ public class Goal implements Comparable<Goal> {
     @NotNull
     private Long priority;
 
+    @Column(name = "CREATION")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private ZonedDateTime createdOn;
@@ -50,6 +55,10 @@ public class Goal implements Comparable<Goal> {
     private ZonedDateTime due;
 
     @Transient @PositiveOrZero private BigDecimal completion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     @Override
     public int compareTo(Goal goal) {

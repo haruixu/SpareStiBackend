@@ -6,6 +6,7 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 
 @Mapper(
@@ -24,5 +25,6 @@ public interface GoalMapper {
     @Mapping(
             target = "completion",
             expression = "java( ApplicationUtil.percent(goalDTO.getSaved(), goalDTO.getTarget()) )")
-    Goal toEntity(GoalDTO goalDTO);
+    @Mapping(target = "id", source = "goalDTO.id")
+    Goal toEntity(GoalDTO goalDTO, User user);
 }
