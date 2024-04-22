@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -56,8 +57,9 @@ public class Goal implements Comparable<Goal> {
 
     @Transient @PositiveOrZero private BigDecimal completion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "USER_ID", nullable = false)
+    @JsonBackReference
     private User user;
 
     @Override
