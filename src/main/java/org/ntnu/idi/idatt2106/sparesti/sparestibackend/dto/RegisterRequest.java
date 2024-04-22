@@ -13,11 +13,10 @@ import lombok.*;
  * @version 1.0
  * @since 17.4.24
  */
-@Value
-public class RegisterRequest implements Serializable {
-    @NotNull @NotBlank @NotEmpty String firstName;
-    @NotNull @NotBlank @NotEmpty String lastName;
-    @NotNull @NotBlank @NotEmpty String username;
-    @NotNull @NotBlank @NotEmpty String password;
-    @NotNull @NotBlank @NotEmpty String email;
-}
+public record RegisterRequest(
+        @NotNull @NotBlank @NotEmpty String firstName,
+        @NotNull @NotBlank @NotEmpty String lastName,
+        @NotNull @NotBlank @NotEmpty String username,
+        @NotNull @NotBlank @NotEmpty String password,
+        @NotNull @NotBlank @NotEmpty String email)
+        implements Serializable {}

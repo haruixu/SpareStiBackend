@@ -50,39 +50,38 @@ public class AuthenticationService {
      */
     public LoginRegisterResponse register(RegisterRequest request)
             throws BadInputException, UserAlreadyExistsException {
-        if (!(isUsernameValid(request.getUsername()))) {
+        if (!(isUsernameValid(request.username()))) {
             throw new BadInputException(
                     "The username can only contain letters, numbers and underscore, "
                             + "with the first character being a letter. "
                             + "The length must be between 3 and 30 characters");
         }
-        if (!isEmailValid(request.getEmail())) {
+        if (!isEmailValid(request.email())) {
             throw new BadInputException("The email address is invalid.");
         }
-        if (!isNameValid(request.getFirstName())) {
+        if (!isNameValid(request.firstName())) {
             throw new BadInputException(
-                    "The first name: '" + request.getFirstName() + "' is invalid.");
+                    "The first name: '" + request.firstName() + "' is invalid.");
         }
-        if (!isNameValid(request.getLastName())) {
-            throw new BadInputException(
-                    "The last name: '" + request.getLastName() + "' is invalid.");
+        if (!isNameValid(request.lastName())) {
+            throw new BadInputException("The last name: '" + request.lastName() + "' is invalid.");
         }
-        if (userService.userExistsByUsername(request.getUsername())) {
+        if (userService.userExistsByUsername(request.username())) {
             throw new UserAlreadyExistsException(
-                    "User with username: " + request.getUsername() + " already exists");
+                    "User with username: " + request.username() + " already exists");
         }
-        if (userService.userExistByEmail(request.getEmail())) {
+        if (userService.userExistByEmail(request.email())) {
             throw new UserAlreadyExistsException(
-                    "User with email: " + request.getEmail() + " already exists");
+                    "User with email: " + request.email() + " already exists");
         }
-        if (!isPasswordStrong(request.getPassword())) {
+        if (!isPasswordStrong(request.password())) {
             throw new BadInputException(
                     "Password must be at least 8 characters long, include numbers, upper and lower"
                             + " case letters, and at least one special character");
         }
 
         logger.info("Creating user");
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.password());
         User user = RegisterMapper.INSTANCE.toEntity(request, Role.USER, encodedPassword);
         logger.info("Saving user");
         userService.save(user);
@@ -154,18 +153,17 @@ public class AuthenticationService {
      * @throws BadInputException if no user has a matching username or password
      */
     public LoginRegisterResponse login(AuthenticationRequest request) throws BadInputException {
-        if (!userService.userExistsByUsername(request.getUsername())
+        if (!userService.userExistsByUsername(request.username())
                 || !matches(
-                        request.getPassword(),
-                        userService.findUserByUsername(request.getUsername()).getPassword())) {
+                        request.password(),
+                        userService.findUserByUsername(request.username()).getPassword())) {
             throw new BadInputException("Username or password is incorrect");
         }
 
         logger.info("Setting authentication context");
         manager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()));
-        User user = userService.findUserByUsername(request.getUsername());
+                new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+        User user = userService.findUserByUsername(request.username());
         System.out.println("Generating tokens");
         String jwtAccessToken = jwtService.generateToken(user, 5);
         String jwtRefreshToken = jwtService.generateToken(user, 30);
