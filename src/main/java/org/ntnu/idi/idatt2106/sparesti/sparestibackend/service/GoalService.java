@@ -19,10 +19,7 @@ public class GoalService {
     private final GoalRepository goalRepository;
 
     public GoalDTO findUserGoal(Long id, User user) {
-        return GoalMapper.INSTANCE.toDTO(
-                goalRepository
-                        .findByIdAndUser(id, user)
-                        .orElseThrow(() -> new GoalNotFoundException(id)));
+        return GoalMapper.INSTANCE.toDTO(findGoalByIdAndUser(id, user));
     }
 
     public Page<GoalDTO> getUserGoals(User user, Pageable pageable) {
@@ -34,14 +31,20 @@ public class GoalService {
                 goalRepository.save(GoalMapper.INSTANCE.toEntity(goalDTO, user)));
     }
 
-    public GoalDTO update(GoalDTO goalDTO) {
-        Goal currentGoal = findGoalById(goalDTO.id());
+    public GoalDTO update(Long id, GoalDTO goalDTO, User user) {
+        Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));
     }
 
-    private Goal findGoalById(Long id) {
-        return goalRepository.findById(id).orElseThrow(() -> new GoalNotFoundException(id));
+    /**
+     * Helper method
+     * @param id
+     * @param user
+     * @return
+     */
+    private Goal findGoalByIdAndUser(Long id, User user) {
+        return goalRepository.findByIdAndUser(id, user).orElseThrow(() -> new GoalNotFoundException(id));
     }
 
     public void deleteUserGoal(Long id, User user) {

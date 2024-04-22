@@ -75,15 +75,16 @@ public class GoalController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GoalDTO> updateUserGoal(
+            @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @Valid @RequestBody GoalDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
-        logger.info("Received PUT request for goal {}", goalDTO);
+        logger.info("Received PUT request for goal with id {} with request body {}", id, goalDTO);
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(goalService.update(goalDTO));
+        return ResponseEntity.ok(goalService.update(id, goalDTO, user));
     }
 
     @DeleteMapping("/{id}")

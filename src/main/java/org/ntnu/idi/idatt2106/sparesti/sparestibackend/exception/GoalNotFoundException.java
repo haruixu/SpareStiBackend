@@ -2,6 +2,6 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception;
 
 public class GoalNotFoundException extends RuntimeException {
     public GoalNotFoundException(Long id) {
-        super("Goal with id '" + id + "' not found");
+        super("Goal with id '" + id + "' not found for current user");
     }
 }
