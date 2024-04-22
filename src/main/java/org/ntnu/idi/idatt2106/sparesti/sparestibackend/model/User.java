@@ -52,7 +52,7 @@ public class User implements UserDetails {
 
     @Setter @Embedded private UserConfig userConfig;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @SortNatural
     private final Set<Goal> goals = new TreeSet<>();
 
