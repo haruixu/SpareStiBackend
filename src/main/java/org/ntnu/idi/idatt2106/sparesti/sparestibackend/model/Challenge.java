@@ -6,19 +6,20 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Data
-@EqualsAndHashCode
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "CHALLENGE")
 public class Challenge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(nullable = false)
@@ -36,13 +37,12 @@ public class Challenge {
     @Positive
     private BigDecimal target;
 
-    @Column(nullable = false)
-    @NotNull
     private String description;
 
     @Column(nullable = false, name = "CREATION", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
+    @Setter(AccessLevel.NONE)
     private ZonedDateTime createdOn;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -57,6 +57,7 @@ public class Challenge {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
+    @Setter(AccessLevel.NONE)
     private User user;
 
     @Transient private BigDecimal completion;

@@ -8,6 +8,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputExcepti
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +38,6 @@ public class GoalController {
     private final UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final UserDetailsService userDetailsService;
 
     // TODO: Finne aktive og inaktive mål i request param
     @GetMapping
@@ -67,7 +66,7 @@ public class GoalController {
             BindingResult bindingResult) {
         logger.info("Received POST request for goal with id {}", goalDTO.id());
         if (bindingResult.hasErrors()) {
-            throw new BadInputException("Fields in the body cannot be null, blank or empty");
+            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
         logger.info("Trying to save goal");

@@ -17,36 +17,40 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
 
-    public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable) {
+    public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable)
+            throws ChallengeNotFoundException {
         return challengeRepository.findByUser(user, pageable).map(ChallengeMapper.INSTANCE::toDTO);
     }
 
-    public ChallengeDTO save(ChallengeDTO challengeDTO, User user) {
+    public ChallengeDTO save(ChallengeDTO challengeDTO, User user)
+            throws ChallengeNotFoundException {
         Challenge newChallenge = ChallengeMapper.INSTANCE.toEntity(challengeDTO, user);
         Challenge persistedChallenge = challengeRepository.save(newChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
 
-    public ChallengeDTO updateChallenge(ChallengeDTO challengeDTO, User user) {
+    public ChallengeDTO updateChallenge(ChallengeDTO challengeDTO, User user)
+            throws ChallengeNotFoundException {
         Challenge challenge = privateGetChallenge(challengeDTO.id(), user);
         Challenge updatedChallenge = ChallengeMapper.INSTANCE.updateEntity(challenge, challengeDTO);
         Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
 
-    public ChallengeDTO getChallenge(Long challengeId, User user) {
+    public ChallengeDTO getChallenge(Long challengeId, User user)
+            throws ChallengeNotFoundException {
         return ChallengeMapper.INSTANCE.toDTO(privateGetChallenge(challengeId, user));
     }
 
-    public void deleteChallenge(ChallengeDTO challengeDTO, User user) {}
+    public void deleteChallenge(Long challengeId, User user) throws ChallengeNotFoundException {
+        Challenge challenge = privateGetChallenge(challengeId, user);
+        challengeRepository.delete(challenge);
+    }
 
     private Challenge privateGetChallenge(Long challengeId, User user) {
 
         return challengeRepository
                 .findByIdAndUser(challengeId, user)
-                .orElseThrow(
-                        () ->
-                                new ChallengeNotFoundException(
-                                        "Challenge for with id: " + challengeId + "was not found"));
+                .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
     }
 }
