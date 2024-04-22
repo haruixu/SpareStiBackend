@@ -34,7 +34,7 @@ public class GoalService {
                 goalRepository.save(GoalMapper.INSTANCE.toEntity(goalDTO, user)));
     }
 
-    public GoalDTO update(GoalDTO goalDTO, User user) {
+    public GoalDTO update(GoalDTO goalDTO) {
         Goal currentGoal = findGoalById(goalDTO.id());
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));

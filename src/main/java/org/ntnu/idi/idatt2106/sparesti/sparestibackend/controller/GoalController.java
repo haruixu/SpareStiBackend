@@ -83,7 +83,7 @@ public class GoalController {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(goalService.update(goalDTO, user));
+        return ResponseEntity.ok(goalService.update(goalDTO));
     }
 
     @DeleteMapping("/{id}")
