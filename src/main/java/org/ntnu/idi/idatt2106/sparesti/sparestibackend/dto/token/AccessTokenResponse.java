@@ -13,7 +13,5 @@ import lombok.*;
  * @version 1.0
  * @since 17.4.24
  */
-@Value
-public class AccessTokenResponse implements Serializable {
-    @NotNull @NotEmpty @NotBlank String accessToken;
-}
+public record AccessTokenResponse(@NotNull @NotEmpty @NotBlank String accessToken)
+        implements Serializable {}
