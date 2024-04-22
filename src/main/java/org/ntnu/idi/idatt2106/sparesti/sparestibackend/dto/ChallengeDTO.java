@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Value;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge}
@@ -21,5 +20,5 @@ public class ChallengeDTO implements Serializable {
     @NotNull @PositiveOrZero BigDecimal completion;
     @NotNull @NotEmpty @NotBlank String description;
     @PastOrPresent ZonedDateTime createdOn;
-    @NotNull ChallengeType type;
+    @NotNull String type;
 }
