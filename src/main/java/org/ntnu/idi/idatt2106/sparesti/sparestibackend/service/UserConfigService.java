@@ -16,20 +16,27 @@ public class UserConfigService {
 
     private final UserRepository userRepository;
 
-    public UserConfigDTO getUserConfig(Long id)
+    public UserConfigDTO getUserConfig(String username)
             throws UserNotFoundException, ConfigNotFoundException {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        User user =
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() -> new UserNotFoundException(username));
 
         if (user.getUserConfig() == null) {
-            throw new ConfigNotFoundException("No user config found for user with id " + id);
+            throw new ConfigNotFoundException(
+                    "No user config found for user with username: '" + username + "'");
         }
 
         return UserConfigMapper.INSTANCE.toDTO(user.getUserConfig());
     }
 
-    public UserConfigDTO updateUserConfig(Long id, UserConfigDTO request)
+    public UserConfigDTO createUserConfig(String username, UserConfigDTO request)
             throws UserNotFoundException {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        User user =
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() -> new UserNotFoundException(username));
 
         UserConfig newConfig = UserConfigMapper.INSTANCE.toEntity(request);
 

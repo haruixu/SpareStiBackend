@@ -1,17 +1,20 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("users/{id}/config")
+@RequestMapping("users/me/config")
 public class UserConfigController {
 
     private final UserConfigService userConfigService;
@@ -21,18 +24,24 @@ public class UserConfigController {
     }
 
     @GetMapping
-    public ResponseEntity<UserConfigDTO> getUserConfig(@PathVariable("id") Long id)
+    public ResponseEntity<UserConfigDTO> getUserConfig(
+            @AuthenticationPrincipal UserDetails userDetails)
             throws UserNotFoundException, ConfigNotFoundException {
-        UserConfigDTO userConfig = userConfigService.getUserConfig(id);
+        UserConfigDTO userConfig = userConfigService.getUserConfig(userDetails.getUsername());
         return ResponseEntity.ok(userConfig);
     }
 
     @PostMapping
     public ResponseEntity<UserConfigDTO> postUserConfig(
-            @NotNull @PathVariable("id") Long userId,
-            @Valid @RequestBody UserConfigDTO userConfigDTO)
-            throws UserNotFoundException {
-        UserConfigDTO newConfig = userConfigService.updateUserConfig(userId, userConfigDTO);
+            @Valid @RequestBody UserConfigDTO userConfigDTO,
+            BindingResult bindingResult,
+            @AuthenticationPrincipal UserDetails userDetails)
+            throws UserNotFoundException, BadInputException {
+        if (bindingResult.hasErrors()) {
+            throw new BadInputException("Fields in the body cannot be null, blank or empty");
+        }
+        UserConfigDTO newConfig =
+                userConfigService.createUserConfig(userDetails.getUsername(), userConfigDTO);
         return ResponseEntity.ok(newConfig);
     }
 }
