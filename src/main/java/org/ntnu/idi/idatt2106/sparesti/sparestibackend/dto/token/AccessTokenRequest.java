@@ -1,10 +1,19 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
+import lombok.*;
 
-@AllArgsConstructor
-@Data
-public class AccessTokenRequest {
-    private String refreshToken;
+/**
+ * DTO used when requesting for renewing access token
+ *
+ * @author Harry L.X & Lars M.L.N
+ * @version 1.0
+ * @since 17.4.24
+ */
+@Value
+public class AccessTokenRequest implements Serializable {
+    @NotNull @NotBlank @NotEmpty String refreshToken;
 }

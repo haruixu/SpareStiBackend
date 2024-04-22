@@ -8,22 +8,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SortNatural;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "USERS")
+@Getter
+@AllArgsConstructor
+@Table(name = "\"USER\"")
 public class User implements UserDetails {
 
     @Id
@@ -38,8 +35,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @NaturalId private String username;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    private String username;
 
+    @Setter
     @NotNull
     @Column(nullable = false)
     private String password;
@@ -50,15 +51,13 @@ public class User implements UserDetails {
     @Email
     private String email;
 
-    @Embedded private UserConfig userConfig;
+    @Setter @Embedded private UserConfig userConfig;
 
-    @ElementCollection
+    @OneToMany(mappedBy = "user")
     @SortNatural
-    @CollectionTable(name = "GOAL")
     private final Set<Goal> goals = new TreeSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "CHALLENGE")
+    @OneToMany(mappedBy = "user")
     private final Set<Challenge> challenges = new HashSet<>();
 
     @ElementCollection

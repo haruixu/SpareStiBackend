@@ -1,19 +1,23 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ * DTO used when registering a new user
+ *
+ * @author Harry L.X & Lars M.L.N
+ * @version 1.0
+ * @since 17.4.24
+ */
+@Value
 public class RegisterRequest implements Serializable {
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String password;
-    private String email;
+    @NotNull @NotBlank @NotEmpty String firstName;
+    @NotNull @NotBlank @NotEmpty String lastName;
+    @NotNull @NotBlank @NotEmpty String username;
+    @NotNull @NotBlank @NotEmpty String password;
+    @NotNull @NotBlank @NotEmpty String email;
 }

@@ -13,22 +13,43 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+/**
+ * Serviced responsible for business logic related to JWT tokens
+ *
+ * @author Harry L.X & Lars M.L.N
+ * @version 1.0
+ * @since 17.4.24
+ */
 @Service
 public class JWTService {
 
     private final SecretKey key;
 
+    /**
+     * Constructs an instance of the class that creates the key for signing tokens
+     */
     public JWTService() {
-        byte[] keyBytes =
-                Base64.getDecoder()
-                        .decode("32fa266d3e3e7e22167a7da202a1be8967e762cbd0ff0bebeb0fce28a49dc4d5");
+        byte[] keyBytes = Base64.getDecoder().decode(System.getenv("SECRET_KEY"));
         this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
+    /**
+     * Wrapper method for generating JWT token
+     * @param userDetails User information
+     * @param expirationTimeMinutes Expiration time of token
+     * @return Generated token
+     */
     public String generateToken(UserDetails userDetails, long expirationTimeMinutes) {
         return generateToken(new HashMap<>(), userDetails, expirationTimeMinutes);
     }
 
+    /**
+     * Generates JWT token
+     * @param extraClaims Map of extra claims
+     * @param userDetails User info
+     * @param expirationTimeMinutes Expiration time for token
+     * @return JWT token
+     */
     public String generateToken(
             Map<String, Object> extraClaims, UserDetails userDetails, long expirationTimeMinutes) {
         return Jwts.builder()
@@ -43,6 +64,11 @@ public class JWTService {
                 .compact();
     }
 
+    /**
+     * Extracts the subject (username) from JWT token
+     * @param token JWT token
+     * @return The username
+     */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -81,10 +107,20 @@ public class JWTService {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
+    /**
+     * Checks if token is expired
+     * @param token JWT token
+     * @return True, if token is expired.
+     */
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    /**
+     * Extracts expiration data from JWT token
+     * @param token JWT token
+     * @return Expiration date
+     */
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
