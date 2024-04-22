@@ -1,6 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -69,7 +71,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (JwtException | ServletException e) {
             String responseMsg = "Invalid or expired JWT token";
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().write(responseMsg);

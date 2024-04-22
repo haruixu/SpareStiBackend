@@ -12,7 +12,7 @@ import lombok.Value;
 @Value
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoalDTO implements Serializable {
-    @NotNull Long id;
+    Long id;
     @NotNull @NotEmpty @NotBlank String title;
     @NotNull @PositiveOrZero BigDecimal saved;
     @NotNull @Positive BigDecimal target;
