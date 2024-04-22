@@ -83,8 +83,8 @@ public class GoalMapperTest {
         assertEquals(target, goal.getTarget());
         assertEquals(completion, goal.getCompletion());
         assertEquals(description, goal.getDescription());
-        assertEquals(createdOn, goal.getCreatedOn());
         assertEquals(due, goal.getDue());
         assertEquals(1L, goal.getPriority().longValue());
+        assertEquals(user, goal.getUser());
     }
 }
