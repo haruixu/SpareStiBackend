@@ -60,7 +60,7 @@ public class GoalController {
             @Valid @RequestBody GoalDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
-        logger.info("Received POST request for goal with id {}", goalDTO.getId());
+        logger.info("Received POST request for goal with id {}", goalDTO.id());
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
         }

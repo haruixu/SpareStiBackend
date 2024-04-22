@@ -29,45 +29,45 @@ public class ChangePasswordRequestService {
 
     public void sendForgotPasswordEmail(ChangePasswordRequestRequest request)
             throws MessagingException {
-        if (!isEmailValid(request.getEmail())) {
+        if (!isEmailValid(request.email())) {
             throw new BadInputException("The email address is invalid.");
         }
-        if (!userService.userExistByEmail(request.getEmail())) {
+        if (!userService.userExistByEmail(request.email())) {
             return;
         }
 
         UUID uniqueKey = UUID.randomUUID();
         String encodedUniqueKey = passwordEncoder.encode(uniqueKey.toString());
 
-        save(request.getEmail(), encodedUniqueKey);
+        save(request.email(), encodedUniqueKey);
 
         try {
-            sendEmail(request.getEmail(), uniqueKey.toString());
+            sendEmail(request.email(), uniqueKey.toString());
         } catch (MessagingException e) {
             throw new MessagingException("Server error");
         }
     }
 
     public void resetPassword(ResetPasswordRequest request) {
-        if (!changePasswordRequestExistsByUserID(request.getUserID())) {
+        if (!changePasswordRequestExistsByUserID(request.userID())) {
             return;
         }
         if (!isLessThan24HoursAgo(
                 changePasswordRequestRepository
-                        .findChangePasswordRequestByUserID(request.getUserID())
+                        .findChangePasswordRequestByUserID(request.userID())
                         .get()
                         .getTime())) {
             return;
         }
-        if (!isPasswordStrong(request.getNewPassword())) {
+        if (!isPasswordStrong(request.newPassword())) {
             throw new BadInputException(
                     "Password must be at least 8 characters long, include numbers, upper and lower"
                             + " case letters, and at least one special character");
         }
         if (passwordEncoder.matches(
-                request.getResetID(),
-                changePasswordRequestRepository.findIdByUserId(request.getUserID()).get())) {
-            userService.updatePassword(request.getUserID(), request.getNewPassword());
+                request.resetID(),
+                changePasswordRequestRepository.findIdByUserId(request.userID()).get())) {
+            userService.updatePassword(request.userID(), request.newPassword());
         }
     }
 
