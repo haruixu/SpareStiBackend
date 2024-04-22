@@ -1,11 +1,12 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigResponse;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class UserConfigService {
 
     private final UserRepository userRepository;
 
-    public UserConfigResponse getUserConfig(Long id)
+    public UserConfigDTO getUserConfig(Long id)
             throws UserNotFoundException, ConfigNotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
@@ -23,6 +24,18 @@ public class UserConfigService {
             throw new ConfigNotFoundException("No user config found for user with id " + id);
         }
 
-        return UserConfigMapper.INSTANCE.toUserConfigResponse(user.getUserConfig());
+        return UserConfigMapper.INSTANCE.toDTO(user.getUserConfig());
+    }
+
+    public UserConfigDTO updateUserConfig(Long id, UserConfigDTO request)
+            throws UserNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        UserConfig newConfig = UserConfigMapper.INSTANCE.toEntity(request);
+
+        user.setUserConfig(newConfig);
+        userRepository.save(user);
+
+        return UserConfigMapper.INSTANCE.toDTO(newConfig);
     }
 }

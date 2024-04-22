@@ -19,4 +19,5 @@ public class GoalDTO implements Serializable {
     @NotNull @NotEmpty @NotBlank String description;
     @NotNull @PositiveOrZero Long priority;
     @Past ZonedDateTime createdOn;
+    @Future ZonedDateTime due;
 }

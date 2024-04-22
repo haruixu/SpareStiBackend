@@ -11,7 +11,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
  */
 @Value
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserConfigResponse implements Serializable {
+public class UserConfigDTO implements Serializable {
     @NotNull Role role;
     @NotNull ChallengeConfigDTO challengeConfig;
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import lombok.Data;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType;
 
 @Embeddable
 @Data
@@ -13,9 +12,8 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.ChallengeType
         name = "CHALLENGETYPE_CONFIG")
 public class ChallengeTypeConfig {
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "TYPE")
-    private ChallengeType type;
+    private String type;
 
     /**
      * How much a user spends on this challenge type in a week
