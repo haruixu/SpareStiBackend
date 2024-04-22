@@ -13,7 +13,5 @@ import lombok.*;
  * @version 1.0
  * @since 17.4.24
  */
-@Value
-public class AccessTokenRequest implements Serializable {
-    @NotNull @NotBlank @NotEmpty String refreshToken;
-}
+public record AccessTokenRequest(@NotNull @NotBlank @NotEmpty String refreshToken)
+        implements Serializable {}

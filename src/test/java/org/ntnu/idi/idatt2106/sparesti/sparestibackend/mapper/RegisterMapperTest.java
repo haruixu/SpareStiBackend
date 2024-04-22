@@ -18,11 +18,11 @@ public class RegisterMapperTest {
 
         User user = RegisterMapper.INSTANCE.toEntity(request, Role.USER, "encodedPassword");
 
-        assertEquals(request.getFirstName(), user.getFirstName());
-        assertEquals(request.getLastName(), user.getLastName());
-        assertEquals(request.getUsername(), user.getUsername());
-        assertNotEquals(request.getPassword(), user.getPassword());
-        assertEquals(request.getEmail(), user.getEmail());
+        assertEquals(request.firstName(), user.getFirstName());
+        assertEquals(request.lastName(), user.getLastName());
+        assertEquals(request.username(), user.getUsername());
+        assertNotEquals(request.password(), user.getPassword());
+        assertEquals(request.email(), user.getEmail());
         assertEquals(0, Role.USER.compareTo(user.getUserConfig().getRole()));
         assertNull(user.getUserConfig().getChallengeConfig());
     }
@@ -35,8 +35,7 @@ public class RegisterMapperTest {
         LoginRegisterResponse response =
                 RegisterMapper.INSTANCE.toDTO(user, accessToken, refreshToken);
 
-        assertEquals(user.getId(), response.getUserId());
-        assertEquals(accessToken, response.getAccessToken());
-        assertEquals(refreshToken, response.getRefreshToken());
+        assertEquals(accessToken, response.accessToken());
+        assertEquals(refreshToken, response.refreshToken());
     }
 }
