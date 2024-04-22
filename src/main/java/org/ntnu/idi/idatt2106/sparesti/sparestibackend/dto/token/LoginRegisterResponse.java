@@ -15,7 +15,6 @@ import lombok.*;
  */
 @Value
 public class LoginRegisterResponse implements Serializable {
-    @NotNull Long userId;
     @NotNull @NotBlank @NotEmpty String accessToken;
     @NotNull @NotBlank @NotEmpty String refreshToken;
 }
