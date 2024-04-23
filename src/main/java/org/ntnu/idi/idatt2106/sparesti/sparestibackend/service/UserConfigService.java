@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeConfigNotFoundException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeTypeConfigNotFoundException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ConfigNotFoundException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeTypeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserConfigMapper;
@@ -32,6 +29,10 @@ public class UserConfigService {
                     "No user config found for user with username: '" + username + "'");
         }
 
+        if (!challengeConfigExists(user)) {
+            user.getUserConfig().setChallengeConfig(null);
+        }
+
         return UserConfigMapper.INSTANCE.toDTO(user.getUserConfig());
     }
 
@@ -49,6 +50,11 @@ public class UserConfigService {
     public ChallengeConfigDTO createChallengeConfig(
             String username, ChallengeConfigDTO challengeConfigDTO) throws UserNotFoundException {
         User user = findUserByUsername(username);
+
+        if (challengeConfigExists(user)) {
+            throw new ChallengeConfigAlreadyExistsException(user.getId());
+        }
+
         ChallengeConfig challengeConfig =
                 ChallengeConfigMapper.INSTANCE.toEntity(challengeConfigDTO);
         user.getUserConfig().setChallengeConfig(challengeConfig);
@@ -64,7 +70,7 @@ public class UserConfigService {
         User user = findUserByUsername(username);
         ChallengeConfig challengeConfig = user.getUserConfig().getChallengeConfig();
 
-        if (challengeConfig == null) {
+        if (!challengeConfigExists(user)) {
             throw new ChallengeConfigNotFoundException(user.getId());
         }
 
@@ -79,6 +85,10 @@ public class UserConfigService {
             String username, ChallengeConfigDTO challengeConfigDTO) throws UserNotFoundException {
         User user = findUserByUsername(username);
 
+        if (!challengeConfigExists(user)) {
+            throw new ChallengeConfigNotFoundException(user.getId());
+        }
+
         ChallengeConfig challengeConfig = user.getUserConfig().getChallengeConfig();
         ChallengeConfig updatedChallengeConfig =
                 ChallengeConfigMapper.INSTANCE.updateEntity(challengeConfig, challengeConfigDTO);
@@ -91,6 +101,11 @@ public class UserConfigService {
     public ChallengeTypeConfigDTO createChallengeTypeConfig(
             String username, ChallengeTypeConfigDTO challengeTypeConfigDTO) {
         User user = findUserByUsername(username);
+
+        if (getConfig(challengeTypeConfigDTO.type(), user) != null) {
+            throw new ChallengeTypeConfigAlreadyExistsException(
+                    user.getId(), challengeTypeConfigDTO.type());
+        }
 
         ChallengeTypeConfig newConfig =
                 ChallengeTypeConfigMapper.INSTANCE.toEntity(challengeTypeConfigDTO);
@@ -106,47 +121,46 @@ public class UserConfigService {
         final User user = findUserByUsername(username);
         final String type = challengeTypeConfigDTO.type();
 
-        ChallengeTypeConfig oldConfig =
-                user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
-                        .filter(config -> config.getType().equalsIgnoreCase(type))
-                        .findFirst()
-                        .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
+        ChallengeTypeConfig oldConfig = getConfig(type, user);
 
         user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().remove(oldConfig);
         ChallengeTypeConfig updatedConfig =
                 ChallengeTypeConfigMapper.INSTANCE.updateEntity(oldConfig, challengeTypeConfigDTO);
-        // maybe we have to do the latter
-        // user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().remove(oldConfig);
-        // user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().add(updatedConfig);
+
         userRepository.save(user);
         return ChallengeTypeConfigMapper.INSTANCE.toDTO(updatedConfig);
     }
 
     public ChallengeTypeConfigDTO getChallengeTypeConfig(String type, String username) {
         User user = findUserByUsername(username);
-        ChallengeTypeConfig config =
-                user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
-                        .filter(_config -> _config.getType().equalsIgnoreCase(type))
-                        .findFirst()
-                        .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
+        ChallengeTypeConfig config = getConfig(type, user);
         return ChallengeTypeConfigMapper.INSTANCE.toDTO(config);
     }
 
     public void deleteChallengeTypeConfig(String type, String username)
             throws UserNotFoundException, ChallengeTypeConfigNotFoundException {
         User user = findUserByUsername(username);
-        ChallengeTypeConfig config =
-                user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
-                        .filter(_config -> _config.getType().equalsIgnoreCase(type))
-                        .findFirst()
-                        .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
+        ChallengeTypeConfig config = getConfig(type, user);
 
         user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().remove(config);
+        userRepository.save(user);
+    }
+
+    private boolean challengeConfigExists(User user) {
+        ChallengeConfig config = user.getUserConfig().getChallengeConfig();
+        return config.getExperience() != null || config.getMotivation() != null;
     }
 
     private User findUserByUsername(String username) throws UserNotFoundException {
         return userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    private ChallengeTypeConfig getConfig(String type, User user) {
+        return user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
+                .filter(_config -> _config.getType().equalsIgnoreCase(type))
+                .findFirst()
+                .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
     }
 }
