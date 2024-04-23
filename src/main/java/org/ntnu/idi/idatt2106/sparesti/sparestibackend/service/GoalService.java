@@ -95,5 +95,6 @@ public class GoalService {
             long priority = (long) i + 1;
             activeGoals.get(i).setPriority(priority);
         }
+        goalRepository.saveAll(activeGoals);
     }
 }

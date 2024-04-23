@@ -264,7 +264,37 @@ public class GoalIntegrationTest {
     @Test
     @WithMockUser
     void testSetCompleted() throws Exception {
-        // TODO: fgjør dettne
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
+
+        // Verify that no completed goals exist yet
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(0)));
+
+        // Set completedOn value
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/users/me/goals/1/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        // Verify goal was completed
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
     }
 
     @Test
