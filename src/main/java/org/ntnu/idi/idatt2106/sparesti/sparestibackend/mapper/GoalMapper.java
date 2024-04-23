@@ -8,8 +8,8 @@ import org.mapstruct.Mappings;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -27,7 +27,7 @@ public interface GoalMapper {
     @Mapping(
             target = "completion",
             expression = "java( ApplicationUtil.percent(goal.getSaved(), goal.getTarget()) )")
-    GoalDTO toDTO(Goal goal);
+    GoalResponseDTO toDTO(Goal goal);
 
     // from create or update dto
     @Mappings({
@@ -45,7 +45,9 @@ public interface GoalMapper {
     @Mappings({
         @Mapping(target = "user", ignore = true),
         @Mapping(target = "id", ignore = true),
-        @Mapping(target = "createdOn", ignore = true)
+        @Mapping(target = "completion", ignore = true),
+        @Mapping(target = "createdOn", ignore = true),
+        @Mapping(target = "completedOn", ignore = true)
     })
     Goal updateEntity(@MappingTarget Goal goal, GoalUpdateDTO goalDTO);
 }

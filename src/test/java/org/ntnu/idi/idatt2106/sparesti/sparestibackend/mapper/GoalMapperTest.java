@@ -6,8 +6,8 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
@@ -55,7 +55,7 @@ public class GoalMapperTest {
                         completion,
                         completedOn,
                         user);
-        GoalDTO dto = GoalMapper.INSTANCE.toDTO(goal);
+        GoalResponseDTO dto = GoalMapper.INSTANCE.toDTO(goal);
         assertEquals(title, dto.title());
         assertEquals(saved, dto.saved());
         assertEquals(target, dto.target());
@@ -74,13 +74,11 @@ public class GoalMapperTest {
         BigDecimal saved = new BigDecimal(0);
         BigDecimal target = new BigDecimal(2);
         BigDecimal completion = new BigDecimal(0);
-        ZonedDateTime createdOn = ZonedDateTime.now();
-        ZonedDateTime completedOn = ZonedDateTime.now();
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
         GoalCreateDTO dto =
-                new GoalCreateDTO(title, saved, target, completion, description, 1L, due);
+                new GoalCreateDTO(title, saved, target, description, 1L, due);
         Goal goal = GoalMapper.INSTANCE.toEntity(dto, user);
         assertEquals(title, goal.getTitle());
         assertEquals(saved, goal.getSaved());
@@ -91,4 +89,6 @@ public class GoalMapperTest {
         assertEquals(1L, goal.getPriority().longValue());
         assertEquals(user, goal.getUser());
     }
+
+    // TOOD: update
 }

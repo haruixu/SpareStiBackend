@@ -3,8 +3,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -44,7 +44,7 @@ public class GoalController {
 
     // TODO: Finne aktive og inaktive mål i request param
     @GetMapping
-    public ResponseEntity<Page<GoalDTO>> getUserGoals(
+    public ResponseEntity<Page<GoalResponseDTO>> getUserGoals(
             Pageable pageable,
             @AuthenticationPrincipal UserDetails userDetails,
             @Parameter(name = "Flag for whether getting active or inactive saving goals")
@@ -58,7 +58,7 @@ public class GoalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GoalDTO> getUserGoal(
+    public ResponseEntity<GoalResponseDTO> getUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Received GET request for goal with id {}", id);
@@ -68,7 +68,7 @@ public class GoalController {
     }
 
     @PostMapping
-    public ResponseEntity<GoalDTO> createUserGoal(
+    public ResponseEntity<GoalResponseDTO> createUserGoal(
             @Valid @RequestBody GoalCreateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
@@ -82,7 +82,7 @@ public class GoalController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GoalDTO> updateUserGoal(
+    public ResponseEntity<GoalResponseDTO> updateUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @Valid @RequestBody GoalUpdateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -104,5 +104,14 @@ public class GoalController {
         goalService.deleteUserGoal(id, user);
         logger.info("Successfully deleted goal");
         return ResponseEntity.noContent().build();
+    }
+
+    // TODO: gjøre dette
+    @PutMapping("/{id}/completed")
+    public ResponseEntity<GoalResponseDTO> completeUserGoal(
+            @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        return null;
     }
 }
