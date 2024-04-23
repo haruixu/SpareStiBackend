@@ -29,8 +29,11 @@ public class GoalService {
     }
 
     public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) {
-        return GoalMapper.INSTANCE.toDTO(
-                goalRepository.save(GoalMapper.INSTANCE.toEntity(goalDTO, user)));
+        Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
+        long priority = getDefaultPriority(user);
+        goal.setPriority(priority);
+
+        return GoalMapper.INSTANCE.toDTO(goalRepository.save(goal));
     }
 
     public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
@@ -53,6 +56,10 @@ public class GoalService {
 
     public void deleteUserGoal(Long id, User user) {
         goalRepository.deleteByIdAndUser(id, user);
+    }
+
+    private long getDefaultPriority(User user) {
+        return user.getGoals().size() + 1;
     }
 
     // Brukt for å testeV
