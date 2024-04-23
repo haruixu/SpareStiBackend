@@ -18,11 +18,7 @@ public class UserConfigService {
 
     public UserConfigDTO getUserConfig(String username)
             throws UserNotFoundException, ConfigNotFoundException {
-        User user =
-                userRepository
-                        .findByUsername(username)
-                        .orElseThrow(() -> new UserNotFoundException(username));
-
+        User user = findUserByUsername(username);
         if (user.getUserConfig() == null) {
             throw new ConfigNotFoundException(
                     "No user config found for user with username: '" + username + "'");
@@ -33,16 +29,18 @@ public class UserConfigService {
 
     public UserConfigDTO createUserConfig(String username, UserConfigDTO request)
             throws UserNotFoundException {
-        User user =
-                userRepository
-                        .findByUsername(username)
-                        .orElseThrow(() -> new UserNotFoundException(username));
-
+        User user = findUserByUsername(username);
         UserConfig newConfig = UserConfigMapper.INSTANCE.toEntity(request);
 
         user.setUserConfig(newConfig);
         userRepository.save(user);
 
         return UserConfigMapper.INSTANCE.toDTO(newConfig);
+    }
+
+    private User findUserByUsername(String username) throws UserNotFoundException {
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
     }
 }
