@@ -1,10 +1,12 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.GoalNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
@@ -31,9 +33,16 @@ public class GoalService {
     public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) {
         Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
         long priority = getDefaultPriority(user);
+
+        if (priority > 10) throw new ActiveGoalLimitExceededException();
+
         goal.setPriority(priority);
 
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(goal));
+    }
+
+    private long getDefaultPriority(User user) {
+        return user.getGoals().size() + 1;
     }
 
     public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
@@ -54,16 +63,37 @@ public class GoalService {
                 .orElseThrow(() -> new GoalNotFoundException(id));
     }
 
+    public List<GoalResponseDTO> getActiveUserGoals(User user) {
+        return goalRepository.findAllByCompletedOnIsNullAndUser(user).stream()
+                .map(GoalMapper.INSTANCE::toDTO)
+                .toList();
+    }
+
+    public Page<GoalResponseDTO> getCompletedUserGoals(User user, Pageable pageable) {
+        return goalRepository
+                .findAllByCompletedOnIsNotNullAndUser(user, pageable)
+                .map(GoalMapper.INSTANCE::toDTO);
+    }
+
+    public GoalResponseDTO setCompleted(Long goalId, User user) {
+        Goal goal = findGoalByIdAndUser(goalId, user);
+        if (findGoalByIdAndUser(goalId, user).getCompletedOn() == null) {
+            goal.setCompletedOn(ZonedDateTime.now());
+        }
+        return GoalMapper.INSTANCE.toDTO(goalRepository.save(goal));
+    }
+
     public void deleteUserGoal(Long id, User user) {
         goalRepository.deleteByIdAndUser(id, user);
+        setNewPriorities(user);
     }
 
-    private long getDefaultPriority(User user) {
-        return user.getGoals().size() + 1;
-    }
-
-    // Brukt for å testeV
-    public List<Goal> getGoals() {
-        return goalRepository.findAll();
+    private void setNewPriorities(User user) {
+        List<Goal> activeGoals =
+                goalRepository.findAllByCompletedOnIsNullAndUserOrderByPriorityAsc(user);
+        for (int i = 0; i < activeGoals.size(); i++) {
+            long priority = (long) i + 1;
+            activeGoals.get(i).setPriority(priority);
+        }
     }
 }

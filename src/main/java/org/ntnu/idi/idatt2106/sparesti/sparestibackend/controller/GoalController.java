@@ -3,6 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,21 +43,35 @@ public class GoalController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // TODO: Finne aktive og inaktive mål i request param
     @GetMapping
     public ResponseEntity<Page<GoalResponseDTO>> getUserGoals(
-            Pageable pageable,
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Parameter(name = "Flag for whether getting active or inactive saving goals")
-                    @RequestParam(defaultValue = "true")
-                    boolean active) {
+            Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Received GET request for goals of user: {}", userDetails.getUsername());
-        logger.info("Finding active goals: {}", active);
         User user = userService.findUserByUsername(userDetails.getUsername());
         logger.info("Trying to get all user goals");
         return ResponseEntity.ok(goalService.getUserGoals(user, pageable));
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<GoalResponseDTO>> getActiveGoals(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("Received GET request for active goals of user: {}", userDetails.getUsername());
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        logger.info("Trying to get all active user goals");
+        return ResponseEntity.ok(goalService.getActiveUserGoals(user));
+    }
+
+    @GetMapping("/completed")
+    public ResponseEntity<Page<GoalResponseDTO>> getCompleteGoals(
+            Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
+        logger.info(
+                "Received GET request for complete goals of user: {}", userDetails.getUsername());
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        logger.info("Trying to get all complete user goals");
+        return ResponseEntity.ok(goalService.getCompletedUserGoals(user, pageable));
+    }
+
+    // TODO: Finne aktive og inaktive mål i request param
     @GetMapping("/{id}")
     public ResponseEntity<GoalResponseDTO> getUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
@@ -71,10 +85,14 @@ public class GoalController {
     @PostMapping
     public ResponseEntity<GoalResponseDTO> createUserGoal(
             @Valid @NotNull @RequestBody GoalCreateDTO goalDTO,
-            @AuthenticationPrincipal UserDetails userDetails,
-            BindingResult bindingResult) {
-        logger.info("Received POST request for goal {}", goalDTO);
+            BindingResult bindingResult,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        logger.info(
+                "Received POST request for goal {} under user {}",
+                goalDTO,
+                userDetails.getUsername());
         if (bindingResult.hasErrors()) {
+            logger.error(bindingResult.getAllErrors().toString());
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
@@ -86,8 +104,8 @@ public class GoalController {
     public ResponseEntity<GoalResponseDTO> updateUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @Valid @NotNull @RequestBody GoalUpdateDTO goalDTO,
-            @AuthenticationPrincipal UserDetails userDetails,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Received PUT request for goal with id {} with request body {}", id, goalDTO);
         if (bindingResult.hasErrors()) {
             throw new BadInputException("Fields in the body cannot be null, blank or empty");
@@ -95,6 +113,8 @@ public class GoalController {
         User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.ok(goalService.update(id, goalDTO, user));
     }
+
+    // TODO: PUT metode raw på /goals hvor en liste av goals sendes (for prioritet)
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserGoal(
@@ -107,12 +127,12 @@ public class GoalController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO: gjøre dette
     @PutMapping("/{id}/completed")
     public ResponseEntity<GoalResponseDTO> completeUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
-
-        return null;
+        logger.info("Received PUT request for completing a goal with id {}", id);
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        return ResponseEntity.ok(goalService.setCompleted(id, user));
     }
 }

@@ -90,7 +90,8 @@ public class GlobalExceptionHandler {
                 HttpRequestMethodNotSupportedException.class,
                 DataIntegrityViolationException.class,
                 MessagingException.class,
-                MethodArgumentNotValidException.class
+                MethodArgumentNotValidException.class,
+                ActiveGoalLimitExceededException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);

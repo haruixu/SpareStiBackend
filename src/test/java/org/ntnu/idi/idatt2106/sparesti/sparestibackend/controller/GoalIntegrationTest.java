@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,6 +87,7 @@ public class GoalIntegrationTest {
                         "testEmail@test.com");
         String registerJsonRequest = objectMapper.writeValueAsString(registerRequest);
 
+        // Post user
         mvc.perform(
                         MockMvcRequestBuilders.post("/auth/register")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,6 +116,7 @@ public class GoalIntegrationTest {
     @Test
     @WithMockUser
     void getAllGoals() throws Exception {
+        // Create goal
         mvc.perform(
                         MockMvcRequestBuilders.post("/users/me/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -121,6 +124,7 @@ public class GoalIntegrationTest {
                                 .content(jsonPostRequest))
                 .andExpect(status().isOk());
 
+        // Check goal has been added to goals
         mvc.perform(
                         MockMvcRequestBuilders.get("/users/me/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -193,6 +197,74 @@ public class GoalIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
+    void testGetActiveGoals() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
+
+        // Verify the newly posted goal is active
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/active")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        // Test completed size is 0
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(0)));
+    }
+
+    @Test
+    @WithMockUser
+    void testGetCompleteGoals() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
+
+        // Set completedOn value
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/users/me/goals/1/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/active")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    @WithMockUser
+    void testSetCompleted() throws Exception {
+        // TODO: fgjør dettne
     }
 
     @Test
