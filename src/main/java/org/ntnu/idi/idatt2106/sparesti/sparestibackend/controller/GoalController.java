@@ -71,7 +71,6 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getCompletedUserGoals(user, pageable));
     }
 
-    // TODO: Finne aktive og inaktive mål i request param
     @GetMapping("/{id}")
     public ResponseEntity<GoalResponseDTO> getUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,

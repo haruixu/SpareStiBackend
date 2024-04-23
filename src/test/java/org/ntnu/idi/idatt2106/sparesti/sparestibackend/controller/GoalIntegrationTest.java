@@ -12,9 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -42,10 +40,6 @@ public class GoalIntegrationTest {
 
     @Autowired private ObjectMapper objectMapper;
 
-    private GoalResponseDTO goalResponseDTO;
-
-    private GoalCreateDTO goalCreateDTO;
-
     private GoalUpdateDTO goalUpdateDTO;
 
     private String jsonPostRequest;
@@ -53,7 +47,6 @@ public class GoalIntegrationTest {
     private String jsonPutRequest;
 
     @Autowired private UserDetailsService userDetailsService;
-    @Autowired private GoalService goalService;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -61,7 +54,7 @@ public class GoalIntegrationTest {
 
         BigDecimal saved = new BigDecimal(0);
         BigDecimal target = new BigDecimal(1);
-        goalCreateDTO =
+        GoalCreateDTO goalCreateDTO =
                 new GoalCreateDTO(
                         "title", saved, target, "description", ZonedDateTime.now().plusDays(1));
         jsonPostRequest = objectMapper.writeValueAsString(goalCreateDTO);
