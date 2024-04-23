@@ -83,7 +83,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (JwtException | ServletException e) {
-            logger.error("Caught exception in filter");
+            logger.error("Caught exception in filter: {}", e.getMessage());
             String responseMsg = "Invalid or expired JWT token";
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(responseMsg);
