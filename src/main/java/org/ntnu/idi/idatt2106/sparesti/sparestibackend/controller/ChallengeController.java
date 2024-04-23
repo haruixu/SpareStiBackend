@@ -1,5 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +34,19 @@ public class ChallengeController {
     private final UserService userService;
     private final ChallengeService challengeService;
 
+    @Operation(
+            summary = "Get user challenges",
+            description = "Retrieve challenges associated with the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Challenges found"),
+                @ApiResponse(responseCode = "404", description = "Challenges or user not found")
+            })
     @GetMapping
     public ResponseEntity<Page<ChallengeDTO>> getUserChallenges(
-            Pageable pageable, @AuthenticationPrincipal UserDetails userDetails)
+            @Parameter(description = "Pageable object for pagination") Pageable pageable,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails)
             throws ChallengeNotFoundException, UserNotFoundException {
         log.info("Received GET request for challenges by username: {}", userDetails.getUsername());
         User user = getUser(userDetails);
@@ -42,9 +56,21 @@ public class ChallengeController {
         return ResponseEntity.ok(challenges);
     }
 
+    @Operation(
+            summary = "Get user challenge",
+            description = "Retrieve a specific challenge for the authenticated user by ID.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Challenge found"),
+                @ApiResponse(responseCode = "404", description = "Challenge or user not found")
+            })
     @GetMapping("/{id}")
     public ResponseEntity<ChallengeDTO> getUserChallenge(
-            @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id)
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails,
+            @Parameter(description = "ID of the challenge to retrieve", example = "123")
+                    @PathVariable
+                    Long id)
             throws ChallengeNotFoundException, UserNotFoundException {
         log.info("Received GET request for challenge with id: {}", id);
         User user = getUser(userDetails);
@@ -53,12 +79,23 @@ public class ChallengeController {
         return ResponseEntity.ok(retrievedChallenge);
     }
 
+    @Operation(
+            summary = "Create challenge",
+            description = "Creates a new challenge for the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Challenge created"),
+                @ApiResponse(responseCode = "404", description = "User not found"),
+                @ApiResponse(responseCode = "400", description = "Bad input")
+            })
     @PostMapping
     public ResponseEntity<ChallengeDTO> createChallenge(
-            @RequestBody @Valid ChallengeDTO challengeDTO,
-            @AuthenticationPrincipal UserDetails userDetails,
+            @Parameter(description = "Challenge details to create") @RequestBody @Valid
+                    ChallengeDTO challengeDTO,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails,
             BindingResult bindingResult)
-            throws ChallengeNotFoundException, UserNotFoundException {
+            throws ChallengeNotFoundException, UserNotFoundException, BadInputException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
@@ -70,12 +107,23 @@ public class ChallengeController {
         return ResponseEntity.ok(createdChallenge);
     }
 
+    @Operation(
+            summary = "Update challenge",
+            description = "Updates an existing challenge for the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Challenge updated"),
+                @ApiResponse(responseCode = "404", description = "Challenge or user not found"),
+                @ApiResponse(responseCode = "400", description = "Bad input")
+            })
     @PutMapping
     public ResponseEntity<ChallengeDTO> updateChallenge(
-            @RequestBody @Valid ChallengeDTO challengeDTO,
-            @AuthenticationPrincipal UserDetails userDetails,
+            @Parameter(description = "Updated challenge details") @RequestBody @Valid
+                    ChallengeDTO challengeDTO,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails,
             BindingResult bindingResult)
-            throws ChallengeNotFoundException, UserNotFoundException {
+            throws ChallengeNotFoundException, UserNotFoundException, BadInputException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
@@ -87,9 +135,20 @@ public class ChallengeController {
         return ResponseEntity.ok(updatedChallenge);
     }
 
+    @Operation(
+            summary = "Delete challenge",
+            description = "Deletes a specific challenge for the authenticated user by ID.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "204", description = "Challenge deleted"),
+                @ApiResponse(responseCode = "404", description = "Challenge or user not found")
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteChallenge(
-            @NotNull @PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails)
+            @Parameter(description = "ID of the challenge to delete") @NotNull @PathVariable
+                    Long id,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails)
             throws ChallengeNotFoundException, UserNotFoundException {
         log.info("Received DELETE request for challenge with id: {}", id);
         User user = getUser(userDetails);
@@ -98,7 +157,15 @@ public class ChallengeController {
         return ResponseEntity.noContent().build();
     }
 
-    private User getUser(UserDetails userDetails) throws UserNotFoundException {
+    /**
+     * Retrieves the user based on the UserDetails.
+     *
+     * @param userDetails The UserDetails object representing the authenticated user.
+     * @return The User object associated with the authenticated user.
+     * @throws UserNotFoundException If the user is not found.
+     */
+    private User getUser(@Parameter(hidden = true) UserDetails userDetails)
+            throws UserNotFoundException {
         return userService.findUserByUsername(userDetails.getUsername());
     }
 }

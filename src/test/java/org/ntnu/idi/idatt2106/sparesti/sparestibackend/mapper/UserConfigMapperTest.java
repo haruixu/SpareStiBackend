@@ -34,9 +34,9 @@ public class UserConfigMapperTest {
     public void testToDTO() {
 
         ChallengeConfig challengeConfig =
-                new ChallengeConfig(Experience.MIDDLE, Motivation.MIDDLE, null);
+                new ChallengeConfig(Experience.MEDIUM, Motivation.MEDIUM, null);
         ChallengeConfigDTO challengeConfigDTO =
-                new ChallengeConfigDTO(Experience.MIDDLE, Motivation.MIDDLE, null);
+                new ChallengeConfigDTO(Experience.MEDIUM, Motivation.MEDIUM, null);
 
         when(challengeConfigMapper.toDTO(challengeConfig)).thenReturn(challengeConfigDTO);
 
