@@ -45,14 +45,8 @@ public class ChallengeTypeConfigController {
 
     @GetMapping("/{type}")
     public ResponseEntity<ChallengeTypeConfigDTO> getChallengeTypeConfig(
-            @Valid @RequestParam String type,
-            @AuthenticationPrincipal UserDetails userDetails,
-            BindingResult bindingResult)
+            @PathVariable String type, @AuthenticationPrincipal UserDetails userDetails)
             throws ChallengeTypeConfigNotFoundException {
-
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
         ChallengeTypeConfigDTO config =
                 userConfigService.getChallengeTypeConfig(type, userDetails.getUsername());
         return ResponseEntity.ok(config);
@@ -96,17 +90,17 @@ public class ChallengeTypeConfigController {
             })
     @DeleteMapping("/{type}")
     public ResponseEntity<Void> deleteChallengeTypeConfig(
-            @Parameter(description = "Type of the challenge config to delete") @Valid @PathVariable
+            @Parameter(description = "Type of the challenge config to delete") @PathVariable
                     String type,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
-                    UserDetails userDetails,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
-
+                    UserDetails userDetails) {
+        log.info(
+                "Received delete request by '{}' for challenge type config {}",
+                userDetails.getUsername(),
+                type);
         userConfigService.deleteChallengeTypeConfig(type, userDetails.getUsername());
 
+        log.info("Successfully deleted challenge type config");
         return ResponseEntity.noContent().build();
     }
 }

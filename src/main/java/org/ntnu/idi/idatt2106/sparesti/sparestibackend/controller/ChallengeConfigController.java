@@ -48,9 +48,11 @@ public class ChallengeConfigController {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
+        log.info("Received request to create challenge config: {}", challengeConfigDTO);
         ChallengeConfigDTO newConfig =
                 userConfigService.createChallengeConfig(
                         userDetails.getUsername(), challengeConfigDTO);
+        log.info("Successfully created challenge config: {}", newConfig);
         return ResponseEntity.ok(newConfig);
     }
 
@@ -65,14 +67,13 @@ public class ChallengeConfigController {
     @GetMapping
     public ResponseEntity<ChallengeConfigDTO> getChallengeConfig(
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
-                    UserDetails userDetails,
-            BindingResult bindingResult)
+                    UserDetails userDetails)
             throws ChallengeConfigNotFoundException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
+        log.info(
+                "Received request to get challenge config for username: {}",
+                userDetails.getUsername());
         ChallengeConfigDTO config = userConfigService.getChallengeConfig(userDetails.getUsername());
-
+        log.info("Successfully retrieved challenge config: {}", config);
         return ResponseEntity.ok(config);
     }
 
@@ -93,6 +94,7 @@ public class ChallengeConfigController {
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
             throws ChallengeConfigNotFoundException, BadInputException {
+        log.info("Received request to update challenge config to: {}", challengeConfigDTO);
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
@@ -100,7 +102,7 @@ public class ChallengeConfigController {
         ChallengeConfigDTO updatedConfig =
                 userConfigService.updateChallengeConfig(
                         userDetails.getUsername(), challengeConfigDTO);
-
+        log.info("Successfully updated challenge config to: {}", updatedConfig);
         return ResponseEntity.ok(updatedConfig);
     }
 }
