@@ -3,16 +3,19 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import lombok.Data;
+import lombok.*;
 
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Table(
         uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "TYPE"})},
         name = "CHALLENGETYPE_CONFIG")
 public class ChallengeTypeConfig {
 
-    @Column(nullable = false, name = "TYPE")
+    @Column(nullable = false, name = "TYPE", unique = true, updatable = false)
+    @Setter(AccessLevel.NONE)
     private String type;
 
     /**

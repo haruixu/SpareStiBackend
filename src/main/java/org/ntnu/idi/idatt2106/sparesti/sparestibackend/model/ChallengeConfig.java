@@ -11,7 +11,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
+@Data
 @Table(
         uniqueConstraints = {
             @UniqueConstraint(columnNames = {"USER_ID", "EXPERIENCE", "MOTIVATION"})
@@ -29,5 +29,6 @@ public class ChallengeConfig {
 
     @ElementCollection
     @CollectionTable(name = "CHALLENGETYPE_CONFIG")
+    @Setter(AccessLevel.NONE)
     Set<ChallengeTypeConfig> challengeTypeConfigs = new HashSet<>();
 }
