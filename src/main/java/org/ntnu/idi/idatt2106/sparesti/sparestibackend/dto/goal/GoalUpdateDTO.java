@@ -13,7 +13,6 @@ public record GoalUpdateDTO(
         @NotEmpty @NotBlank String title,
         @PositiveOrZero BigDecimal saved,
         @Positive BigDecimal target,
-        @NotEmpty @NotBlank String description,
-        @PositiveOrZero Long priority,
+        String description,
         @Future ZonedDateTime due)
         implements Serializable {}
