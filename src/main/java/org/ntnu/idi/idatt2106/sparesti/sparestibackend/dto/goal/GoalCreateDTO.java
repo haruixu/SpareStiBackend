@@ -14,8 +14,6 @@ public record GoalCreateDTO(
         @NotNull @NotEmpty @NotBlank String title,
         @NotNull @PositiveOrZero BigDecimal saved,
         @NotNull @Positive BigDecimal target,
-        @NotNull @PositiveOrZero BigDecimal completion,
-        @NotNull @NotEmpty @NotBlank String description,
-        @NotNull @PositiveOrZero Long priority,
+        @NotNull String description,
         @Future ZonedDateTime due)
         implements Serializable {}

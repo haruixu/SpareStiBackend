@@ -190,7 +190,6 @@ public class AuthenticationService {
      * @throws UserNotFoundException If the tokens subject matches no existing username
      */
     public AccessTokenResponse refreshAccessToken(String bearerToken) throws UserNotFoundException {
-        // TODO: Add config class for handling MalformedJwtException
         String parsedRefreshToken = bearerToken.substring(7);
         User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
         String newJWTAccessToken = jwtService.generateToken(user, 5);

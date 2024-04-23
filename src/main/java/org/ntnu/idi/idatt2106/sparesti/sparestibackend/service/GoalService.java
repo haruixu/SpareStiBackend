@@ -2,8 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.GoalNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
@@ -20,20 +20,23 @@ public class GoalService {
 
     private final GoalRepository goalRepository;
 
-    public GoalDTO findUserGoal(Long id, User user) {
+    public GoalResponseDTO findUserGoal(Long id, User user) {
         return GoalMapper.INSTANCE.toDTO(findGoalByIdAndUser(id, user));
     }
 
-    public Page<GoalDTO> getUserGoals(User user, Pageable pageable) {
+    public Page<GoalResponseDTO> getUserGoals(User user, Pageable pageable) {
         return goalRepository.findAllByUser(user, pageable).map(GoalMapper.INSTANCE::toDTO);
     }
 
-    public GoalDTO save(GoalCreateDTO goalDTO, User user) {
-        return GoalMapper.INSTANCE.toDTO(
-                goalRepository.save(GoalMapper.INSTANCE.toEntity(goalDTO, user)));
+    public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) {
+        Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
+        long priority = getDefaultPriority(user);
+        goal.setPriority(priority);
+
+        return GoalMapper.INSTANCE.toDTO(goalRepository.save(goal));
     }
 
-    public GoalDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
+    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
         Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));
@@ -53,6 +56,10 @@ public class GoalService {
 
     public void deleteUserGoal(Long id, User user) {
         goalRepository.deleteByIdAndUser(id, user);
+    }
+
+    private long getDefaultPriority(User user) {
+        return user.getGoals().size() + 1;
     }
 
     // Brukt for å testeV
