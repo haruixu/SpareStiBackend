@@ -34,6 +34,7 @@ public interface GoalMapper {
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "createdOn", ignore = true),
         @Mapping(target = "completedOn", ignore = true),
+        @Mapping(target = "priority", ignore = true),
         @Mapping(
                 target = "completion",
                 expression = "java( ApplicationUtil.percent(goalDTO.saved(), goalDTO.target()) )")
@@ -47,7 +48,8 @@ public interface GoalMapper {
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "completion", ignore = true),
         @Mapping(target = "createdOn", ignore = true),
-        @Mapping(target = "completedOn", ignore = true)
+        @Mapping(target = "priority", ignore = true),
+        @Mapping(target = "completedOn", ignore = true),
     })
     Goal updateEntity(@MappingTarget Goal goal, GoalUpdateDTO goalDTO);
 }
