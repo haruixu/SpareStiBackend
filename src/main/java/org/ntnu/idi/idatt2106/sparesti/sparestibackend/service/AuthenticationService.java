@@ -83,7 +83,7 @@ public class AuthenticationService {
         logger.info("Creating user");
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = RegisterMapper.INSTANCE.toEntity(request, Role.USER, encodedPassword);
-        logger.info("Saving user");
+        logger.info("Saving user with username '{}'", user.getUsername());
         userService.save(user);
         logger.info("Generating tokens");
         String jwtAccessToken = jwtService.generateToken(user, 5);
