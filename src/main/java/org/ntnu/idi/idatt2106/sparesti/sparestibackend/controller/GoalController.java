@@ -132,6 +132,6 @@ public class GoalController {
             @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Received PUT request for completing a goal with id {}", id);
         User user = userService.findUserByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(goalService.setCompleted(id, user));
+        return ResponseEntity.ok(goalService.completeGoal(id, user));
     }
 }

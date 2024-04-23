@@ -12,7 +12,7 @@ services:
     healthcheck:
       test: ["CMD", 'mysqladmin', 'ping', '-h', 'db', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
       # Run health check <start_period> seconds after container start.
-      start_period: 16s
+      start_period: 18s
       # Proceeding checks are spaced by <interval> seconds
       interval: 5s
       # Fail check if it takes longer than 5

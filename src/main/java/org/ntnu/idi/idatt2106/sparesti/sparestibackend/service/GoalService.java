@@ -22,6 +22,8 @@ public class GoalService {
 
     private final GoalRepository goalRepository;
 
+    private static final int ACTIVE_GOAL_LIMIT = 10;
+
     public GoalResponseDTO findUserGoal(Long id, User user) {
         return GoalMapper.INSTANCE.toDTO(findGoalByIdAndUser(id, user));
     }
@@ -34,7 +36,7 @@ public class GoalService {
         Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
         long priority = getDefaultPriority(user);
 
-        if (priority > 10) throw new ActiveGoalLimitExceededException();
+        if (priority > ACTIVE_GOAL_LIMIT) throw new ActiveGoalLimitExceededException();
 
         goal.setPriority(priority);
 
@@ -75,12 +77,18 @@ public class GoalService {
                 .map(GoalMapper.INSTANCE::toDTO);
     }
 
-    public GoalResponseDTO setCompleted(Long goalId, User user) {
+    public GoalResponseDTO completeGoal(Long goalId, User user) {
+        Goal completedGoal = setCompleted(goalId, user);
+        setNewPriorities(user);
+        return GoalMapper.INSTANCE.toDTO(completedGoal);
+    }
+
+    private Goal setCompleted(Long goalId, User user) {
         Goal goal = findGoalByIdAndUser(goalId, user);
         if (findGoalByIdAndUser(goalId, user).getCompletedOn() == null) {
             goal.setCompletedOn(ZonedDateTime.now());
         }
-        return GoalMapper.INSTANCE.toDTO(goalRepository.save(goal));
+        return goalRepository.save(goal);
     }
 
     public void deleteUserGoal(Long id, User user) {
