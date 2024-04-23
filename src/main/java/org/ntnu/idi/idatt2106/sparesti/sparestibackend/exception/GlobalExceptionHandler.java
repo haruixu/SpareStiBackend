@@ -39,6 +39,7 @@ public class GlobalExceptionHandler {
      *            The exception to be logged.
      */
     private void logError(Exception ex) {
+        ex.printStackTrace();
         logger.error("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
     }
 
@@ -66,7 +67,11 @@ public class GlobalExceptionHandler {
             value = {
                 UserNotFoundException.class,
                 UsernameNotFoundException.class,
-                GoalNotFoundException.class
+                GoalNotFoundException.class,
+                ChallengeConfigNotFoundException.class,
+                ChallengeNotFoundException.class,
+                ChallengeTypeConfigNotFoundException.class,
+                ConfigNotFoundException.class
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
