@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public record GoalCreateDTO(
-        @NotNull @NotEmpty @NotBlank String title,
+        @NotEmpty @NotBlank String title,
         @NotNull @PositiveOrZero BigDecimal saved,
         @NotNull @Positive BigDecimal target,
         @NotNull String description,
