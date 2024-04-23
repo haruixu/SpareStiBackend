@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
