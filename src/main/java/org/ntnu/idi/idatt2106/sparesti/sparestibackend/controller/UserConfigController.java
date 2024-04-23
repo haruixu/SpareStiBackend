@@ -6,6 +6,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputExcepti
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +39,7 @@ public class UserConfigController {
             @AuthenticationPrincipal UserDetails userDetails)
             throws UserNotFoundException, BadInputException {
         if (bindingResult.hasErrors()) {
-            throw new BadInputException("Fields in the body cannot be null, blank or empty");
+            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
         UserConfigDTO newConfig =
                 userConfigService.createUserConfig(userDetails.getUsername(), userConfigDTO);
