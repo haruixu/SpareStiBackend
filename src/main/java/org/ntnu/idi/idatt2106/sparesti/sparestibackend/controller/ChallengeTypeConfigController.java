@@ -1,5 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,12 +58,23 @@ public class ChallengeTypeConfigController {
         return ResponseEntity.ok(config);
     }
 
+    @Operation(
+            summary = "Update challenge type config",
+            description = "Updates the challenge type config for the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Challenge type config updated"),
+                @ApiResponse(responseCode = "404", description = "Challenge type config not found"),
+                @ApiResponse(responseCode = "400", description = "Bad input")
+            })
     @PutMapping
     public ResponseEntity<ChallengeTypeConfigDTO> updateChallengeTypeConfig(
-            @Valid @RequestBody ChallengeTypeConfigDTO challengeTypeConfigDTO,
-            @AuthenticationPrincipal UserDetails userDetails,
+            @Parameter(description = "Updated challenge type config details") @Valid @RequestBody
+                    ChallengeTypeConfigDTO challengeTypeConfigDTO,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails,
             BindingResult bindingResult)
-            throws ChallengeTypeConfigNotFoundException {
+            throws ChallengeTypeConfigNotFoundException, BadInputException {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
@@ -71,10 +86,20 @@ public class ChallengeTypeConfigController {
         return ResponseEntity.ok(updatedConfig);
     }
 
+    @Operation(
+            summary = "Delete challenge type config",
+            description = "Deletes the challenge type config for the authenticated user by type.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "204", description = "Challenge type config deleted"),
+                @ApiResponse(responseCode = "404", description = "Challenge type config not found")
+            })
     @DeleteMapping("/{type}")
-    public ResponseEntity<ChallengeTypeConfigDTO> deleteChallengeTypeConfig(
-            @Valid @PathVariable String type,
-            @AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<Void> deleteChallengeTypeConfig(
+            @Parameter(description = "Type of the challenge config to delete") @Valid @PathVariable
+                    String type,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
