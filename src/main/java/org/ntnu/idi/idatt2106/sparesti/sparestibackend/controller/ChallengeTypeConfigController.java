@@ -39,6 +39,21 @@ public class ChallengeTypeConfigController {
         return ResponseEntity.ok(newConfig);
     }
 
+    @GetMapping("/{type}")
+    public ResponseEntity<ChallengeTypeConfigDTO> getChallengeTypeConfig(
+            @Valid @RequestParam String type,
+            @AuthenticationPrincipal UserDetails userDetails,
+            BindingResult bindingResult)
+            throws ChallengeTypeConfigNotFoundException {
+
+        if (bindingResult.hasErrors()) {
+            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
+        }
+        ChallengeTypeConfigDTO config =
+                userConfigService.getChallengeTypeConfig(type, userDetails.getUsername());
+        return ResponseEntity.ok(config);
+    }
+
     @PutMapping
     public ResponseEntity<ChallengeTypeConfigDTO> updateChallengeTypeConfig(
             @Valid @RequestBody ChallengeTypeConfigDTO challengeTypeConfigDTO,

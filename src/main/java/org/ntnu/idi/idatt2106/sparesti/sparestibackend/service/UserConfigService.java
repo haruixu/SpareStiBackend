@@ -122,6 +122,16 @@ public class UserConfigService {
         return ChallengeTypeConfigMapper.INSTANCE.toDTO(updatedConfig);
     }
 
+    public ChallengeTypeConfigDTO getChallengeTypeConfig(String type, String username) {
+        User user = findUserByUsername(username);
+        ChallengeTypeConfig config =
+                user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
+                        .filter(_config -> _config.getType().equalsIgnoreCase(type))
+                        .findFirst()
+                        .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
+        return ChallengeTypeConfigMapper.INSTANCE.toDTO(config);
+    }
+
     public void deleteChallengeTypeConfig(String type, String username)
             throws UserNotFoundException, ChallengeTypeConfigNotFoundException {
         User user = findUserByUsername(username);
