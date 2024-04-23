@@ -91,7 +91,6 @@ public class GoalController {
                 goalDTO,
                 userDetails.getUsername());
         if (bindingResult.hasErrors()) {
-            logger.error(bindingResult.getAllErrors().toString());
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
         User user = userService.findUserByUsername(userDetails.getUsername());
