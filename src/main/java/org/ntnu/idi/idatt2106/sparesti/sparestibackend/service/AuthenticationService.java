@@ -8,6 +8,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResp
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +83,7 @@ public class AuthenticationService {
         logger.info("Creating user");
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = RegisterMapper.INSTANCE.toEntity(request, Role.USER, encodedPassword);
-        logger.info("Saving user");
+        logger.info("Saving user with username '{}'", user.getUsername());
         userService.save(user);
         logger.info("Generating tokens");
         String jwtAccessToken = jwtService.generateToken(user, 5);
@@ -187,11 +187,9 @@ public class AuthenticationService {
      * Refreshes access token given a valid refresh token
      * @param bearerToken Stringified HTTP-header (Authorization-header)
      * @return Access token wrapper if the refresh token is valid
-     * @throws UsernameNotFoundException If the tokens subject matches no existing username
+     * @throws UserNotFoundException If the tokens subject matches no existing username
      */
-    public AccessTokenResponse refreshAccessToken(String bearerToken)
-            throws UsernameNotFoundException {
-        // TODO: Add config class for handling MalformedJwtException
+    public AccessTokenResponse refreshAccessToken(String bearerToken) throws UserNotFoundException {
         String parsedRefreshToken = bearerToken.substring(7);
         User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
         String newJWTAccessToken = jwtService.generateToken(user, 5);

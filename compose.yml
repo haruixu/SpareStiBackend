@@ -11,8 +11,8 @@ services:
       - mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", 'mysqladmin', 'ping', '-h', 'db', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
-      # Run health check <start_interval> seconds after container start.
-      start_interval: 9s
+      # Run health check <start_period> seconds after container start.
+      start_period: 18s
       # Proceeding checks are spaced by <interval> seconds
       interval: 5s
       # Fail check if it takes longer than 5

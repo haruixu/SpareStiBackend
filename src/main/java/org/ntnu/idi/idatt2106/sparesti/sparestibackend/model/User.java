@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -53,8 +54,11 @@ public class User implements UserDetails {
 
     @Setter @Embedded private UserConfig userConfig;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @SortNatural
+    @JsonManagedReference
     private final Set<Goal> goals = new TreeSet<>();
 
     @OneToMany(mappedBy = "user")
