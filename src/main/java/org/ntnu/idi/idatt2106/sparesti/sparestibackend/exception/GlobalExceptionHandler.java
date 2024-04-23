@@ -50,7 +50,12 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object already exists.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = {UserAlreadyExistsException.class})
+    @ExceptionHandler(
+            value = {
+                UserAlreadyExistsException.class,
+                ChallengeConfigAlreadyExistsException.class,
+                ChallengeTypeConfigAlreadyExistsException.class
+            })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
@@ -71,7 +76,7 @@ public class GlobalExceptionHandler {
                 ChallengeConfigNotFoundException.class,
                 ChallengeNotFoundException.class,
                 ChallengeTypeConfigNotFoundException.class,
-                ConfigNotFoundException.class
+                ConfigNotFoundException.class,
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
