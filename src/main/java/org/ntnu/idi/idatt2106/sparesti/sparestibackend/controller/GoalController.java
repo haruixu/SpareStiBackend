@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
@@ -69,7 +70,7 @@ public class GoalController {
 
     @PostMapping
     public ResponseEntity<GoalResponseDTO> createUserGoal(
-            @Valid @RequestBody GoalCreateDTO goalDTO,
+            @Valid @NotNull @RequestBody GoalCreateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
         logger.info("Received POST request for goal {}", goalDTO);
@@ -84,7 +85,7 @@ public class GoalController {
     @PutMapping("/{id}")
     public ResponseEntity<GoalResponseDTO> updateUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
-            @Valid @RequestBody GoalUpdateDTO goalDTO,
+            @Valid @NotNull @RequestBody GoalUpdateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails,
             BindingResult bindingResult) {
         logger.info("Received PUT request for goal with id {} with request body {}", id, goalDTO);
