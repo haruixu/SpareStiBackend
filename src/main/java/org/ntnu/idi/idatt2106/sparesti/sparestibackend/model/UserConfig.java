@@ -19,5 +19,5 @@ public class UserConfig {
     @NotNull
     private Role role;
 
-    private ChallengeConfig challengeConfig;
+    @Setter private ChallengeConfig challengeConfig;
 }
