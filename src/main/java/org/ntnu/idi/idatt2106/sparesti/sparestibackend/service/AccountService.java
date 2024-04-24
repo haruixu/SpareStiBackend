@@ -1,9 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountNotFoundException;
@@ -33,15 +32,11 @@ public class AccountService {
         return accountDTO;
     }
 
-    public Map<String, Object> findUserAccounts(User user) {
-        Map<String, Object> accounts = new HashMap<>();
-        accounts.put("SAVING", user.getSavingAccount());
-        accounts.put("SPENDING", user.getSpendingAccount());
-
-        return accounts;
+    public AccountResponseDTO findUserAccounts(User user) {
+        return new AccountResponseDTO(user.getSavingAccount(), user.getSpendingAccount());
     }
 
-    public Map<String, Object> updateAccount(AccountUpdateDTO accountUpdateDTO, User user) {
+    public AccountResponseDTO updateAccount(AccountUpdateDTO accountUpdateDTO, User user) {
         if (accountUpdateDTO.accountType() == AccountType.SAVING
                 && user.getSavingAccount() != null) {
             Account updatedAccount =
