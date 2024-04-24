@@ -233,7 +233,7 @@ public class GoalIntegrationTest {
 
         // Set completedOn value
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals/1/completed")
+                        MockMvcRequestBuilders.put("/users/me/goals/1/complete")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -275,7 +275,7 @@ public class GoalIntegrationTest {
 
         // Set completedOn value
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals/1/completed")
+                        MockMvcRequestBuilders.put("/users/me/goals/1/complete")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -314,6 +314,28 @@ public class GoalIntegrationTest {
                 .andExpect(jsonPath("$.saved").value(1))
                 .andExpect(jsonPath("$.target").value(2))
                 .andExpect(jsonPath("$.description").value("newDescription"));
+    }
+
+    @Test
+    @WithMockUser
+    void testPutGoalWithTitleIsNull() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
+
+        jsonPutRequest = objectMapper.writeValueAsString(goalUpdateDTO);
+        GoalUpdateDTO goalUpdateDTO = new GoalUpdateDTO(null, null, null, null, null);
+        jsonPutRequest = objectMapper.writeValueAsString(goalUpdateDTO);
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPutRequest))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
