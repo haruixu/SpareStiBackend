@@ -37,7 +37,7 @@ public class GoalMapperTest {
         String title = "title";
         BigDecimal saved = new BigDecimal(0);
         BigDecimal target = new BigDecimal(2);
-        BigDecimal completion = new BigDecimal(0);
+        BigDecimal completion = new BigDecimal("0.000");
         ZonedDateTime createdOn = ZonedDateTime.now();
         ZonedDateTime completedOn = ZonedDateTime.now();
         ZonedDateTime due = ZonedDateTime.now();
