@@ -2,6 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,14 @@ public class UserConfigController {
             description = "Retrieve the configuration of the currently authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "User configuration found"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "User configuration found",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserConfigDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "User or configuration not found")
             })
     @GetMapping
