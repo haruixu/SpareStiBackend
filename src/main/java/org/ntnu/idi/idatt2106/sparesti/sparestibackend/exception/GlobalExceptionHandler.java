@@ -7,6 +7,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -45,6 +46,10 @@ public class GlobalExceptionHandler {
         logger.error("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
     }
 
+    private String createErrorResponseMsg(Exception ex) {
+        return ex.getClass().getSimpleName() + ": " + ex.getMessage();
+    }
+
     /**
      * Handle exceptions related to existing objects.
      *
@@ -60,7 +65,8 @@ public class GlobalExceptionHandler {
             })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        String msg = createErrorResponseMsg(ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(msg);
     }
 
     /**
@@ -82,7 +88,8 @@ public class GlobalExceptionHandler {
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        String msg = createErrorResponseMsg(ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
     }
 
     /**
@@ -104,11 +111,14 @@ public class GlobalExceptionHandler {
                 MessagingException.class,
                 MethodArgumentNotValidException.class,
                 ActiveGoalLimitExceededException.class,
-                ChallengeAlreadyCompletedException.class
+                ChallengeAlreadyCompletedException.class,
+                ActiveGoalLimitExceededException.class,
+                NotActiveGoalException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        String msg = createErrorResponseMsg(ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
     }
 
     /**

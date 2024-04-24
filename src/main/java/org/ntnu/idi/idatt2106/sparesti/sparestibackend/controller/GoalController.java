@@ -293,7 +293,51 @@ public class GoalController {
         return ResponseEntity.ok(goalService.update(id, goalDTO, user));
     }
 
-    // TODO: PUT metode raw på /goals hvor en liste av goals sendes (for prioritet)
+    @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
+    @Operation(
+            summary = "Updates the priorities of active goals",
+            description =
+                    "Updates the priorities of active goals based on their IDs. All the ID's must"
+                            + " be active goals that belong to the authenticated user)",
+            responses = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successful update of goal priorities",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = GoalResponseDTO.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "The request body is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "One or more of the goals could not be found",
+                        content = @Content)
+            })
+    @PutMapping
+    public ResponseEntity<List<GoalResponseDTO>> updatePriorities(
+            @Valid @RequestBody List<Long> goalIds,
+            BindingResult bindingResult,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("Received PUT request for updating priorities of goals");
+        if (bindingResult.hasErrors()) {
+            throw new BadInputException("Invalid request body");
+        }
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        logger.info("Trying to update priorities");
+        return ResponseEntity.ok(goalService.updatePriorities(goalIds, user));
+    }
 
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
@@ -360,7 +404,7 @@ public class GoalController {
                         description = "The goal could not be found",
                         content = @Content)
             })
-    @PutMapping("/{id}/completed")
+    @PutMapping("/{id}/complete")
     public ResponseEntity<GoalResponseDTO> completeUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {

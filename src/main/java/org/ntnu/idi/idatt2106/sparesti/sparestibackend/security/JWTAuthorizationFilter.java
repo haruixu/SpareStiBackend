@@ -78,9 +78,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     authToken.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    logger.info("Successfully authenticated user");
+                    logger.info("Set authentication context to current user");
                 }
             }
+            logger.info("Continue filter chain");
             filterChain.doFilter(request, response);
         } catch (JwtException | ServletException e) {
             // TODO: remove e.getMessage() before delivery, only for debugging
