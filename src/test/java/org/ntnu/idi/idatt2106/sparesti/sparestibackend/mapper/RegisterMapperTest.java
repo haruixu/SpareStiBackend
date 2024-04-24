@@ -3,7 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;

@@ -2,7 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;

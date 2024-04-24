@@ -1,9 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeTypeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.UserConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeTypeConfigMapper;

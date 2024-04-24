@@ -1,7 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
