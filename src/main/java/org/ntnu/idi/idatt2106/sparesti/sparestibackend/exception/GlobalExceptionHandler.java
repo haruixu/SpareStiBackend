@@ -48,7 +48,8 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object already exists.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = {UserAlreadyExistsException.class})
+    @ExceptionHandler(
+            value = {UserAlreadyExistsException.class, AccountAlreadyExistsException.class})
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
@@ -61,7 +62,7 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object does not exist.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = {UsernameNotFoundException.class})
+    @ExceptionHandler(value = {UsernameNotFoundException.class, AccountNotFoundException.class})
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -83,7 +84,7 @@ public class GlobalExceptionHandler {
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
                 DataIntegrityViolationException.class,
-                MessagingException.class
+                MessagingException.class,
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
