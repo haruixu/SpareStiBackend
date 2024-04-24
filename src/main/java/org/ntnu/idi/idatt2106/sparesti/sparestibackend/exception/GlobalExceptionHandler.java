@@ -57,11 +57,11 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(
-        value = {
-            UserAlreadyExistsException.class,
-            ChallengeConfigAlreadyExistsException.class,
-            ChallengeTypeConfigAlreadyExistsException.class
-        })
+            value = {
+                UserAlreadyExistsException.class,
+                ChallengeConfigAlreadyExistsException.class,
+                ChallengeTypeConfigAlreadyExistsException.class
+            })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         String msg = createErrorResponseMsg(ex);
@@ -76,15 +76,15 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(
-        value = {
-            UserNotFoundException.class,
-            UsernameNotFoundException.class,
-            GoalNotFoundException.class,
-            ChallengeConfigNotFoundException.class,
-            ChallengeNotFoundException.class,
-            ChallengeTypeConfigNotFoundException.class,
-            ConfigNotFoundException.class,
-        })
+            value = {
+                UserNotFoundException.class,
+                UsernameNotFoundException.class,
+                GoalNotFoundException.class,
+                ChallengeConfigNotFoundException.class,
+                ChallengeNotFoundException.class,
+                ChallengeTypeConfigNotFoundException.class,
+                ConfigNotFoundException.class,
+            })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         String msg = createErrorResponseMsg(ex);
@@ -99,18 +99,18 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(
-        value = {
-            IllegalArgumentException.class,
-            HttpMessageNotReadableException.class,
-            BadInputException.class,
-            NullPointerException.class,
-            MissingServletRequestParameterException.class,
-            HttpRequestMethodNotSupportedException.class,
-            DataIntegrityViolationException.class,
-            MessagingException.class,
-            MethodArgumentNotValidException.class,
-            ActiveGoalLimitExceededException.class
-        })
+            value = {
+                IllegalArgumentException.class,
+                HttpMessageNotReadableException.class,
+                BadInputException.class,
+                NullPointerException.class,
+                MissingServletRequestParameterException.class,
+                HttpRequestMethodNotSupportedException.class,
+                DataIntegrityViolationException.class,
+                MessagingException.class,
+                MethodArgumentNotValidException.class,
+                ActiveGoalLimitExceededException.class
+            })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
         String msg = createErrorResponseMsg(ex);
@@ -127,7 +127,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
     public ResponseEntity<String> handleConstraintViolationException(
-        ConstraintViolationException ex) {
+            ConstraintViolationException ex) {
         List<String> errors = new ArrayList<>();
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             errors.add(violation.getMessage());
