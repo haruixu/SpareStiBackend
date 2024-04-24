@@ -10,10 +10,7 @@ public record ResetPasswordRequest(
                 @NotEmpty(message = "Reset ID cannot be empty")
                 @NotBlank(message = "Reset ID cannot be blank")
                 String resetID,
-        @NotNull(message = "User ID cannot be null")
-                @NotEmpty(message = "User ID cannot be empty")
-                @NotBlank(message = "User ID cannot be blank")
-                Long userID,
+        @NotNull(message = "User ID cannot be null") Long userID,
         @NotNull(message = "New password cannot be null")
                 @NotEmpty(message = "New password cannot be empty")
                 @NotBlank(message = "New password cannot be blank")
