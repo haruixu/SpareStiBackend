@@ -75,9 +75,9 @@ public class GoalMapperTest {
     public void toEntity() {
 
         String title = "title";
-        BigDecimal saved = new BigDecimal(0);
+        BigDecimal saved = new BigDecimal(1);
         BigDecimal target = new BigDecimal(2);
-        BigDecimal completion = new BigDecimal(0);
+        BigDecimal completion = new BigDecimal(50);
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 

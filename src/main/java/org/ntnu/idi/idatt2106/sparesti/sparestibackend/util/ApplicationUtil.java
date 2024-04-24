@@ -12,6 +12,6 @@ public class ApplicationUtil {
     public static String BINDING_RESULT_ERROR = "Fields in the body cannot be null, blank or empty";
 
     public static BigDecimal percent(BigDecimal quot, BigDecimal divisor) {
-        return quot.divide(divisor, roundingMode).multiply(ONE_HUNDRED);
+        return quot.multiply(ONE_HUNDRED).divide(divisor, roundingMode);
     }
 }
