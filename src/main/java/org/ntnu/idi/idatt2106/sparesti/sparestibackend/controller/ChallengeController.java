@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping("users/me/challenges")
+@Tag(name = "Challenges", description = "Endpoints for managing user challenges")
 @RequiredArgsConstructor
 public class ChallengeController {
 
@@ -56,6 +58,42 @@ public class ChallengeController {
         Page<ChallengeDTO> challenges = challengeService.getChallengesByUser(user, pageable);
         log.info("Retrieved challenges: {}", challenges);
         return ResponseEntity.ok(challenges);
+    }
+
+    @Operation(
+            summary = "Get active challenges",
+            description = "Retrieve active challenges associated with the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Active challenges found"),
+                @ApiResponse(responseCode = "404", description = "User not found")
+            })
+    @GetMapping("/active")
+    public ResponseEntity<Page<ChallengeDTO>> getActiveChallenges(
+            Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
+        log.info(
+                "Received GET request for active challenges by user: {}",
+                userDetails.getUsername());
+        User user = userService.findUserByUsername(userDetails.getUsername());
+        return ResponseEntity.ok(challengeService.getActiveChallenges(user, pageable));
+    }
+
+    @Operation(
+            summary = "Get completed challenges",
+            description = "Retrieve completed challenges associated with the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Completed challenges found"),
+                @ApiResponse(responseCode = "404", description = "User not found")
+            })
+    @GetMapping("/completed")
+    public ResponseEntity<Page<ChallengeDTO>> getCompletedChallenges(
+            Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
+        log.info(
+                "Received GET request for completed challenges by user: {}",
+                userDetails.getUsername());
+        User user = getUser(userDetails);
+        return ResponseEntity.ok(challengeService.getCompletedChallenges(user, pageable));
     }
 
     @Operation(
@@ -110,6 +148,32 @@ public class ChallengeController {
     }
 
     @Operation(
+            summary = "Complete challenge",
+            description = "Marks a challenge as completed for the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Challenge completed"),
+                @ApiResponse(responseCode = "404", description = "Challenge not found")
+            })
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<ChallengeDTO> completeChallenge(
+            @Parameter(description = "ID of the challenge to complete") @PathVariable Long id,
+            @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
+                    UserDetails userDetails) {
+        log.info(
+                "Received request by user '{}' to complete challenge with id: {}",
+                userDetails.getUsername(),
+                id);
+        User user = getUser(userDetails);
+        ChallengeDTO completedChallenge = challengeService.completeChallenge(id, user);
+        log.info(
+                "Completion status of challenge with id {} set to: {}",
+                completedChallenge.id(),
+                completedChallenge.completedOn());
+        return ResponseEntity.ok(completedChallenge);
+    }
+
+    @Operation(
             summary = "Update challenge",
             description = "Updates an existing challenge for the authenticated user.")
     @ApiResponses(
@@ -120,7 +184,7 @@ public class ChallengeController {
             })
     @PutMapping("/{id}")
     public ResponseEntity<ChallengeDTO> updateChallenge(
-            @PathVariable Long id,
+            @Parameter(description = "ID of the challenge to update") @PathVariable Long id,
             @Parameter(description = "Updated challenge details") @RequestBody @Valid
                     ChallengeUpdateDTO challengeUpdateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
@@ -135,7 +199,7 @@ public class ChallengeController {
         ChallengeDTO updatedChallenge =
                 challengeService.updateChallenge(id, challengeUpdateDTO, user);
 
-        log.info("Updated challenge to: {}", challengeUpdateDTO);
+        log.info("Updated challenge to: {}", updatedChallenge);
         return ResponseEntity.ok(updatedChallenge);
     }
 
