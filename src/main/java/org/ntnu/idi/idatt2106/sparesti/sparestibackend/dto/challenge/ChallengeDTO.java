@@ -14,6 +14,7 @@ public record ChallengeDTO(
         @NotNull @NotEmpty @NotBlank String title,
         @NotNull @PositiveOrZero BigDecimal saved,
         @NotNull @PositiveOrZero BigDecimal target,
+        @NotNull @PositiveOrZero BigDecimal perPurchase,
         @NotNull @PositiveOrZero BigDecimal completion,
         @NotNull @NotEmpty @NotBlank String description,
         @Past ZonedDateTime createdOn,

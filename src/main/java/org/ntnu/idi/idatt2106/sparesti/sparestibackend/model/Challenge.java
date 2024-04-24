@@ -37,6 +37,11 @@ public class Challenge {
     @Positive
     private BigDecimal target;
 
+    @Column(nullable = false)
+    @NotNull
+    @Positive
+    private BigDecimal perPurchase;
+
     private String description;
 
     @Column(nullable = false, name = "CREATION", updatable = false)
