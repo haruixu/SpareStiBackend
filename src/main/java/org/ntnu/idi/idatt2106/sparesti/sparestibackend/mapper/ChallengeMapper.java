@@ -2,7 +2,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
@@ -20,12 +22,15 @@ public interface ChallengeMapper {
 
     @Mappings({
         @Mapping(target = "id", ignore = true),
+        @Mapping(target = "createdOn", ignore = true),
+        @Mapping(target = "completedOn", ignore = true),
         @Mapping(
                 target = "completion",
                 expression =
-                        "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
+                        "java(ApplicationUtil.percent(challengeCreateDTO.saved(),"
+                                + " challengeCreateDTO.target()))")
     })
-    Challenge toEntity(ChallengeDTO challengeDTO, User user);
+    Challenge toEntity(ChallengeCreateDTO challengeCreateDTO, User user);
 
     @Mappings({
         @Mapping(target = "user", ignore = true),
@@ -37,5 +42,5 @@ public interface ChallengeMapper {
                 expression =
                         "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
     })
-    Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeDTO challengeDTO);
+    Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO);
 }

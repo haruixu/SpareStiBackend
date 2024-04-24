@@ -40,7 +40,7 @@ public class GoalMapperTest {
         String title = "title";
         BigDecimal saved = new BigDecimal(0);
         BigDecimal target = new BigDecimal(2);
-        BigDecimal completion = new BigDecimal(0);
+        BigDecimal completion = new BigDecimal("0.000");
         ZonedDateTime createdOn = ZonedDateTime.now();
         ZonedDateTime completedOn = ZonedDateTime.now();
         ZonedDateTime due = ZonedDateTime.now();
@@ -78,9 +78,9 @@ public class GoalMapperTest {
     public void toEntity() {
 
         String title = "title";
-        BigDecimal saved = new BigDecimal(0);
-        BigDecimal target = new BigDecimal(2);
-        BigDecimal completion = new BigDecimal(0);
+        BigDecimal saved = new BigDecimal(1);
+        BigDecimal target = new BigDecimal(1000);
+        BigDecimal completion = new BigDecimal("0.100");
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 

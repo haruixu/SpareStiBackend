@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeTypeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeTypeConfigNotFoundException;
@@ -37,6 +37,10 @@ public class ChallengeTypeConfigController {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
+        log.info(
+                "Creating challenge type config: {} for user: {}",
+                challengeTypeConfigDTO,
+                userDetails.getUsername());
         ChallengeTypeConfigDTO newConfig =
                 userConfigService.createChallengeTypeConfig(
                         userDetails.getUsername(), challengeTypeConfigDTO);
@@ -47,8 +51,13 @@ public class ChallengeTypeConfigController {
     public ResponseEntity<ChallengeTypeConfigDTO> getChallengeTypeConfig(
             @PathVariable String type, @AuthenticationPrincipal UserDetails userDetails)
             throws ChallengeTypeConfigNotFoundException {
+        log.info(
+                "Getting challenge type config for user '{}' and type {}",
+                userDetails.getUsername(),
+                type);
         ChallengeTypeConfigDTO config =
                 userConfigService.getChallengeTypeConfig(type, userDetails.getUsername());
+        log.info("Successfully retrieved challenge type config '{}'", config);
         return ResponseEntity.ok(config);
     }
 
@@ -73,9 +82,16 @@ public class ChallengeTypeConfigController {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
 
+        log.info(
+                "Received request to update challenge type config for user: {}",
+                userDetails.getUsername());
         ChallengeTypeConfigDTO updatedConfig =
                 userConfigService.updateChallengeTypeConfig(
                         userDetails.getUsername(), challengeTypeConfigDTO);
+        log.info(
+                "Successfully updated challenge type config for user: {} to {}",
+                userDetails.getUsername(),
+                updatedConfig);
 
         return ResponseEntity.ok(updatedConfig);
     }

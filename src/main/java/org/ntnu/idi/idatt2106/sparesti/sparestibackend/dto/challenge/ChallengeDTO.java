@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -14,6 +14,7 @@ public record ChallengeDTO(
         @NotNull @NotEmpty @NotBlank String title,
         @NotNull @PositiveOrZero BigDecimal saved,
         @NotNull @PositiveOrZero BigDecimal target,
+        @NotNull @Positive BigDecimal perPurchase,
         @NotNull @PositiveOrZero BigDecimal completion,
         @NotNull @NotEmpty @NotBlank String description,
         @Past ZonedDateTime createdOn,

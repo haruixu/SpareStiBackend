@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
@@ -48,7 +48,10 @@ public class ChallengeConfigController {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
-        log.info("Received request to create challenge config: {}", challengeConfigDTO);
+        log.info(
+                "Received request to create challenge config: {}, by user: {}",
+                challengeConfigDTO,
+                userDetails.getUsername());
         ChallengeConfigDTO newConfig =
                 userConfigService.createChallengeConfig(
                         userDetails.getUsername(), challengeConfigDTO);
