@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
@@ -31,7 +32,9 @@ public class GoalMapperTest {
                         "testUsername",
                         "testPassword123!",
                         "testEmail@test.com",
-                        new UserConfig(Role.USER, null));
+                        new UserConfig(Role.USER, null),
+                        new Account(),
+                        new Account());
 
         // Goal
         String title = "title";

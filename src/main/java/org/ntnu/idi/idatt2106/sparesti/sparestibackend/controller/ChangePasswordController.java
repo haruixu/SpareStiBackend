@@ -29,7 +29,7 @@ public class ChangePasswordController {
     @PostMapping("/resetPassword")
     public ResponseEntity<String> resetPassword(
             @NonNull @RequestBody ResetPasswordRequest resetPasswordRequest)
-            throws BadInputException, MessagingException {
+            throws BadInputException {
         changePasswordRequestService.resetPassword(resetPasswordRequest);
         return ResponseEntity.ok("OK");
     }
