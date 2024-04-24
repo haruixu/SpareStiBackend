@@ -4,19 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -39,15 +37,11 @@ public class ChallengeConfigController {
             })
     @PostMapping
     public ResponseEntity<ChallengeConfigDTO> createChallengeConfig(
-            @Parameter(description = "Challenge config details to create") @Valid @RequestBody
+            @Parameter(description = "Challenge config details to create") @RequestBody
                     ChallengeConfigDTO challengeConfigDTO,
-            BindingResult bindingResult,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
-            throws UserNotFoundException, BadInputException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
+            throws UserNotFoundException, BadInputException, ObjectNotValidException {
         log.info(
                 "Received request to create challenge config: {}, by user: {}",
                 challengeConfigDTO,
@@ -91,17 +85,12 @@ public class ChallengeConfigController {
             })
     @PutMapping
     public ResponseEntity<ChallengeConfigDTO> updateChallengeConfig(
-            @Parameter(description = "Updated challenge config details") @Valid @RequestBody
+            @Parameter(description = "Updated challenge config details") @RequestBody
                     ChallengeConfigDTO challengeConfigDTO,
-            BindingResult bindingResult,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
-            throws ChallengeConfigNotFoundException, BadInputException {
+            throws ChallengeConfigNotFoundException, BadInputException, ObjectNotValidException {
         log.info("Received request to update challenge config to: {}", challengeConfigDTO);
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
-
         ChallengeConfigDTO updatedConfig =
                 userConfigService.updateChallengeConfig(
                         userDetails.getUsername(), challengeConfigDTO);

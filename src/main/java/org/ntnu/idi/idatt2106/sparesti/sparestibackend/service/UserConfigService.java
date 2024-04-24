@@ -5,6 +5,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfi
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeTypeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserConfigMapper;
@@ -13,6 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +22,10 @@ import org.springframework.stereotype.Service;
 public class UserConfigService {
 
     private final UserRepository userRepository;
+
+    private final ObjectValidator<ChallengeConfigDTO> challengeConfigValidator;
+    private final ObjectValidator<ChallengeTypeConfigDTO> challengeTypeConfigValidator;
+    private final ObjectValidator<UserConfigDTO> userConfigValidator;
 
     public UserConfigDTO getUserConfig(String username)
             throws UserNotFoundException, ConfigNotFoundException {
@@ -37,7 +43,8 @@ public class UserConfigService {
     }
 
     public UserConfigDTO createUserConfig(String username, UserConfigDTO request)
-            throws UserNotFoundException {
+            throws UserNotFoundException, ObjectNotValidException {
+        userConfigValidator.validate(request);
         User user = findUserByUsername(username);
         UserConfig newConfig = UserConfigMapper.INSTANCE.toEntity(request);
 
@@ -48,7 +55,9 @@ public class UserConfigService {
     }
 
     public ChallengeConfigDTO createChallengeConfig(
-            String username, ChallengeConfigDTO challengeConfigDTO) throws UserNotFoundException {
+            String username, ChallengeConfigDTO challengeConfigDTO)
+            throws UserNotFoundException, ObjectNotValidException {
+        challengeConfigValidator.validate(challengeConfigDTO);
         User user = findUserByUsername(username);
 
         if (challengeConfigExists(user)) {
@@ -82,7 +91,9 @@ public class UserConfigService {
      * This behaviour can be disabled, by ignoring the challenge type dtos in the mapper.
      */
     public ChallengeConfigDTO updateChallengeConfig(
-            String username, ChallengeConfigDTO challengeConfigDTO) throws UserNotFoundException {
+            String username, ChallengeConfigDTO challengeConfigDTO)
+            throws UserNotFoundException, ObjectNotValidException {
+        challengeConfigValidator.validate(challengeConfigDTO);
         User user = findUserByUsername(username);
 
         if (!challengeConfigExists(user)) {
@@ -99,7 +110,9 @@ public class UserConfigService {
     }
 
     public ChallengeTypeConfigDTO createChallengeTypeConfig(
-            String username, ChallengeTypeConfigDTO challengeTypeConfigDTO) {
+            String username, ChallengeTypeConfigDTO challengeTypeConfigDTO)
+            throws ObjectNotValidException {
+        challengeTypeConfigValidator.validate(challengeTypeConfigDTO);
         User user = findUserByUsername(username);
 
         if (!challengeConfigExists(user)) {
@@ -122,7 +135,9 @@ public class UserConfigService {
     }
 
     public ChallengeTypeConfigDTO updateChallengeTypeConfig(
-            String username, ChallengeTypeConfigDTO challengeTypeConfigDTO) {
+            String username, ChallengeTypeConfigDTO challengeTypeConfigDTO)
+            throws ObjectNotValidException {
+        challengeTypeConfigValidator.validate(challengeTypeConfigDTO);
         final User user = findUserByUsername(username);
         final String type = challengeTypeConfigDTO.type();
 
