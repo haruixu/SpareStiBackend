@@ -48,7 +48,10 @@ public class ChallengeConfigController {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
-        log.info("Received request to create challenge config: {}", challengeConfigDTO);
+        log.info(
+                "Received request to create challenge config: {}, by user: {}",
+                challengeConfigDTO,
+                userDetails.getUsername());
         ChallengeConfigDTO newConfig =
                 userConfigService.createChallengeConfig(
                         userDetails.getUsername(), challengeConfigDTO);
