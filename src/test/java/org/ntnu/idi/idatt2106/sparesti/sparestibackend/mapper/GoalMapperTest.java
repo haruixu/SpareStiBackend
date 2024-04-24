@@ -76,8 +76,8 @@ public class GoalMapperTest {
 
         String title = "title";
         BigDecimal saved = new BigDecimal(1);
-        BigDecimal target = new BigDecimal(2);
-        BigDecimal completion = new BigDecimal(50);
+        BigDecimal target = new BigDecimal(1000);
+        BigDecimal completion = new BigDecimal("0.100");
         ZonedDateTime due = ZonedDateTime.now();
         String description = "description";
 
