@@ -34,7 +34,8 @@ public class ChallengeService {
     public ChallengeDTO updateChallenge(Long id, ChallengeUpdateDTO challengeUpdateDTO, User user)
             throws ChallengeNotFoundException {
         Challenge challenge = privateGetChallenge(id, user);
-        Challenge updatedChallenge = ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
+        Challenge updatedChallenge =
+                ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
         Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }

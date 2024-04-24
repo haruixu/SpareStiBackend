@@ -122,7 +122,7 @@ public class ChallengeController {
     public ResponseEntity<ChallengeDTO> updateChallenge(
             @PathVariable Long id,
             @Parameter(description = "Updated challenge details") @RequestBody @Valid
-            ChallengeUpdateDTO challengeUpdateDTO,
+                    ChallengeUpdateDTO challengeUpdateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails,
             BindingResult bindingResult)
@@ -132,7 +132,8 @@ public class ChallengeController {
         }
         log.info("Received PUT request for challenge with id: {}", id);
         User user = getUser(userDetails);
-        ChallengeDTO updatedChallenge = challengeService.updateChallenge(id, challengeUpdateDTO, user);
+        ChallengeDTO updatedChallenge =
+                challengeService.updateChallenge(id, challengeUpdateDTO, user);
 
         log.info("Updated challenge to: {}", challengeUpdateDTO);
         return ResponseEntity.ok(updatedChallenge);
