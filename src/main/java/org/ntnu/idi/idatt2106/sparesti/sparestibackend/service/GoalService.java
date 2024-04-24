@@ -3,6 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
@@ -10,6 +11,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -38,7 +40,7 @@ public class GoalService {
         return goalRepository.findAllByUser(user, pageable).map(GoalMapper.INSTANCE::toDTO);
     }
 
-    public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) {
+    public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) throws ObjectNotValidException {
         createValidator.validate(goalDTO);
         Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
         long priority = getDefaultPriority(user);
@@ -54,7 +56,7 @@ public class GoalService {
         return user.getGoals().size() + 1;
     }
 
-    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
+    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) throws ObjectNotValidException {
         updateValidator.validate(goalDTO);
         Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
