@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +41,7 @@ public class GlobalExceptionHandler {
      *            The exception to be logged.
      */
     private void logError(Exception ex) {
+        ex.printStackTrace();
         logger.error("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
     }
 
@@ -49,7 +53,12 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(
-            value = {UserAlreadyExistsException.class, AccountAlreadyExistsException.class})
+            value = {
+                UserAlreadyExistsException.class,
+                ChallengeConfigAlreadyExistsException.class,
+                ChallengeTypeConfigAlreadyExistsException.class,
+                AccountAlreadyExistsException.class
+            })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
@@ -62,7 +71,17 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object does not exist.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = {UsernameNotFoundException.class, AccountNotFoundException.class})
+    @ExceptionHandler(
+            value = {
+                UserNotFoundException.class,
+                UsernameNotFoundException.class,
+                GoalNotFoundException.class,
+                ChallengeConfigNotFoundException.class,
+                ChallengeNotFoundException.class,
+                ChallengeTypeConfigNotFoundException.class,
+                ConfigNotFoundException.class,
+                AccountNotFoundException.class
+            })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -85,6 +104,8 @@ public class GlobalExceptionHandler {
                 HttpRequestMethodNotSupportedException.class,
                 DataIntegrityViolationException.class,
                 MessagingException.class,
+                MethodArgumentNotValidException.class,
+                ActiveGoalLimitExceededException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);

@@ -25,7 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(locations = "classpath:application-test.yml")
-class AuthenticationControllerIntegrationTest {
+class AuthenticationIntegrationTest {
 
     @Autowired private WebApplicationContext context;
 

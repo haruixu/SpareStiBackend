@@ -6,7 +6,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.EmailNotFoundEx
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +37,12 @@ public class UserService {
      * Finds a user from a given username.
      * @param username Username used for finding a user
      * @return User entity with matching username
-     * @throws UsernameNotFoundException If no user has the given username
+     * @throws UserNotFoundException If no user has the given username
      */
-    public User findUserByUsername(String username) throws UsernameNotFoundException {
+    public User findUserByUsername(String username) throws UserNotFoundException {
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(
-                        () ->
-                                new UsernameNotFoundException(
-                                        "User with username: " + username + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     public User findUserByEmail(String email) throws EmailNotFoundException {

@@ -34,9 +34,9 @@ public class UserConfigMapperTest {
     public void testToDTO() {
 
         ChallengeConfig challengeConfig =
-                new ChallengeConfig(Experience.MIDDLE, Motivation.MIDDLE, null);
+                new ChallengeConfig(Experience.MEDIUM, Motivation.MEDIUM, null);
         ChallengeConfigDTO challengeConfigDTO =
-                new ChallengeConfigDTO(Experience.MIDDLE, Motivation.MIDDLE, null);
+                new ChallengeConfigDTO(Experience.MEDIUM, Motivation.MEDIUM, null);
 
         when(challengeConfigMapper.toDTO(challengeConfig)).thenReturn(challengeConfigDTO);
 
@@ -46,5 +46,22 @@ public class UserConfigMapperTest {
 
         assertEquals(0, userConfig.getRole().compareTo(Role.USER));
         assertEquals(challengeConfigDTO, userConfigResponse.challengeConfig());
+    }
+
+    @Test
+    public void testToEntity() {
+        ChallengeConfigDTO challengeConfigDTO =
+                new ChallengeConfigDTO(Experience.MEDIUM, Motivation.MEDIUM, null);
+        ChallengeConfig challengeConfig =
+                new ChallengeConfig(Experience.MEDIUM, Motivation.MEDIUM, null);
+
+        when(challengeConfigMapper.toEntity(challengeConfigDTO)).thenReturn(challengeConfig);
+
+        UserConfigDTO userConfigDTO = new UserConfigDTO(Role.ADMIN, challengeConfigDTO);
+
+        UserConfig userConfig = userConfigMapper.toEntity(userConfigDTO);
+
+        assertEquals(Role.ADMIN, userConfig.getRole());
+        assertEquals(challengeConfig, userConfig.getChallengeConfig());
     }
 }
