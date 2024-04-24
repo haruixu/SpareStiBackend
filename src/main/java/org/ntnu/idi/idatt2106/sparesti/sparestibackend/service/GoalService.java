@@ -3,7 +3,6 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
@@ -56,7 +55,8 @@ public class GoalService {
         return user.getGoals().size() + 1;
     }
 
-    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) throws ObjectNotValidException {
+    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user)
+            throws ObjectNotValidException {
         updateValidator.validate(goalDTO);
         Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);

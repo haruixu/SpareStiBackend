@@ -10,15 +10,29 @@ import java.time.ZonedDateTime;
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeDTO(
-        @NotNull Long id,
-        @NotNull @NotEmpty @NotBlank String title,
-        @NotNull @PositiveOrZero BigDecimal saved,
-        @NotNull @PositiveOrZero BigDecimal target,
-        @NotNull @Positive BigDecimal perPurchase,
-        @NotNull @PositiveOrZero BigDecimal completion,
-        @NotNull @NotEmpty @NotBlank String description,
-        @Past ZonedDateTime createdOn,
+        @NotNull(message = "ID cannot be null") Long id,
+        @NotNull(message = "Title cannot be null")
+                @NotEmpty(message = "Title cannot be empty")
+                @NotBlank(message = "Title cannot be blank")
+                String title,
+        @NotNull(message = "Saved amount cannot be null")
+                @PositiveOrZero(message = "Saved amount cannot be negative")
+                BigDecimal saved,
+        @NotNull(message = "Target amount cannot be null")
+                @PositiveOrZero(message = "Target amount cannot be negative")
+                BigDecimal target,
+        @NotNull(message = "Per purchase amount cannot be null")
+                @Positive(message = "Per purchase amount cannot be less than or equal to zero")
+                BigDecimal perPurchase,
+        @NotNull(message = "Completion amount cannot be null")
+                @PositiveOrZero(message = "Completion amount cannot be negative")
+                BigDecimal completion,
+        @NotNull(message = "Description cannot be null")
+                @NotEmpty(message = "Description cannot be empty")
+                @NotBlank(message = "Description cannot be blank")
+                String description,
+        @Past(message = "Created date must be in the past") ZonedDateTime createdOn,
         ZonedDateTime completedOn,
-        @Future ZonedDateTime due,
-        @NotNull String type)
+        @Future(message = "Due date must be in the future") ZonedDateTime due,
+        @NotNull(message = "Type cannot be null") String type)
         implements Serializable {}
