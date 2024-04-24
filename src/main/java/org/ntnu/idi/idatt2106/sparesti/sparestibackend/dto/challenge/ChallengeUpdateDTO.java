@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge}
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
-public record UpdateChallengeDTO(
+public record ChallengeUpdateDTO(
         @NotEmpty @NotBlank String title,
         @NotNull @PositiveOrZero BigDecimal saved,
         @NotNull @Positive BigDecimal target,

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
@@ -117,10 +118,11 @@ public class ChallengeController {
                 @ApiResponse(responseCode = "404", description = "Challenge or user not found"),
                 @ApiResponse(responseCode = "400", description = "Bad input")
             })
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ChallengeDTO> updateChallenge(
+            @PathVariable Long id,
             @Parameter(description = "Updated challenge details") @RequestBody @Valid
-                    ChallengeDTO challengeDTO,
+            ChallengeUpdateDTO challengeUpdateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails,
             BindingResult bindingResult)
@@ -128,11 +130,11 @@ public class ChallengeController {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
-        log.info("Received PUT request for challenge with id: {}", challengeDTO.id());
+        log.info("Received PUT request for challenge with id: {}", id);
         User user = getUser(userDetails);
-        ChallengeDTO updatedChallenge = challengeService.updateChallenge(challengeDTO, user);
+        ChallengeDTO updatedChallenge = challengeService.updateChallenge(id, challengeUpdateDTO, user);
 
-        log.info("Updated challenge to: {}", challengeDTO);
+        log.info("Updated challenge to: {}", challengeUpdateDTO);
         return ResponseEntity.ok(updatedChallenge);
     }
 
