@@ -3,6 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
@@ -30,10 +31,11 @@ public class ChallengeService {
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
 
-    public ChallengeDTO updateChallenge(ChallengeDTO challengeDTO, User user)
+    public ChallengeDTO updateChallenge(Long id, ChallengeUpdateDTO challengeUpdateDTO, User user)
             throws ChallengeNotFoundException {
-        Challenge challenge = privateGetChallenge(challengeDTO.id(), user);
-        Challenge updatedChallenge = ChallengeMapper.INSTANCE.updateEntity(challenge, challengeDTO);
+        Challenge challenge = privateGetChallenge(id, user);
+        Challenge updatedChallenge =
+                ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
         Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }

@@ -14,7 +14,7 @@ import lombok.*;
         name = "CHALLENGETYPE_CONFIG")
 public class ChallengeTypeConfig {
 
-    @Column(nullable = false, name = "TYPE", unique = true, updatable = false)
+    @Column(nullable = false, name = "TYPE", updatable = false)
     @Setter(AccessLevel.NONE)
     private String type;
 

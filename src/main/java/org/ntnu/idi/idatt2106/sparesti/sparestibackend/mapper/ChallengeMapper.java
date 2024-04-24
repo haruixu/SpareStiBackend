@@ -4,6 +4,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
@@ -41,5 +42,5 @@ public interface ChallengeMapper {
                 expression =
                         "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
     })
-    Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeDTO challengeDTO);
+    Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO);
 }

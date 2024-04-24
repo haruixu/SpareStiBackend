@@ -37,6 +37,10 @@ public class ChallengeTypeConfigController {
         if (bindingResult.hasErrors()) {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
+        log.info(
+                "Creating challenge type config: {} for user: {}",
+                challengeTypeConfigDTO,
+                userDetails.getUsername());
         ChallengeTypeConfigDTO newConfig =
                 userConfigService.createChallengeTypeConfig(
                         userDetails.getUsername(), challengeTypeConfigDTO);
@@ -47,8 +51,13 @@ public class ChallengeTypeConfigController {
     public ResponseEntity<ChallengeTypeConfigDTO> getChallengeTypeConfig(
             @PathVariable String type, @AuthenticationPrincipal UserDetails userDetails)
             throws ChallengeTypeConfigNotFoundException {
+        log.info(
+                "Getting challenge type config for user '{}' and type {}",
+                userDetails.getUsername(),
+                type);
         ChallengeTypeConfigDTO config =
                 userConfigService.getChallengeTypeConfig(type, userDetails.getUsername());
+        log.info("Successfully retrieved challenge type config '{}'", config);
         return ResponseEntity.ok(config);
     }
 
@@ -73,9 +82,16 @@ public class ChallengeTypeConfigController {
             throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
         }
 
+        log.info(
+                "Received request to update challenge type config for user: {}",
+                userDetails.getUsername());
         ChallengeTypeConfigDTO updatedConfig =
                 userConfigService.updateChallengeTypeConfig(
                         userDetails.getUsername(), challengeTypeConfigDTO);
+        log.info(
+                "Successfully updated challenge type config for user: {} to {}",
+                userDetails.getUsername(),
+                updatedConfig);
 
         return ResponseEntity.ok(updatedConfig);
     }
