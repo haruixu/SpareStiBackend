@@ -111,7 +111,8 @@ public class GoalIntegrationTest {
     @Test
     @WithMockUser
     void testPostUserWithNullBody() throws Exception {
-        jsonPostRequest = null;
+        GoalCreateDTO goalCreateDTO = new GoalCreateDTO(null, null, null, null, null);
+        jsonPostRequest = objectMapper.writeValueAsString(goalCreateDTO);
         mvc.perform(
                         MockMvcRequestBuilders.post("/users/me/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
