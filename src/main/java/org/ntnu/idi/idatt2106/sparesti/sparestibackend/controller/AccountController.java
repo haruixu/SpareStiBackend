@@ -1,9 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import jakarta.validation.Valid;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -41,14 +41,14 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getUserAccount(
+    public ResponseEntity<AccountResponseDTO> getUserAccount(
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.ok(accountService.findUserAccounts(user));
     }
 
     @PutMapping
-    public ResponseEntity<Map<String, Object>> updateUserAccount(
+    public ResponseEntity<AccountResponseDTO> updateUserAccount(
             @Valid @RequestBody AccountUpdateDTO accountUpdateDTO,
             BindingResult bindingResult,
             @AuthenticationPrincipal UserDetails userDetails) {

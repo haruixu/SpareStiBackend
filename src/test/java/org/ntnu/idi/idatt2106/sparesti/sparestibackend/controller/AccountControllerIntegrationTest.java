@@ -171,10 +171,10 @@ class AccountControllerIntegrationTest {
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
 
-        String savingAccNumber = responseJson.get("SAVING").get("accNumber").asText();
-        String savingBalance = responseJson.get("SAVING").get("balance").asText();
-        String spendingAccNumber = responseJson.get("SPENDING").get("accNumber").asText();
-        String spendingBalance = responseJson.get("SPENDING").get("balance").asText();
+        String savingAccNumber = responseJson.get("savingAccount").get("accNumber").asText();
+        String savingBalance = responseJson.get("savingAccount").get("balance").asText();
+        String spendingAccNumber = responseJson.get("spendingAccount").get("accNumber").asText();
+        String spendingBalance = responseJson.get("spendingAccount").get("balance").asText();
 
         Assertions.assertEquals("50", savingAccNumber);
         Assertions.assertEquals("200.55", savingBalance);
@@ -208,8 +208,8 @@ class AccountControllerIntegrationTest {
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
 
-        String savingAccNumber = responseJson.get("SAVING").get("accNumber").asText();
-        String savingBalance = responseJson.get("SAVING").get("balance").asText();
+        String savingAccNumber = responseJson.get("savingAccount").get("accNumber").asText();
+        String savingBalance = responseJson.get("savingAccount").get("balance").asText();
 
         Assertions.assertEquals("50", savingAccNumber);
         Assertions.assertEquals("660.21", savingBalance);
@@ -241,8 +241,8 @@ class AccountControllerIntegrationTest {
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
 
-        String savingAccNumber = responseJson.get("SPENDING").get("accNumber").asText();
-        String savingBalance = responseJson.get("SPENDING").get("balance").asText();
+        String savingAccNumber = responseJson.get("spendingAccount").get("accNumber").asText();
+        String savingBalance = responseJson.get("spendingAccount").get("balance").asText();
 
         Assertions.assertEquals("900", savingAccNumber);
         Assertions.assertEquals("660.21", savingBalance);
@@ -273,8 +273,8 @@ class AccountControllerIntegrationTest {
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
 
-        String savingAccNumber = responseJson.get("SAVING").get("accNumber").asText();
-        String savingBalance = responseJson.get("SAVING").get("balance").asText();
+        String savingAccNumber = responseJson.get("savingAccount").get("accNumber").asText();
+        String savingBalance = responseJson.get("savingAccount").get("balance").asText();
 
         Assertions.assertEquals("50", savingAccNumber);
         Assertions.assertEquals("660.21", savingBalance);
