@@ -12,4 +12,8 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     Page<Challenge> findByUser(User user, Pageable pageable);
 
     Optional<Challenge> findByIdAndUser(Long id, User user);
+
+    Page<Challenge> findAllByCompletedOnIsNullAndUser(User user, Pageable pageable);
+
+    Page<Challenge> findAllByCompletedOnIsNotNullAndUser(User user, Pageable pageable);
 }
