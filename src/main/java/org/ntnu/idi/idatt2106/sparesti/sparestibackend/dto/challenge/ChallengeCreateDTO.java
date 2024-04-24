@@ -13,7 +13,7 @@ public record ChallengeCreateDTO(
         @NotEmpty @NotBlank String title,
         @NotNull @PositiveOrZero BigDecimal saved,
         @NotNull @PositiveOrZero BigDecimal target,
-        @NotNull @PositiveOrZero BigDecimal perPurchase,
+        @NotNull @Positive BigDecimal perPurchase,
         String description,
         @Future ZonedDateTime due,
         String type)
