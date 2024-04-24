@@ -102,9 +102,14 @@ public class UserConfigService {
             String username, ChallengeTypeConfigDTO challengeTypeConfigDTO) {
         User user = findUserByUsername(username);
 
-        if (getConfig(challengeTypeConfigDTO.type(), user) != null) {
-            throw new ChallengeTypeConfigAlreadyExistsException(
-                    user.getId(), challengeTypeConfigDTO.type());
+        if (!challengeConfigExists(user)) {
+            throw new ChallengeConfigNotFoundException(user.getId());
+        }
+
+        String type = challengeTypeConfigDTO.type();
+
+        if (challengeTypeConfigExists(type, user)) {
+            throw new ChallengeTypeConfigAlreadyExistsException(user.getId(), type);
         }
 
         ChallengeTypeConfig newConfig =
@@ -123,7 +128,6 @@ public class UserConfigService {
 
         ChallengeTypeConfig oldConfig = getConfig(type, user);
 
-        user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().remove(oldConfig);
         ChallengeTypeConfig updatedConfig =
                 ChallengeTypeConfigMapper.INSTANCE.updateEntity(oldConfig, challengeTypeConfigDTO);
 
@@ -160,7 +164,12 @@ public class UserConfigService {
     private ChallengeTypeConfig getConfig(String type, User user) {
         return user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
                 .filter(_config -> _config.getType().equalsIgnoreCase(type))
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
+    }
+
+    private boolean challengeTypeConfigExists(String type, User user) {
+        return user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
+                .anyMatch(config -> type.equalsIgnoreCase(config.getType()));
     }
 }
