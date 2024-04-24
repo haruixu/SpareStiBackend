@@ -135,7 +135,12 @@ public class ChangePasswordRequestService {
 
         String userID = userService.findUserByEmail(email).getId().toString();
         message.setText(
-                "http://localhost:5173/forgotPassword?resetID=" + uniqueKey + "&userID=" + userID);
+                "Hei🐷\n\n"
+                        + "Trykk på linken for å endre passordet ditt og logg på SpareSti!\n"
+                        + "\nhttp://localhost:5173/forgotPassword?resetID="
+                        + uniqueKey
+                        + "&userID="
+                        + userID);
 
         Transport.send(message);
     }

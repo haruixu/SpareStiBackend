@@ -61,7 +61,8 @@ public class GlobalExceptionHandler {
             value = {
                 UserAlreadyExistsException.class,
                 ChallengeConfigAlreadyExistsException.class,
-                ChallengeTypeConfigAlreadyExistsException.class
+                ChallengeTypeConfigAlreadyExistsException.class,
+                AccountAlreadyExistsException.class
             })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
@@ -85,6 +86,7 @@ public class GlobalExceptionHandler {
                 ChallengeNotFoundException.class,
                 ChallengeTypeConfigNotFoundException.class,
                 ConfigNotFoundException.class,
+                AccountNotFoundException.class
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
