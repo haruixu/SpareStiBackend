@@ -90,7 +90,8 @@ public class ChallengeTypeConfigController {
                         userDetails.getUsername(), challengeTypeConfigDTO);
         log.info(
                 "Successfully updated challenge type config for user: {} to {}",
-                userDetails.getUsername(), updatedConfig);
+                userDetails.getUsername(),
+                updatedConfig);
 
         return ResponseEntity.ok(updatedConfig);
     }
