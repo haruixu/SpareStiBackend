@@ -19,7 +19,9 @@ public interface RegisterMapper {
     @Mappings({
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "userConfig", expression = "java( new UserConfig(role, null) )"),
-        @Mapping(target = "password", source = "encodedPassword")
+        @Mapping(target = "password", source = "encodedPassword"),
+        @Mapping(target = "spendingAccount", ignore = true),
+        @Mapping(target = "savingAccount", ignore = true)
     })
     User toEntity(RegisterRequest request, Role role, String encodedPassword);
 
