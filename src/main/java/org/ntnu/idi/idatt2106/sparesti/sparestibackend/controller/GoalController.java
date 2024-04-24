@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
@@ -18,7 +16,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoal
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -229,17 +225,12 @@ public class GoalController {
             })
     @PostMapping
     public ResponseEntity<GoalResponseDTO> createUserGoal(
-            @Valid @NotNull @RequestBody GoalCreateDTO goalDTO,
-            BindingResult bindingResult,
-            @AuthenticationPrincipal UserDetails userDetails)
+            @RequestBody GoalCreateDTO goalDTO, @AuthenticationPrincipal UserDetails userDetails)
             throws BadInputException, ActiveGoalLimitExceededException {
         logger.info(
                 "Received POST request for goal {} under user {}",
                 goalDTO,
                 userDetails.getUsername());
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
         User user = userService.findUserByUsername(userDetails.getUsername());
         logger.info("Trying to save goal");
         return ResponseEntity.ok(goalService.save(goalDTO, user));
@@ -281,14 +272,10 @@ public class GoalController {
     @PutMapping("/{id}")
     public ResponseEntity<GoalResponseDTO> updateUserGoal(
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
-            @Valid @NotNull @RequestBody GoalUpdateDTO goalDTO,
-            BindingResult bindingResult,
+            @RequestBody GoalUpdateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails)
             throws BadInputException {
         logger.info("Received PUT request for goal with id {} with request body {}", id, goalDTO);
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException("Fields in the body cannot be null, blank or empty");
-        }
         User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.ok(goalService.update(id, goalDTO, user));
     }
@@ -327,13 +314,8 @@ public class GoalController {
             })
     @PutMapping
     public ResponseEntity<List<GoalResponseDTO>> updatePriorities(
-            @Valid @RequestBody List<Long> goalIds,
-            BindingResult bindingResult,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody List<Long> goalIds, @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Received PUT request for updating priorities of goals");
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException("Invalid request body");
-        }
         User user = userService.findUserByUsername(userDetails.getUsername());
         logger.info("Trying to update priorities");
         return ResponseEntity.ok(goalService.updatePriorities(goalIds, user));
