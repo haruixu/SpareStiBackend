@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.GoalDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
@@ -26,7 +27,9 @@ public class GoalMapperTest {
                         "testUsername",
                         "testPassword123!",
                         "testEmail@test.com",
-                        new UserConfig(Role.USER, null));
+                        new UserConfig(Role.USER, null),
+                        new Account(),
+                        new Account());
     }
 
     @Test
