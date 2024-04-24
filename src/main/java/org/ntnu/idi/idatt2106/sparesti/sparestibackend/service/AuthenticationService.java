@@ -39,6 +39,9 @@ public class AuthenticationService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
+    private static final int ONE_DAY_IN_MINUTES = 60 * 24;
+    private static final int ONE_WEEK_IN_MINUTES = ONE_DAY_IN_MINUTES * 7;
+
     /**
      * Registers a new, valid user. For a user to be valid, they have to
      * have a valid and unique username, a valid and unique email, valid first name and last names,
@@ -86,8 +89,8 @@ public class AuthenticationService {
         logger.info("Saving user with username '{}'", user.getUsername());
         userService.save(user);
         logger.info("Generating tokens");
-        String jwtAccessToken = jwtService.generateToken(user, 5);
-        String jwtRefreshToken = jwtService.generateToken(user, 30);
+        String jwtAccessToken = jwtService.generateToken(user, ONE_DAY_IN_MINUTES);
+        String jwtRefreshToken = jwtService.generateToken(user, ONE_WEEK_IN_MINUTES);
         return RegisterMapper.INSTANCE.toDTO(user, jwtAccessToken, jwtRefreshToken);
     }
 
