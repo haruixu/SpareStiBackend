@@ -60,9 +60,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private final Set<Challenge> challenges = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "ACCOUNT")
-    private final Set<Account> accounts = new HashSet<>();
+    @Setter
+    @AttributeOverride(name = "accNumber", column = @Column(name = "spending_acc_number"))
+    @AttributeOverride(name = "balance", column = @Column(name = "spending_balance"))
+    private Account spendingAccount = new Account();
+
+    @Setter
+    @AttributeOverride(name = "accNumber", column = @Column(name = "saving_acc_number"))
+    @AttributeOverride(name = "balance", column = @Column(name = "saving_balance"))
+    private Account savingAccount = new Account();
 
     // Unidirectional many-to-many
     @ManyToMany(fetch = FetchType.EAGER)
