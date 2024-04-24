@@ -103,7 +103,8 @@ public class GlobalExceptionHandler {
                 DataIntegrityViolationException.class,
                 MessagingException.class,
                 MethodArgumentNotValidException.class,
-                ActiveGoalLimitExceededException.class
+                ActiveGoalLimitExceededException.class,
+                ChallengeAlreadyCompletedException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
