@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
@@ -91,7 +93,7 @@ public class GoalIntegrationTest {
 
     @Test
     @WithMockUser
-    void postUser() throws Exception {
+    void testPostUser() throws Exception {
         mvc.perform(
                         MockMvcRequestBuilders.post("/users/me/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +110,18 @@ public class GoalIntegrationTest {
 
     @Test
     @WithMockUser
-    void getAllGoals() throws Exception {
+    void testPostUserWithNullBody() throws Exception {
+        jsonPostRequest = null;
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isBadRequest());
+    }
+
+    @WithMockUser
+    void testGetAllGoals() throws Exception {
         // Create goal
         mvc.perform(
                         MockMvcRequestBuilders.post("/users/me/goals")
@@ -128,7 +141,7 @@ public class GoalIntegrationTest {
 
     @Test
     @WithMockUser
-    void getSpecificGoal() throws Exception {
+    void testGetSpecificGoal() throws Exception {
         mvc.perform(
                         MockMvcRequestBuilders.post("/users/me/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -152,7 +165,7 @@ public class GoalIntegrationTest {
 
     @Test
     @WithMockUser
-    void getSpecificGoalNotOwnedByUser() throws Exception {
+    void testGetSpecificGoalNotOwnedByUser() throws Exception {
         // Post goal under mock user
         mvc.perform(
                         MockMvcRequestBuilders.post("/users/me/goals")
@@ -464,5 +477,47 @@ public class GoalIntegrationTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    @WithMockUser
+    void testSetGoalPriority() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.priority").value(2));
+
+        List<Long> goalIds = new ArrayList<>();
+        goalIds.add(2L);
+        goalIds.add(1L);
+
+        String jsonPutRequest = objectMapper.writeValueAsString(goalIds);
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/users/me/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPutRequest))
+                .andExpect(status().isOk());
+        // Verify priority of second goal is bumped up
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/users/me/goals/2")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.priority").value(1));
     }
 }
