@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeNotFoundException;
@@ -91,7 +92,7 @@ public class ChallengeController {
     @PostMapping
     public ResponseEntity<ChallengeDTO> createChallenge(
             @Parameter(description = "Challenge details to create") @RequestBody @Valid
-                    ChallengeDTO challengeDTO,
+                    ChallengeCreateDTO challengeCreateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails,
             BindingResult bindingResult)
@@ -102,7 +103,7 @@ public class ChallengeController {
         log.info("Received POST request for challenge username: {}", userDetails.getUsername());
         User user = getUser(userDetails);
 
-        ChallengeDTO createdChallenge = challengeService.save(challengeDTO, user);
+        ChallengeDTO createdChallenge = challengeService.save(challengeCreateDTO, user);
         log.info("Created challenge: {}", createdChallenge);
         return ResponseEntity.ok(createdChallenge);
     }
