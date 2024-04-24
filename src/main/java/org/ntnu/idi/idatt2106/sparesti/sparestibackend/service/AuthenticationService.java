@@ -9,10 +9,12 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +44,9 @@ public class AuthenticationService {
     private static final int ONE_DAY_IN_MINUTES = 60 * 24;
     private static final int ONE_WEEK_IN_MINUTES = ONE_DAY_IN_MINUTES * 7;
 
+    private final ObjectValidator<RegisterRequest> registerRequestValidator;
+    private final ObjectValidator<AuthenticationRequest> authenticationRequestValidator;
+
     /**
      * Registers a new, valid user. For a user to be valid, they have to
      * have a valid and unique username, a valid and unique email, valid first name and last names,
@@ -52,7 +57,8 @@ public class AuthenticationService {
      * @throws UserAlreadyExistsException If username or email have been taken
      */
     public LoginRegisterResponse register(RegisterRequest request)
-            throws BadInputException, UserAlreadyExistsException {
+            throws BadInputException, UserAlreadyExistsException, ObjectNotValidException {
+        registerRequestValidator.validate(request);
         if (!(isUsernameValid(request.username()))) {
             throw new BadInputException(
                     "The username can only contain letters, numbers and underscore, "
@@ -155,7 +161,9 @@ public class AuthenticationService {
      * @return Jwt tokens upon successful login
      * @throws BadInputException if no user has a matching username or password
      */
-    public LoginRegisterResponse login(AuthenticationRequest request) throws BadInputException {
+    public LoginRegisterResponse login(AuthenticationRequest request)
+            throws BadInputException, ObjectNotValidException {
+        authenticationRequestValidator.validate(request);
         if (!userService.userExistsByUsername(request.username())
                 || !matches(
                         request.password(),

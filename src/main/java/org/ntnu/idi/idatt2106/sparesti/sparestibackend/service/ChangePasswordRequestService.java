@@ -14,7 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.ResetPasswordReq
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChangePasswordRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.ChangePasswordRequestRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +25,14 @@ public class ChangePasswordRequestService {
     private final UserService userService;
     private final ChangePasswordRequestRepository changePasswordRequestRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+
+    private final ObjectValidator<ChangePasswordRequestRequest>
+            changePasswordRequestRequestValidator;
+    private final ObjectValidator<ResetPasswordRequest> resetPasswordRequestValidator;
 
     public void sendForgotPasswordEmail(ChangePasswordRequestRequest request)
             throws MessagingException {
+        changePasswordRequestRequestValidator.validate(request);
         if (!isEmailValid(request.email())) {
             throw new BadInputException("The email address is invalid.");
         }
@@ -49,6 +53,7 @@ public class ChangePasswordRequestService {
     }
 
     public void resetPassword(ResetPasswordRequest request) {
+        resetPasswordRequestValidator.validate(request);
         if (!changePasswordRequestExistsByUserID(request.userID())) {
             return;
         }
