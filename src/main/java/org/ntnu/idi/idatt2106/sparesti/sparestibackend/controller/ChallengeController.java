@@ -14,6 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUp
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.ChallengeService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
@@ -131,7 +132,10 @@ public class ChallengeController {
                     ChallengeCreateDTO challengeCreateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
-            throws ChallengeNotFoundException, UserNotFoundException, BadInputException {
+            throws ChallengeNotFoundException,
+                    UserNotFoundException,
+                    BadInputException,
+                    ObjectNotValidException {
         log.info("Received POST request for challenge username: {}", userDetails.getUsername());
         User user = getUser(userDetails);
 
@@ -182,7 +186,10 @@ public class ChallengeController {
                     ChallengeUpdateDTO challengeUpdateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
-            throws ChallengeNotFoundException, UserNotFoundException, BadInputException {
+            throws ChallengeNotFoundException,
+                    UserNotFoundException,
+                    BadInputException,
+                    ObjectNotValidException {
         log.info("Received PUT request for challenge with id: {}", id);
         User user = getUser(userDetails);
         ChallengeDTO updatedChallenge =

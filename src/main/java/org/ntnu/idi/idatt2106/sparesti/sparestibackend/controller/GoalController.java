@@ -13,6 +13,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
@@ -226,7 +227,7 @@ public class GoalController {
     @PostMapping
     public ResponseEntity<GoalResponseDTO> createUserGoal(
             @RequestBody GoalCreateDTO goalDTO, @AuthenticationPrincipal UserDetails userDetails)
-            throws BadInputException, ActiveGoalLimitExceededException {
+            throws BadInputException, ActiveGoalLimitExceededException, ObjectNotValidException {
         logger.info(
                 "Received POST request for goal {} under user {}",
                 goalDTO,
@@ -274,7 +275,7 @@ public class GoalController {
             @Parameter(description = "The ID-number of a goal") @PathVariable Long id,
             @RequestBody GoalUpdateDTO goalDTO,
             @AuthenticationPrincipal UserDetails userDetails)
-            throws BadInputException {
+            throws BadInputException, ObjectNotValidException {
         logger.info("Received PUT request for goal with id {} with request body {}", id, goalDTO);
         User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.ok(goalService.update(id, goalDTO, user));
