@@ -95,15 +95,17 @@ public class GoalService {
     }
 
     public List<GoalResponseDTO> updatePriorities(List<Long> goalIds, User user) {
-        validateGoalIds(goalIds, user);
+        List<Long> distinctGoalIds = goalIds.stream().distinct().toList();
+        validateGoalIds(distinctGoalIds, user);
 
         List<Goal> updatedGoalsList = new ArrayList<>();
-        for (int i = 0; i < goalIds.size(); i++) {
-            Goal goal = findGoalByIdAndUser(goalIds.get(i), user);
+        for (int i = 0; i < distinctGoalIds.size(); i++) {
+            Goal goal = findGoalByIdAndUser(distinctGoalIds.get(i), user);
             int priority = i + 1;
             goal.setPriority((long) priority);
             updatedGoalsList.add(goal);
         }
+
         return goalRepository.saveAll(updatedGoalsList).stream()
                 .map(GoalMapper.INSTANCE::toDTO)
                 .toList();
@@ -120,8 +122,12 @@ public class GoalService {
             }
         }
 
-        if (goalIds.size() != activeGoalsIds.size()) {
+        if (goalIds.size() > activeGoalsIds.size()) {
             throw new ActiveGoalLimitExceededException();
+        }
+        if (goalIds.size() < activeGoalsIds.size()) {
+            throw new IllegalArgumentException(
+                    "Size of priority list does not match size of active goals");
         }
     }
 
