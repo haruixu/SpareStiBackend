@@ -7,6 +7,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", 'mysqladmin', 'ping', '-h', 'db', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
       # Run health check <start_period> seconds after container start.
