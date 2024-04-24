@@ -7,6 +7,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -109,7 +110,8 @@ public class GlobalExceptionHandler {
                 DataIntegrityViolationException.class,
                 MessagingException.class,
                 MethodArgumentNotValidException.class,
-                ActiveGoalLimitExceededException.class
+                ActiveGoalLimitExceededException.class,
+                NotActiveGoalException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
