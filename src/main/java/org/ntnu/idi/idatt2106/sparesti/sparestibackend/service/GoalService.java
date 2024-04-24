@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
@@ -8,6 +9,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -87,8 +89,40 @@ public class GoalService {
         Goal goal = findGoalByIdAndUser(goalId, user);
         if (findGoalByIdAndUser(goalId, user).getCompletedOn() == null) {
             goal.setCompletedOn(ZonedDateTime.now());
+            goal.setPriority((long) ACTIVE_GOAL_LIMIT + 1);
         }
         return goalRepository.save(goal);
+    }
+
+    public List<GoalResponseDTO> updatePriorities(List<Long> goalIds, User user) {
+        validateGoalIds(goalIds, user);
+
+        List<Goal> updatedGoalsList = new ArrayList<>();
+        for (int i = 0; i < goalIds.size(); i++) {
+            Goal goal = findGoalByIdAndUser(goalIds.get(i), user);
+            int priority = i + 1;
+            goal.setPriority((long) priority);
+            updatedGoalsList.add(goal);
+        }
+        return goalRepository.saveAll(updatedGoalsList).stream()
+                .map(GoalMapper.INSTANCE::toDTO)
+                .toList();
+    }
+
+    private void validateGoalIds(List<Long> goalIds, User user) {
+        List<Long> activeGoalsIds =
+                goalRepository.findAllByCompletedOnIsNullAndUser(user).stream()
+                        .map(Goal::getId)
+                        .toList();
+        for (Long goalId : goalIds) {
+            if (!activeGoalsIds.contains(goalId)) {
+                throw new NotActiveGoalException(goalId);
+            }
+        }
+
+        if (goalIds.size() != activeGoalsIds.size()) {
+            throw new ActiveGoalLimitExceededException();
+        }
     }
 
     public void deleteUserGoal(Long id, User user) {
