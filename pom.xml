@@ -257,6 +257,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
         <configuration>
           <environmentVariables>
             <!-- secret used only for testing -->
@@ -265,6 +266,8 @@
             <EMAIL_USERNAME>sparestigruppe2test@gmail.com</EMAIL_USERNAME>
             <EMAIL_PASSWORD>izrd qtso iyhj pbml</EMAIL_PASSWORD>
           </environmentVariables>
+          <parallel>classesAndMethods</parallel>
+          <useUnlimitedThreads>true</useUnlimitedThreads>
         </configuration>
       </plugin>
     </plugins>
