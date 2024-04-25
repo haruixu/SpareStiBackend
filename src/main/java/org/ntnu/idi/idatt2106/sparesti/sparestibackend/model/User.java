@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -32,23 +33,27 @@ public class User implements UserDetails {
     @NotNull
     @Column(nullable = false)
     @Pattern(regexp = "^[æÆøØåÅa-zA-Z,.'-][æÆøØåÅa-zA-Z ,.'-]{1,29}$")
+    @Size(min = 1, max = 30, message = "First name should be between 1 and 30 characters")
     private String firstName;
 
     @NotNull
     @Column(nullable = false)
     @Pattern(regexp = "^[æÆøØåÅa-zA-Z,.'-][æÆøØåÅa-zA-Z ,.'-]{1,29}$")
+    @Size(min = 1, max = 30, message = "Last name should be between 1 and 30 characters")
     private String lastName;
 
     @NotNull
     @Column(nullable = false, unique = true)
     @Pattern(regexp = "^[ÆØÅæøåA-Za-z][æÆøØåÅA-Za-z0-9_]{2,29}$")
+    @Size(min = 3, max = 30, message = "Username should be between 3 and 30 characters")
     @NaturalId
     private String username;
 
     @Setter
     @NotNull
     @Column(nullable = false)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zæøå])(?=.*[ÆØÅA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zæøå])(?=.*[ÆØÅA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,30}$")
+    @Size(min = 3, max = 30, message = "Password should be between 8 and 30 characters")
     private String password;
 
     @NotNull
