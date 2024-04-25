@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.BadgeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User}

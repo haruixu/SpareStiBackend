@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/users/me/goals")
+@RequestMapping("/goals")
 public class GoalController {
 
     private final GoalService goalService;

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/users/me/config/challenge/type")
+@RequestMapping("//config/challenge/type")
 @Tag(
         name = "Challenge Type Config",
         description = "Endpoints for managing challenge type configurations")

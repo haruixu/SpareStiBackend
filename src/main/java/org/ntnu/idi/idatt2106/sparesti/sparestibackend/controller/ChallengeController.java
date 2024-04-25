@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @CrossOrigin
-@RequestMapping("users/me/challenges")
+@RequestMapping("/challenges")
 @Tag(name = "Challenges", description = "Endpoints for managing user challenges")
 @RequiredArgsConstructor
 public class ChallengeController {
