@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -25,6 +26,7 @@ public class Goal implements Comparable<Goal> {
 
     @Column(nullable = false)
     @NotNull
+    @Size(max = 20, message = "Title can at most have 20 characters")
     private String title;
 
     @Column(nullable = false)
@@ -38,6 +40,7 @@ public class Goal implements Comparable<Goal> {
     @Positive
     private BigDecimal target;
 
+    @Size(max = 280, message = "Description can at most have 280 characters")
     private String description;
 
     @Column(nullable = false, name = "PRIORITY")
