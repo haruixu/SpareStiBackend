@@ -24,5 +24,5 @@ public interface UserMapper {
         @Mapping(target = "badges", ignore = true),
         @Mapping(target = "password", source = "encodedPassword")
     })
-    User updateEntity(@MappingTarget User user, UserUpdateDTO updateDTO, String encodedPassword);
+    void updateEntity(@MappingTarget User user, UserUpdateDTO updateDTO, String encodedPassword);
 }
