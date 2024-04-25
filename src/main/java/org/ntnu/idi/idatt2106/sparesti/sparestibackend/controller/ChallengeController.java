@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +16,15 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUp
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.ChallengeService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -167,15 +165,14 @@ public class ChallengeController {
             })
     @PostMapping
     public ResponseEntity<ChallengeDTO> createChallenge(
-            @Parameter(description = "Challenge details to create") @RequestBody @Valid
+            @Parameter(description = "Challenge details to create") @RequestBody
                     ChallengeCreateDTO challengeCreateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
-                    UserDetails userDetails,
-            BindingResult bindingResult)
-            throws ChallengeNotFoundException, UserNotFoundException, BadInputException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
+                    UserDetails userDetails)
+            throws ChallengeNotFoundException,
+                    UserNotFoundException,
+                    BadInputException,
+                    ObjectNotValidException {
         log.info("Received POST request for challenge username: {}", userDetails.getUsername());
         User user = getUser(userDetails);
 
@@ -236,15 +233,14 @@ public class ChallengeController {
     @PutMapping("/{id}")
     public ResponseEntity<ChallengeDTO> updateChallenge(
             @Parameter(description = "ID of the challenge to update") @PathVariable Long id,
-            @Parameter(description = "Updated challenge details") @RequestBody @Valid
+            @Parameter(description = "Updated challenge details") @RequestBody
                     ChallengeUpdateDTO challengeUpdateDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
-                    UserDetails userDetails,
-            BindingResult bindingResult)
-            throws ChallengeNotFoundException, UserNotFoundException, BadInputException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
+                    UserDetails userDetails)
+            throws ChallengeNotFoundException,
+                    UserNotFoundException,
+                    BadInputException,
+                    ObjectNotValidException {
         log.info("Received PUT request for challenge with id: {}", id);
         User user = getUser(userDetails);
         ChallengeDTO updatedChallenge =

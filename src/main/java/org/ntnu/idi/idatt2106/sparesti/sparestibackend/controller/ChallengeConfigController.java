@@ -14,6 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfi
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.ChallengeConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 import org.springframework.http.ResponseEntity;
@@ -58,10 +59,7 @@ public class ChallengeConfigController {
             BindingResult bindingResult,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
-            throws UserNotFoundException, BadInputException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
+            throws UserNotFoundException, BadInputException, ObjectNotValidException {
         log.info(
                 "Received request to create challenge config: {}, by user: {}",
                 challengeConfigDTO,
@@ -125,17 +123,12 @@ public class ChallengeConfigController {
                 @ApiResponse(responseCode = "400", description = "Bad input")
             })
     public ResponseEntity<ChallengeConfigDTO> updateChallengeConfig(
-            @Parameter(description = "Updated challenge config details") @Valid @RequestBody
+            @Parameter(description = "Updated challenge config details") @RequestBody
                     ChallengeConfigDTO challengeConfigDTO,
-            BindingResult bindingResult,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
-            throws ChallengeConfigNotFoundException, BadInputException {
+            throws ChallengeConfigNotFoundException, BadInputException, ObjectNotValidException {
         log.info("Received request to update challenge config to: {}", challengeConfigDTO);
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
-
         ChallengeConfigDTO updatedConfig =
                 userConfigService.updateChallengeConfig(
                         userDetails.getUsername(), challengeConfigDTO);

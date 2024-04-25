@@ -7,7 +7,10 @@ import java.math.BigDecimal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
 
 public record AccountDTO(
-        @NotNull AccountType accountType,
-        @NotNull @Positive Long accNumber,
-        @NotNull @Positive BigDecimal balance)
+        @NotNull(message = "Account type cannot be null") AccountType accountType,
+        @NotNull(message = "Account number cannot be null")
+                @Positive(message = "Account number must be positive")
+                Long accNumber,
+        @NotNull(message = "Balance cannot be null") @Positive(message = "Balance must be positive")
+                BigDecimal balance)
         implements Serializable {}

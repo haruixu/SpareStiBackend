@@ -13,7 +13,10 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeConfigDTO(
-        @NotNull Experience experience,
-        @NotNull Motivation motivation,
-        @NotNull @Size Set<ChallengeTypeConfigDTO> challengeTypeConfigs)
+        @NotNull(message = "Experience cannot be null") Experience experience,
+        @NotNull(message = "Motivation cannot be null") Motivation motivation,
+        @NotNull(message = "Challenge type configurations cannot be null")
+                // TODO: unsure
+                @Size(min = 1, message = "At least one challenge type configuration is required")
+                Set<ChallengeTypeConfigDTO> challengeTypeConfigs)
         implements Serializable {}

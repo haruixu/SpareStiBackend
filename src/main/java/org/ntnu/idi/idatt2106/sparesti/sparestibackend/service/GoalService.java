@@ -10,10 +10,12 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.GoalRepository;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class GoalService {
 
     private static final int ACTIVE_GOAL_LIMIT = 10;
 
+    private final ObjectValidator<GoalUpdateDTO> updateValidator;
+    private final ObjectValidator<GoalCreateDTO> createValidator;
+
     public GoalResponseDTO findUserGoal(Long id, User user) {
         return GoalMapper.INSTANCE.toDTO(findGoalByIdAndUser(id, user));
     }
@@ -34,7 +39,8 @@ public class GoalService {
         return goalRepository.findAllByUser(user, pageable).map(GoalMapper.INSTANCE::toDTO);
     }
 
-    public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) {
+    public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) throws ObjectNotValidException {
+        createValidator.validate(goalDTO);
         Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
         long priority = getDefaultPriority(user);
 
@@ -49,7 +55,9 @@ public class GoalService {
         return user.getGoals().size() + 1;
     }
 
-    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user) {
+    public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user)
+            throws ObjectNotValidException {
+        updateValidator.validate(goalDTO);
         Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));

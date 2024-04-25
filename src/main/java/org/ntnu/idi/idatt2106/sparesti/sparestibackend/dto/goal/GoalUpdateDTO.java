@@ -10,9 +10,10 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public record GoalUpdateDTO(
-        @NotEmpty @NotBlank String title,
-        @PositiveOrZero BigDecimal saved,
-        @Positive BigDecimal target,
+        @NotEmpty(message = "Title cannot be empty") @NotBlank(message = "Title cannot be blank")
+                String title,
+        @PositiveOrZero(message = "Saved amount cannot be negative") BigDecimal saved,
+        @Positive(message = "Target amount cannot be less than or equal to zero") BigDecimal target,
         String description,
-        @Future ZonedDateTime due)
+        @Future(message = "Due date cannot be in the past or now") ZonedDateTime due)
         implements Serializable {}

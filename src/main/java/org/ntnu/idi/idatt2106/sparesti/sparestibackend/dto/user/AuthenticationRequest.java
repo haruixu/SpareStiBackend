@@ -6,5 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public record AuthenticationRequest(
-        @NotNull @NotBlank @NotEmpty String username, @NotNull @NotBlank @NotEmpty String password)
+        @NotNull(message = "Username cannot be null")
+                @NotBlank(message = "Username cannot be blank")
+                @NotEmpty(message = "Username cannot be empty")
+                String username,
+        @NotNull(message = "Password cannot be null")
+                @NotBlank(message = "Password cannot be blank")
+                @NotEmpty(message = "Password cannot be empty")
+                String password)
         implements Serializable {}
