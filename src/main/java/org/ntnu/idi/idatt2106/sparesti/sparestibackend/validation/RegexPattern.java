@@ -20,10 +20,10 @@ public enum RegexPattern {
     USERNAME("^[ÆØÅæøåA-Za-z][æÆøØåÅA-Za-z0-9_]{2,29}$"),
 
     /**
-     * Valid password contains at least 8 characters, including numbers,
+     * Valid password contains at least 8 characters and at max 30 characters, including numbers,
      * Norwegian letters and at least 1 special character
      */
-    PASSWORD("^(?=.*[0-9])(?=.*[a-zæøå])(?=.*[ÆØÅA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"),
+    PASSWORD("^(?=.*[0-9])(?=.*[a-zæøå])(?=.*[ÆØÅA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,30}$"),
 
     /**
      * Valid email must start with Norwegian letters, numbers, underscore, '+', '&', '*', '-'
