@@ -9,6 +9,5 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
 public record AccountUpdateDTO(
         @NotNull(message = "Account type cannot be null") AccountType accountType,
         @Positive(message = "Account number must be positive") Long accNumber,
-        @Positive(message = "Balance must be positive")
-                BigDecimal balance)
+        @Positive(message = "Balance must be positive") BigDecimal balance)
         implements Serializable {}
