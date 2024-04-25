@@ -1,44 +1,38 @@
-# Cache maven docker image in GitLab
-image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
-
+# Define stages
 stages:
+  - build
   - linting
   - test
-  - build
-
-# Cache Maven dependencies
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 default:
-  cache: &global_cache
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - .m2/repository
-    policy: pull-push
-
-linting:
-  stage: linting
-  # No needs - Can run in parallel with other stages
-  needs: []
+  # Cache maven docker image in GitLab
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
   cache:
-    <<: *global_cache
-    policy: pull
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .m2/
+
+# Define variables
+variables:
+  MAVEN_OPTS: >-
+    -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+  MAVEN_BUILD_CLI_OPTS: >-
+    -DskipTests -Dspotless.check.skip=true
+  MAVEN_TEST_CLI_OPTS: >-
+    -Dspotless.check.skip=true
+
+build:
+  stage: build
   script:
-    # One thread per core
-    - mvn spotless:check
+    - mvn $MAVEN_BUILD_CLI_OPTS package
 
 test:
   stage: test
   needs: []
   script:
-    - mvn clean test -Dspotless.check.skip=true
+    - mvn test
 
-build:
-  stage: build
-  needs: []
-  cache:
-    <<: *global_cache
-    policy: pull
+linting:
+  stage: linting
   script:
-    - mvn clean package -Dmaven.test.skip -Dspotless.check.skip=true
+    - mvn spotless:check
