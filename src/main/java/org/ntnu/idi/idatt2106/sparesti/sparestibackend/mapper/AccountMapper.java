@@ -15,7 +15,6 @@ public interface AccountMapper {
     @Mapping(target = "accountType", ignore = true)
     AccountDTO toDTO(Account account);
 
-    // TODO: User can change account number
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Account updateEntity(@MappingTarget Account account, AccountUpdateDTO accountDTO);
 }
