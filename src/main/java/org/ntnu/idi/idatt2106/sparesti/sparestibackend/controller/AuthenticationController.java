@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
@@ -14,11 +13,11 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRe
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,7 +36,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     /**
      * Registers a new user with a given username, password, email, first name and last name
@@ -74,14 +73,11 @@ public class AuthenticationController {
             })
     @PostMapping("/register")
     public ResponseEntity<LoginRegisterResponse> register(
-            @Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult)
-            throws BadInputException, UserAlreadyExistsException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException("Fields in the body cannot be null, blank or empty");
-        }
-        LOGGER.info("Received register request for: {}", registerRequest);
+            @RequestBody RegisterRequest registerRequest)
+            throws BadInputException, ObjectNotValidException, UserAlreadyExistsException {
+        logger.info("Received register request for: {}", registerRequest);
         LoginRegisterResponse responseContent = authenticationService.register(registerRequest);
-        LOGGER.info("Successfully registered user");
+        logger.info("Successfully registered user");
         return ResponseEntity.ok(responseContent);
     }
 
@@ -111,14 +107,11 @@ public class AuthenticationController {
             })
     @PostMapping("/login")
     public ResponseEntity<LoginRegisterResponse> login(
-            @Valid @RequestBody AuthenticationRequest authRequest, BindingResult bindingResult)
-            throws BadInputException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException("Fields in the body cannot be null, blank or empty");
-        }
-        LOGGER.info("Received login request for: {}", authRequest);
+            @RequestBody AuthenticationRequest authRequest)
+            throws BadInputException, ObjectNotValidException {
+        logger.info("Received login request for: {}", authRequest);
         LoginRegisterResponse responseContent = authenticationService.login(authRequest);
-        LOGGER.info("Successfully logged in user");
+        logger.info("Successfully logged in user");
         return ResponseEntity.ok(responseContent);
     }
 
@@ -148,9 +141,9 @@ public class AuthenticationController {
             @Parameter(description = "Authorization header with bearer token")
                     @RequestHeader("Authorization")
                     String bearerToken) {
-        LOGGER.info("Received renew token request for: {}", bearerToken);
+        logger.info("Received renew token request for: {}", bearerToken);
         AccessTokenResponse responseContent = authenticationService.refreshAccessToken(bearerToken);
-        LOGGER.info("Successfully renewed access token");
+        logger.info("Successfully renewed access token");
         return ResponseEntity.ok(responseContent);
     }
 }

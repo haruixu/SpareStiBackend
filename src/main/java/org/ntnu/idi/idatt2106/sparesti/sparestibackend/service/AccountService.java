@@ -6,6 +6,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountRespon
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.AccountMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -18,7 +19,11 @@ public class AccountService {
 
     private final UserService userService;
 
-    public AccountDTO saveAccount(AccountDTO accountDTO, User user) {
+    private final ObjectValidator<AccountDTO> accountValidator;
+    private final ObjectValidator<AccountUpdateDTO> accountUpdateValidator;
+
+    public AccountDTO saveAccount(AccountDTO accountDTO, User user) throws ObjectNotValidException {
+        accountValidator.validate(accountDTO);
         if (accountDTO.accountType() == AccountType.SAVING && user.getSavingAccount() == null) {
             user.setSavingAccount(AccountMapper.INSTANCE.toEntity(accountDTO));
         } else if (accountDTO.accountType() == AccountType.SPENDING
@@ -36,7 +41,9 @@ public class AccountService {
         return new AccountResponseDTO(user.getSavingAccount(), user.getSpendingAccount());
     }
 
-    public AccountResponseDTO updateAccount(AccountUpdateDTO accountUpdateDTO, User user) {
+    public AccountResponseDTO updateAccount(AccountUpdateDTO accountUpdateDTO, User user)
+            throws ObjectNotValidException {
+        accountUpdateValidator.validate(accountUpdateDTO);
         if (accountUpdateDTO.accountType() == AccountType.SAVING
                 && user.getSavingAccount() != null) {
             Account updatedAccount =

@@ -10,11 +10,18 @@ import java.time.ZonedDateTime;
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeUpdateDTO(
-        @NotEmpty @NotBlank String title,
-        @NotNull @PositiveOrZero BigDecimal saved,
-        @NotNull @Positive BigDecimal target,
-        @NotNull @Positive BigDecimal perPurchase,
+        @NotEmpty(message = "Title cannot be empty") @NotBlank(message = "Title cannot be blank")
+                String title,
+        @NotNull(message = "Saved amount cannot be null")
+                @PositiveOrZero(message = "Saved amount cannot be negative")
+                BigDecimal saved,
+        @NotNull(message = "Target amount cannot be null")
+                @Positive(message = "Target amount cannot be less than or equal to zero")
+                BigDecimal target,
+        @NotNull(message = "Per purchase amount cannot be null")
+                @Positive(message = "Per purchase amount cannot be less than or equal to zero")
+                BigDecimal perPurchase,
         String description,
-        @Future ZonedDateTime due,
+        @Future(message = "Due date must be in the future") ZonedDateTime due,
         String type)
         implements Serializable {}
