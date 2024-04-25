@@ -27,11 +27,15 @@ build:
     - mvn $MAVEN_BUILD_CLI_OPTS package
 
 test:
+  needs: ["build"]
   stage: test
   script:
     - mvn test
+  retry: 1
 
 linting:
+  needs: ["build"]
   stage: linting
   script:
     - mvn spotless:check
+  retry: 1
