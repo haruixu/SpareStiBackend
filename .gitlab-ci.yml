@@ -30,12 +30,25 @@ test:
   needs: ["build"]
   stage: test
   script:
-    - mvn test
-  retry: 1
+    - |
+      set +o errexit
+      END=1
+      for i in $(seq 1 $END); do
+          echo "Execution no. $i"
+          mvn test && exit 0
+      done
+      exit 1
 
 linting:
   needs: ["build"]
   stage: linting
   script:
     - mvn spotless:check
-  retry: 1
+    - |
+      set +o errexit
+      END=1
+      for i in $(seq 1 $END); do
+          echo "Execution no. $i"
+          mvn test && exit 0
+      done
+      exit 1
