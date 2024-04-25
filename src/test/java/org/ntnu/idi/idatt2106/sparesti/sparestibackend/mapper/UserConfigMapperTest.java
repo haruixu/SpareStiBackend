@@ -12,11 +12,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeConfig;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Experience;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Motivation;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Role;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.UserConfig;
 
 @ExtendWith(MockitoExtension.class)
 public class UserConfigMapperTest {

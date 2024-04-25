@@ -1,12 +1,10 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

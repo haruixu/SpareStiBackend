@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.Account;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Role;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.UserConfig;
 
 public class ChallengeMapperTest {
 

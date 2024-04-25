@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.AccountType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;

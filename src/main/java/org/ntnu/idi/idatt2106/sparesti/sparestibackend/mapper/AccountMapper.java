@@ -4,7 +4,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.Account;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface AccountMapper {

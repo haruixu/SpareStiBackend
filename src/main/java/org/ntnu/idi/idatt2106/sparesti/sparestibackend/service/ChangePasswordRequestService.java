@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.ChangePasswordRequestRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.ResetPasswordRequest;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChangePasswordRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.ChangePasswordRequestRepository;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;

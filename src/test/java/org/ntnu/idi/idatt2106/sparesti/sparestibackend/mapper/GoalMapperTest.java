@@ -9,11 +9,11 @@ import org.junit.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.Account;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Role;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.UserConfig;
 
 public class GoalMapperTest {
 

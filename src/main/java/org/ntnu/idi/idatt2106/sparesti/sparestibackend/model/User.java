@@ -12,6 +12,8 @@ import java.util.TreeSet;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SortNatural;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.Account;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.UserConfig;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

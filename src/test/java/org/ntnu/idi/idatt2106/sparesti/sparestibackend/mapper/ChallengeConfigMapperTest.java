@@ -13,10 +13,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeConfig;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeTypeConfig;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Experience;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Motivation;
 
 public class ChallengeConfigMapperTest {
 

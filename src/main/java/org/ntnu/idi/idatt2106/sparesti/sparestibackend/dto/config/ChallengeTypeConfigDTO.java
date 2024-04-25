@@ -4,9 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeTypeConfig;
 
 /**
- * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig}
+ * DTO for {@link ChallengeTypeConfig}
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeTypeConfigDTO(

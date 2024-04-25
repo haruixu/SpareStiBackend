@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

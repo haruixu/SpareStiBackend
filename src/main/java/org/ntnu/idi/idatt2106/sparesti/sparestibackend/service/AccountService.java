@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountAlreadyExistsException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.account.AccountAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.account.AccountNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.AccountMapper;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.Account;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.account.AccountType;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

@@ -5,11 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeConfig;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Experience;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Motivation;
 
 /**
- * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig}
+ * DTO for {@link ChallengeConfig}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeConfigDTO(
