@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.ChangePasswordRequestRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
@@ -31,7 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(locations = "classpath:application-test.yml")
 @RunWith(SpringRunner.class)
-class ChangePasswordControllerTest {
+class ChangePasswordIntegrationTest {
 
     @Autowired private WebApplicationContext context;
 
