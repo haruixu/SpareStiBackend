@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,10 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * Global exception handler to handle different types of exceptions across the application. It provides centralized
  * exception handling for various types of exceptions that may occur during the execution of the application.
- *
- * @author Harry L.X & Lars M.L.N
- * @version 1.0
- * @since 17.4.24
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -106,7 +101,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(
             value = {
                 IllegalArgumentException.class,
-                HttpMessageNotReadableException.class,
                 BadInputException.class,
                 NullPointerException.class,
                 MissingServletRequestParameterException.class,
