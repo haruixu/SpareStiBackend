@@ -1,6 +1,5 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
@@ -15,6 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.RegexValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,20 +59,20 @@ public class AuthenticationService {
     public LoginRegisterResponse register(RegisterRequest request)
             throws BadInputException, UserAlreadyExistsException, ObjectNotValidException {
         registerRequestValidator.validate(request);
-        if (!(isUsernameValid(request.username()))) {
+        if (!(RegexValidator.isUsernameValid(request.username()))) {
             throw new BadInputException(
                     "The username can only contain letters, numbers and underscore, "
                             + "with the first character being a letter. "
                             + "The length must be between 3 and 30 characters");
         }
-        if (!isEmailValid(request.email())) {
+        if (!RegexValidator.isEmailValid(request.email())) {
             throw new BadInputException("The email address is invalid.");
         }
-        if (!isNameValid(request.firstName())) {
+        if (!RegexValidator.isNameValid(request.firstName())) {
             throw new BadInputException(
                     "The first name: '" + request.firstName() + "' is invalid.");
         }
-        if (!isNameValid(request.lastName())) {
+        if (!RegexValidator.isNameValid(request.lastName())) {
             throw new BadInputException("The last name: '" + request.lastName() + "' is invalid.");
         }
         if (userService.userExistsByUsername(request.username())) {
@@ -83,7 +83,7 @@ public class AuthenticationService {
             throw new UserAlreadyExistsException(
                     "User with email: " + request.email() + " already exists");
         }
-        if (!isPasswordStrong(request.password())) {
+        if (!RegexValidator.isPasswordStrong(request.password())) {
             throw new BadInputException(
                     "Password must be at least 8 characters long, include numbers, upper and lower"
                             + " case letters, and at least one special character");
@@ -98,61 +98,6 @@ public class AuthenticationService {
         String jwtAccessToken = jwtService.generateToken(user, ONE_DAY_IN_MINUTES);
         String jwtRefreshToken = jwtService.generateToken(user, ONE_WEEK_IN_MINUTES);
         return RegisterMapper.INSTANCE.toDTO(user, jwtAccessToken, jwtRefreshToken);
-    }
-
-    /**
-     * Checks if username is valid.
-     * Valid username starts with a letter.
-     * Valid characters are letters, numbers and underscore.
-     * Length must be between 3 and 30 characters.
-     * @param username Username
-     * @return True, if username is valid. Else, returns false.
-     */
-    private boolean isUsernameValid(String username) {
-        String usernamePattern = "^[A-Za-z][A-Za-z0-9_]{2,29}$";
-        return Pattern.compile(usernamePattern).matcher(username).matches();
-    }
-
-    /**
-     * Checks if email is invalid.
-     * Valid email must start with letters, numbers, underscore, '+', '&', '*', '-'
-     * Valid email can include must include '@'
-     * Must include a period after '@'
-     * Must have letters after period of length 2-7 characters
-     * @param email Email
-     * @return True, if email is valid.
-     */
-    public boolean isEmailValid(String email) {
-        String emailPattern =
-                "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return Pattern.compile(emailPattern).matcher(email).matches();
-    }
-
-    /**
-     * Checks if name is valid
-     * A valid contains can only contain characters, white space,
-     * comma, period, singe quotes and hyphens
-     * @param name Name
-     * @return If name is valid
-     */
-    public boolean isNameValid(String name) {
-        String namePattern = "^[a-zA-Z ,.'-]+$";
-        return Pattern.compile(namePattern).matcher(name).matches();
-    }
-
-    /**
-     * Checks if a password meets the strength criteria.
-     *
-     * @param password
-     *            The password to check
-     * @return true if the password meets the criteria, false otherwise
-     */
-    private boolean isPasswordStrong(String password) {
-        // Example criteria: at least 8 characters, including numbers, letters and at least one
-        // special character
-        String passwordPattern =
-                "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-        return Pattern.compile(passwordPattern).matcher(password).matches();
     }
 
     /**
