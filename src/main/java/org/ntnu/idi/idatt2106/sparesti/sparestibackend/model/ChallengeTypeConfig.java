@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class ChallengeTypeConfig {
 
     @Column(nullable = false, name = "TYPE", updatable = false)
     @Setter(AccessLevel.NONE)
+    @Size(max = 20, message = "Type can have max 20 characters")
     private String type;
 
     /**

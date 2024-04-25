@@ -85,8 +85,9 @@ public class AuthenticationService {
         }
         if (!RegexValidator.isPasswordStrong(request.password())) {
             throw new BadInputException(
-                    "Password must be at least 8 characters long and at max 30 characters, include numbers, upper and lower"
-                            + " case letters, and at least one special character");
+                    "Password must be at least 8 characters long and at max 30 characters, include"
+                            + " numbers, upper and lower case letters, and at least one special"
+                            + " character");
         }
 
         logger.info("Creating user");
