@@ -3,9 +3,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.EmailNotFoundException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
@@ -66,10 +64,22 @@ public class UserService {
 
     public UserResponse updateUser(String username, UserUpdateDTO updateDTO) {
         User user = findUserByUsername(username);
+        userAlreadyExists(user, updateDTO);
+
         String newPassword = passwordEncoder.encode(updateDTO.password());
         UserMapper.INSTANCE.updateEntity(user, updateDTO, newPassword);
         userRepository.save(user);
         return UserMapper.INSTANCE.toDTO(user);
+    }
+
+    public void userAlreadyExists(User user, UserUpdateDTO updateDTO) {
+        if (userExistsByUsername(updateDTO.username()) && !user.getUsername().equalsIgnoreCase(updateDTO.username())) {
+            throw new UserAlreadyExistsException("The username is already taken");
+        }
+
+        if (userExistByEmail(updateDTO.email()) && !user.getEmail().equalsIgnoreCase(updateDTO.email())) {
+            throw new UserAlreadyExistsException("The email is already taken");
+        }
     }
 
     /**
