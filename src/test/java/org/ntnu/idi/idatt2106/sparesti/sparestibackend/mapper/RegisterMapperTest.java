@@ -1,8 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;

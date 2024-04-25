@@ -265,6 +265,8 @@
             <EMAIL_USERNAME>sparestigruppe2test@gmail.com</EMAIL_USERNAME>
             <EMAIL_PASSWORD>izrd qtso iyhj pbml</EMAIL_PASSWORD>
           </environmentVariables>
+          <parallel>classesAndMethods</parallel>
+          <useUnlimitedThreads>true</useUnlimitedThreads>
         </configuration>
       </plugin>
     </plugins>
