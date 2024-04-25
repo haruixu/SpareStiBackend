@@ -1,32 +1,23 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 @Embeddable
-@Builder
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "ROLE"})},
+        name = "USER_CONFIG")
 public class UserConfig {
-    @Column(nullable = false)
-    private Motivation motivation;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private Role role;
 
-    @Column(nullable = false)
-    private Experience experience;
-
-    @ElementCollection
-    @CollectionTable(name = "CHALLENGE_CONFIG")
-    Set<ChallengeConfig> challengeConfigs = new HashSet<>();
+    @Setter private ChallengeConfig challengeConfig;
 }

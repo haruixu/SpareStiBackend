@@ -1,43 +1,78 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SortNatural;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "USERS")
+@Getter
+@AllArgsConstructor
+@Table(name = "\"USER\"")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId private String username;
+    @NotNull
+    @Column(nullable = false)
+    private String firstName;
 
+    @NotNull
+    @Column(nullable = false)
+    private String lastName;
+
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    private String username;
+
+    @Setter
+    @NotNull
+    @Column(nullable = false)
     private String password;
 
-    @Embedded private UserConfig userConfig;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    @Email
+    private String email;
 
-    @ElementCollection
+    @Setter @Embedded private UserConfig userConfig;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @SortNatural
-    @CollectionTable(name = "GOAL")
-    private Set<Goal> goals = new TreeSet<>();
+    @JsonManagedReference
+    private final Set<Goal> goals = new TreeSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "CHALLENGE")
-    private Set<Challenge> challenges = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private final Set<Challenge> challenges = new HashSet<>();
+
+    @Setter
+    @AttributeOverride(name = "accNumber", column = @Column(name = "spending_acc_number"))
+    @AttributeOverride(name = "balance", column = @Column(name = "spending_balance"))
+    private Account spendingAccount = new Account();
+
+    @Setter
+    @AttributeOverride(name = "accNumber", column = @Column(name = "saving_acc_number"))
+    @AttributeOverride(name = "balance", column = @Column(name = "saving_balance"))
+    private Account savingAccount = new Account();
 
     // Unidirectional many-to-many
     @ManyToMany(fetch = FetchType.EAGER)
@@ -45,7 +80,7 @@ public class User implements UserDetails {
             name = "USER_BADGE",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "BADGE_ID"))
-    private Set<Badge> badges = new HashSet<>();
+    private final Set<Badge> badges = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

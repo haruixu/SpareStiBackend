@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum Experience {
     VERY_HIGH(5),
     HIGH(4),
-    MIDDLE(3),
+    MEDIUM(3),
     LOW(2),
     VERY_LOW(1);
 

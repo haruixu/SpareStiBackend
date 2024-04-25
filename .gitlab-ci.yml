@@ -1,4 +1,8 @@
-image: maven:latest
+# Cache maven docker image in GitLab
+image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
+
+before_script:
+  - rm -f .git/shallow.lock
 
 stages:
   - linting
@@ -7,14 +11,20 @@ stages:
 
 linting:
   stage: linting
+  # No needs - Can run in parallel with other stages
+  needs: []
   script:
+    # One thread per core
     - mvn spotless:check
+
 test:
   stage: test
+  needs: []
   script:
-    - mvn clean test
+    - mvn clean test -Dspotless.check.skip=true
 
 build:
   stage: build
+  needs: []
   script:
-    mvn clean package
+    - mvn clean package -Dmaven.test.skip -Dspotless.check.skip=true
