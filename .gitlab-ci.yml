@@ -1,9 +1,6 @@
 # Cache maven docker image in GitLab
 image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
 
-variables:
-  GIT_CLONE_PATH: '$CI_BUILDS_DIR/$CI_PROJECT_NAME/job_$CI_JOB_ID'
-
 stages:
   - linting
   - test
