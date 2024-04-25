@@ -2,21 +2,23 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRequest;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,12 @@ public class AuthenticationService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
+    private static final int ONE_DAY_IN_MINUTES = 60 * 24;
+    private static final int ONE_WEEK_IN_MINUTES = ONE_DAY_IN_MINUTES * 7;
+
+    private final ObjectValidator<RegisterRequest> registerRequestValidator;
+    private final ObjectValidator<AuthenticationRequest> authenticationRequestValidator;
+
     /**
      * Registers a new, valid user. For a user to be valid, they have to
      * have a valid and unique username, a valid and unique email, valid first name and last names,
@@ -49,46 +57,46 @@ public class AuthenticationService {
      * @throws UserAlreadyExistsException If username or email have been taken
      */
     public LoginRegisterResponse register(RegisterRequest request)
-            throws BadInputException, UserAlreadyExistsException {
-        if (!(isUsernameValid(request.getUsername()))) {
+            throws BadInputException, UserAlreadyExistsException, ObjectNotValidException {
+        registerRequestValidator.validate(request);
+        if (!(isUsernameValid(request.username()))) {
             throw new BadInputException(
                     "The username can only contain letters, numbers and underscore, "
                             + "with the first character being a letter. "
                             + "The length must be between 3 and 30 characters");
         }
-        if (!isEmailValid(request.getEmail())) {
+        if (!isEmailValid(request.email())) {
             throw new BadInputException("The email address is invalid.");
         }
-        if (!isNameValid(request.getFirstName())) {
+        if (!isNameValid(request.firstName())) {
             throw new BadInputException(
-                    "The first name: '" + request.getFirstName() + "' is invalid.");
+                    "The first name: '" + request.firstName() + "' is invalid.");
         }
-        if (!isNameValid(request.getLastName())) {
-            throw new BadInputException(
-                    "The last name: '" + request.getLastName() + "' is invalid.");
+        if (!isNameValid(request.lastName())) {
+            throw new BadInputException("The last name: '" + request.lastName() + "' is invalid.");
         }
-        if (userService.userExistsByUsername(request.getUsername())) {
+        if (userService.userExistsByUsername(request.username())) {
             throw new UserAlreadyExistsException(
-                    "User with username: " + request.getUsername() + " already exists");
+                    "User with username: " + request.username() + " already exists");
         }
-        if (userService.userExistByEmail(request.getEmail())) {
+        if (userService.userExistByEmail(request.email())) {
             throw new UserAlreadyExistsException(
-                    "User with email: " + request.getEmail() + " already exists");
+                    "User with email: " + request.email() + " already exists");
         }
-        if (!isPasswordStrong(request.getPassword())) {
+        if (!isPasswordStrong(request.password())) {
             throw new BadInputException(
                     "Password must be at least 8 characters long, include numbers, upper and lower"
                             + " case letters, and at least one special character");
         }
 
         logger.info("Creating user");
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.password());
         User user = RegisterMapper.INSTANCE.toEntity(request, Role.USER, encodedPassword);
-        logger.info("Saving user");
+        logger.info("Saving user with username '{}'", user.getUsername());
         userService.save(user);
         logger.info("Generating tokens");
-        String jwtAccessToken = jwtService.generateToken(user, 5);
-        String jwtRefreshToken = jwtService.generateToken(user, 30);
+        String jwtAccessToken = jwtService.generateToken(user, ONE_DAY_IN_MINUTES);
+        String jwtRefreshToken = jwtService.generateToken(user, ONE_WEEK_IN_MINUTES);
         return RegisterMapper.INSTANCE.toDTO(user, jwtAccessToken, jwtRefreshToken);
     }
 
@@ -153,22 +161,23 @@ public class AuthenticationService {
      * @return Jwt tokens upon successful login
      * @throws BadInputException if no user has a matching username or password
      */
-    public LoginRegisterResponse login(AuthenticationRequest request) throws BadInputException {
-        if (!userService.userExistsByUsername(request.getUsername())
+    public LoginRegisterResponse login(AuthenticationRequest request)
+            throws BadInputException, ObjectNotValidException {
+        authenticationRequestValidator.validate(request);
+        if (!userService.userExistsByUsername(request.username())
                 || !matches(
-                        request.getPassword(),
-                        userService.findUserByUsername(request.getUsername()).getPassword())) {
+                        request.password(),
+                        userService.findUserByUsername(request.username()).getPassword())) {
             throw new BadInputException("Username or password is incorrect");
         }
 
         logger.info("Setting authentication context");
         manager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()));
-        User user = userService.findUserByUsername(request.getUsername());
+                new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+        User user = userService.findUserByUsername(request.username());
         System.out.println("Generating tokens");
-        String jwtAccessToken = jwtService.generateToken(user, 5);
-        String jwtRefreshToken = jwtService.generateToken(user, 30);
+        String jwtAccessToken = jwtService.generateToken(user, ONE_DAY_IN_MINUTES);
+        String jwtRefreshToken = jwtService.generateToken(user, ONE_WEEK_IN_MINUTES);
         return RegisterMapper.INSTANCE.toDTO(user, jwtAccessToken, jwtRefreshToken);
     }
 
@@ -189,11 +198,9 @@ public class AuthenticationService {
      * Refreshes access token given a valid refresh token
      * @param bearerToken Stringified HTTP-header (Authorization-header)
      * @return Access token wrapper if the refresh token is valid
-     * @throws UsernameNotFoundException If the tokens subject matches no existing username
+     * @throws UserNotFoundException If the tokens subject matches no existing username
      */
-    public AccessTokenResponse refreshAccessToken(String bearerToken)
-            throws UsernameNotFoundException {
-        // TODO: Add config class for handling MalformedJwtException
+    public AccessTokenResponse refreshAccessToken(String bearerToken) throws UserNotFoundException {
         String parsedRefreshToken = bearerToken.substring(7);
         User user = userService.findUserByUsername(jwtService.extractUsername(parsedRefreshToken));
         String newJWTAccessToken = jwtService.generateToken(user, 5);

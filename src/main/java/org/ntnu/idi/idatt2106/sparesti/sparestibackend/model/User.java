@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @AllArgsConstructor
@@ -40,6 +41,7 @@ public class User implements UserDetails {
     @NaturalId
     private String username;
 
+    @Setter
     @NotNull
     @Column(nullable = false)
     private String password;
@@ -52,18 +54,25 @@ public class User implements UserDetails {
 
     @Setter @Embedded private UserConfig userConfig;
 
-    @ElementCollection
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @SortNatural
-    @CollectionTable(name = "GOAL")
+    @JsonManagedReference
     private final Set<Goal> goals = new TreeSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "CHALLENGE")
+    @OneToMany(mappedBy = "user")
     private final Set<Challenge> challenges = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "ACCOUNT")
-    private final Set<Account> accounts = new HashSet<>();
+    @Setter
+    @AttributeOverride(name = "accNumber", column = @Column(name = "spending_acc_number"))
+    @AttributeOverride(name = "balance", column = @Column(name = "spending_balance"))
+    private Account spendingAccount = new Account();
+
+    @Setter
+    @AttributeOverride(name = "accNumber", column = @Column(name = "saving_acc_number"))
+    @AttributeOverride(name = "balance", column = @Column(name = "saving_balance"))
+    private Account savingAccount = new Account();
 
     // Unidirectional many-to-many
     @ManyToMany(fetch = FetchType.EAGER)

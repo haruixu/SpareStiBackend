@@ -1,17 +1,15 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import lombok.Value;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig}
  */
-@Value
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserConfigDTO implements Serializable {
-    @NotNull Role role;
-    @NotNull ChallengeConfigDTO challengeConfig;
-}
+public record UserConfigDTO(
+        @NotNull(message = "Role cannot be null") Role role,
+        @NotNull(message = "Challenge config cannot be null") ChallengeConfigDTO challengeConfig)
+        implements Serializable {}

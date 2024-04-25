@@ -1,13 +1,15 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
 
-@Mapper(componentModel = "spring", imports = ApplicationUtil.class)
+@Mapper(imports = ApplicationUtil.class, unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ChallengeMapper {
 
     ChallengeMapper INSTANCE = Mappers.getMapper(ChallengeMapper.class);
@@ -18,9 +20,27 @@ public interface ChallengeMapper {
                     "java(ApplicationUtil.percent(challenge.getSaved(), challenge.getTarget()))")
     ChallengeDTO toDTO(Challenge challenge);
 
-    @Mapping(
-            target = "completion",
-            expression =
-                    "java(ApplicationUtil.percent(challengeDTO.getSaved(),challengeDTO.getTarget()))")
-    Challenge toEntity(ChallengeDTO challengeDTO);
+    @Mappings({
+        @Mapping(target = "id", ignore = true),
+        @Mapping(target = "createdOn", ignore = true),
+        @Mapping(target = "completedOn", ignore = true),
+        @Mapping(
+                target = "completion",
+                expression =
+                        "java(ApplicationUtil.percent(challengeCreateDTO.saved(),"
+                                + " challengeCreateDTO.target()))")
+    })
+    Challenge toEntity(ChallengeCreateDTO challengeCreateDTO, User user);
+
+    @Mappings({
+        @Mapping(target = "user", ignore = true),
+        @Mapping(target = "id", ignore = true),
+        @Mapping(target = "createdOn", ignore = true),
+        @Mapping(target = "completedOn", ignore = true),
+        @Mapping(
+                target = "completion",
+                expression =
+                        "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
+    })
+    Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO);
 }

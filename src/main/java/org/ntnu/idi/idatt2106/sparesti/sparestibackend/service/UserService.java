@@ -1,10 +1,12 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.EmailNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Persists a user entity
@@ -34,15 +37,21 @@ public class UserService {
      * Finds a user from a given username.
      * @param username Username used for finding a user
      * @return User entity with matching username
-     * @throws UsernameNotFoundException If no user has the given username
+     * @throws UserNotFoundException If no user has the given username
      */
-    public User findUserByUsername(String username) throws UsernameNotFoundException {
+    public User findUserByUsername(String username) throws UserNotFoundException {
         return userRepository
                 .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    public User findUserByEmail(String email) throws EmailNotFoundException {
+        return userRepository
+                .findByEmail(email)
                 .orElseThrow(
                         () ->
-                                new UsernameNotFoundException(
-                                        "User with username: " + username + " not found"));
+                                new EmailNotFoundException(
+                                        "User with email: " + email + " not found"));
     }
 
     /**
@@ -61,6 +70,15 @@ public class UserService {
      */
     public boolean userExistByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    public void updatePassword(Long userID, String newPassword) {
+        User user =
+                userRepository
+                        .findById(userID)
+                        .orElseThrow(() -> new BadInputException("User not found"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public User findUserById(Long id) {
