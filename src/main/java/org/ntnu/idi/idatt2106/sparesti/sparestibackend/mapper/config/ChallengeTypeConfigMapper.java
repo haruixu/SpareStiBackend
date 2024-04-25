@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

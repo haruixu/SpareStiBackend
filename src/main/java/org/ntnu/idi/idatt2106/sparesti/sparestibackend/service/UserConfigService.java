@@ -11,9 +11,9 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.Challeng
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeConfigMapper;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeTypeConfigMapper;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserConfigMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.ChallengeConfigMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.ChallengeTypeConfigMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.UserConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeTypeConfig;

@@ -12,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.ChallengeConfigMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.UserConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Experience;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Motivation;

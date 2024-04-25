@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.ChallengeConfigMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.config.ChallengeTypeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.ChallengeTypeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.config.Experience;
