@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountUpdateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(locations = "classpath:application-test.yml")
-class AccountControllerIntegrationTest {
+class AccountIntegrationTest {
 
     @Autowired private WebApplicationContext context;
 
@@ -217,7 +217,7 @@ class AccountControllerIntegrationTest {
 
     @Test
     @WithMockUser
-    void putValidSpendingAccountBalance() throws Exception {
+    void putValidSpendingAccountBalanceWithoutAccNumber() throws Exception {
         mvc.perform(
                 MockMvcRequestBuilders.post("/users/me/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -250,6 +250,39 @@ class AccountControllerIntegrationTest {
 
     @Test
     @WithMockUser
+    void putValidSpendingAccNumberWithoutBalance() throws Exception {
+        mvc.perform(
+                MockMvcRequestBuilders.post("/users/me/accounts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(spendingAccountDTOJsonRequest));
+
+        AccountUpdateDTO accountUpdateDTO =
+                new AccountUpdateDTO(AccountType.SPENDING, 191L, new BigDecimal("660.21"));
+        String updateAccountDTOJsonRequest = objectMapper.writeValueAsString(accountUpdateDTO);
+        String modifiedJson = updateAccountDTOJsonRequest.replace(",\"balance\":234", "");
+
+        mvc.perform(
+                MockMvcRequestBuilders.put("/users/me/accounts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(modifiedJson));
+
+        MvcResult result =
+                mvc.perform(MockMvcRequestBuilders.get("/users/me/accounts")).andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+        JsonNode responseJson = objectMapper.readTree(responseBody);
+
+        String savingAccNumber = responseJson.get("spendingAccount").get("accNumber").asText();
+        String savingBalance = responseJson.get("spendingAccount").get("balance").asText();
+
+        Assertions.assertEquals("191", savingAccNumber);
+        Assertions.assertEquals("660.21", savingBalance);
+    }
+
+    @Test
+    @WithMockUser
     void putValidAccountBalanceWithAccNumber() throws Exception {
         mvc.perform(
                 MockMvcRequestBuilders.post("/users/me/accounts")
@@ -276,7 +309,7 @@ class AccountControllerIntegrationTest {
         String savingAccNumber = responseJson.get("savingAccount").get("accNumber").asText();
         String savingBalance = responseJson.get("savingAccount").get("balance").asText();
 
-        Assertions.assertEquals("50", savingAccNumber);
+        Assertions.assertEquals("191", savingAccNumber);
         Assertions.assertEquals("660.21", savingBalance);
     }
 
@@ -338,7 +371,29 @@ class AccountControllerIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void putAccountWithMissingAccNumber() throws Exception {
+        mvc.perform(
+                MockMvcRequestBuilders.post("/users/me/accounts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(savingAccountDTOJsonRequest));
+
+        AccountUpdateDTO accountUpdateDTO =
+                new AccountUpdateDTO(AccountType.SAVING, 191L, new BigDecimal("660.21"));
+        String updateAccountDTOJsonRequest = objectMapper.writeValueAsString(accountUpdateDTO);
+        String modifiedJson = updateAccountDTOJsonRequest.replace(",\"accNumber\":191", "");
+
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/users/me/accounts")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(modifiedJson))
+                .andExpect(status().isOk());
     }
 
     @Test
