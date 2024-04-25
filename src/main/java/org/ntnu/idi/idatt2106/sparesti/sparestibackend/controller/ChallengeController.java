@@ -2,6 +2,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +43,14 @@ public class ChallengeController {
             description = "Retrieve challenges associated with the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Challenges found"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenges found",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "Challenges or user not found")
             })
     @GetMapping
@@ -63,7 +72,14 @@ public class ChallengeController {
             description = "Retrieve active challenges associated with the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Active challenges found"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Active challenges found",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "User not found")
             })
     @GetMapping("/active")
@@ -81,7 +97,14 @@ public class ChallengeController {
             description = "Retrieve completed challenges associated with the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Completed challenges found"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Completed challenges found",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "User not found")
             })
     @GetMapping("/completed")
@@ -99,7 +122,14 @@ public class ChallengeController {
             description = "Retrieve a specific challenge for the authenticated user by ID.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Challenge found"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge found",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "Challenge or user not found")
             })
     @GetMapping("/{id}")
@@ -122,7 +152,14 @@ public class ChallengeController {
             description = "Creates a new challenge for the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Challenge created"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge created",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "User not found"),
                 @ApiResponse(responseCode = "400", description = "Bad input")
             })
@@ -149,7 +186,14 @@ public class ChallengeController {
             description = "Marks a challenge as completed for the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Challenge completed"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge completed",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "Challenge not found")
             })
     @PutMapping("/{id}/complete")
@@ -175,7 +219,14 @@ public class ChallengeController {
             description = "Updates an existing challenge for the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Challenge updated"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge updated",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
                 @ApiResponse(responseCode = "404", description = "Challenge or user not found"),
                 @ApiResponse(responseCode = "400", description = "Bad input")
             })
