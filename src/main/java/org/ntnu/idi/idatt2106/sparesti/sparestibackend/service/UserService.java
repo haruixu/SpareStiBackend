@@ -73,11 +73,13 @@ public class UserService {
     }
 
     public void userAlreadyExists(User user, UserUpdateDTO updateDTO) {
-        if (userExistsByUsername(updateDTO.username()) && !user.getUsername().equalsIgnoreCase(updateDTO.username())) {
+        if (userExistsByUsername(updateDTO.username())
+                && !user.getUsername().equalsIgnoreCase(updateDTO.username())) {
             throw new UserAlreadyExistsException("The username is already taken");
         }
 
-        if (userExistByEmail(updateDTO.email()) && !user.getEmail().equalsIgnoreCase(updateDTO.email())) {
+        if (userExistByEmail(updateDTO.email())
+                && !user.getEmail().equalsIgnoreCase(updateDTO.email())) {
             throw new UserAlreadyExistsException("The email is already taken");
         }
     }
