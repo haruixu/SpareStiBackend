@@ -28,12 +28,10 @@ build:
 
 test:
   stage: test
-  needs: ["build"]
   script:
     - mvn test
 
 linting:
-  needs: ["build"]
   stage: linting
   script:
     - mvn spotless:check
