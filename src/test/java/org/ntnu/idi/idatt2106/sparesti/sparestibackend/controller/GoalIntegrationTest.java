@@ -121,6 +121,7 @@ public class GoalIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
     @WithMockUser
     void testGetAllGoals() throws Exception {
         // Create goal

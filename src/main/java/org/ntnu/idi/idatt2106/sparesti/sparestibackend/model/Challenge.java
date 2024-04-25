@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -24,6 +25,7 @@ public class Challenge {
 
     @Column(nullable = false)
     @NotNull
+    @Size(max = 20, message = "Title can have max 20 characters")
     private String title;
 
     @Column(nullable = false)
@@ -42,6 +44,7 @@ public class Challenge {
     @Positive
     private BigDecimal perPurchase;
 
+    @Size(max = 280, message = "Description can have max 280 characters")
     private String description;
 
     @Column(nullable = false, name = "CREATION", updatable = false)
