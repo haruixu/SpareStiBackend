@@ -1,9 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountResponseDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AccountUpdateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountResponseDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountAlreadyExistsException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.AccountNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
