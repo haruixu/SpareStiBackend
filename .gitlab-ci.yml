@@ -28,7 +28,6 @@ build:
 
 test:
   stage: test
-  needs: []
   script:
     - mvn test
 
