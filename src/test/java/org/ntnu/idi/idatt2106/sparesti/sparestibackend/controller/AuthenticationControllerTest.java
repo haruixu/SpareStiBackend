@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.AuthenticationRequest;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.JWTService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.security.SecurityConfiguration;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.AuthenticationService;
