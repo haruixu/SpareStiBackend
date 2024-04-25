@@ -10,7 +10,11 @@ import java.math.BigDecimal;
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeTypeConfigDTO(
-        @NotNull String type,
-        @NotNull @Positive BigDecimal generalAmount,
-        @NotNull @Positive BigDecimal specificAmount)
+        @NotNull(message = "Challenge type cannot be null") String type,
+        @NotNull(message = "General amount cannot be null")
+                @Positive(message = "General amount must be positive")
+                BigDecimal generalAmount,
+        @NotNull(message = "Specific amount cannot be null")
+                @Positive(message = "Specific amount must be positive")
+                BigDecimal specificAmount)
         implements Serializable {}

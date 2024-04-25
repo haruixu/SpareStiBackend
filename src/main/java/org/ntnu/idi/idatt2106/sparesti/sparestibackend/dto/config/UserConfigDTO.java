@@ -9,5 +9,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UserConfigDTO(@NotNull Role role, @NotNull ChallengeConfigDTO challengeConfig)
+public record UserConfigDTO(
+        @NotNull(message = "Role cannot be null") Role role,
+        @NotNull(message = "Challenge config cannot be null") ChallengeConfigDTO challengeConfig)
         implements Serializable {}

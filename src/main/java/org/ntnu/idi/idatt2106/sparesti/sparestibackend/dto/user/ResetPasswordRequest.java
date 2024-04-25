@@ -6,7 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public record ResetPasswordRequest(
-        @NotNull @NotEmpty @NotBlank String resetID,
-        @NotNull @NotEmpty @NotBlank Long userID,
-        @NotNull @NotEmpty @NotBlank String newPassword)
+        @NotNull(message = "Reset ID cannot be null")
+                @NotEmpty(message = "Reset ID cannot be empty")
+                @NotBlank(message = "Reset ID cannot be blank")
+                String resetID,
+        @NotNull(message = "User ID cannot be null") Long userID,
+        @NotNull(message = "New password cannot be null")
+                @NotEmpty(message = "New password cannot be empty")
+                @NotBlank(message = "New password cannot be blank")
+                String newPassword)
         implements Serializable {}
