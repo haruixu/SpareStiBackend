@@ -20,6 +20,7 @@ variables:
     -DskipTests -Dspotless.check.skip=true
   MAVEN_TEST_CLI_OPTS: >-
     -Dspotless.check.skip=true
+    
 
 build:
   stage: build
@@ -34,8 +35,8 @@ test:
       set +o errexit
       END=1
       for i in $(seq 1 $END); do
-          echo "Execution no. $i"
-          mvn -T 1C test && exit 0
+          echo "Execution no. $i of test"
+          mvn $MAVEN_TEST_CLI_OPTS test && exit 0
       done
       exit 1
 
@@ -47,7 +48,7 @@ linting:
       set +o errexit
       END=1
       for i in $(seq 1 $END); do
-          echo "Execution no. $i"
+          echo "Execution no. $i of linting"
           mvn spotless:check && exit 0
       done
       exit 1
