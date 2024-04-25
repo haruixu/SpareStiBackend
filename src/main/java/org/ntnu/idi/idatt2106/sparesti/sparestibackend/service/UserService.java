@@ -1,9 +1,12 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.EmailNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +48,13 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
+    public UserResponse findUserByUsernameToDTO(String username) {
+        return UserMapper.INSTANCE.toDTO(
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() -> new UserNotFoundException(username)));
+    }
+
     public User findUserByEmail(String email) throws EmailNotFoundException {
         return userRepository
                 .findByEmail(email)
@@ -52,6 +62,14 @@ public class UserService {
                         () ->
                                 new EmailNotFoundException(
                                         "User with email: " + email + " not found"));
+    }
+
+    public UserResponse updateUser(String username, UserUpdateDTO updateDTO) {
+        User user = findUserByUsername(username);
+        String newPassword = passwordEncoder.encode(updateDTO.password());
+        UserMapper.INSTANCE.updateEntity(user, updateDTO, newPassword);
+        userRepository.save(user);
+        return UserMapper.INSTANCE.toDTO(user);
     }
 
     /**
