@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -31,24 +30,20 @@ public class User implements UserDetails {
 
     @NotNull
     @Column(nullable = false)
-    @Pattern(regexp = "^[æÆøØåÅa-zA-Z,.'-][æÆøØåÅa-zA-Z ,.'-]{1,29}$")
     private String firstName;
 
     @NotNull
     @Column(nullable = false)
-    @Pattern(regexp = "^[æÆøØåÅa-zA-Z,.'-][æÆøØåÅa-zA-Z ,.'-]{1,29}$")
     private String lastName;
 
     @NotNull
     @Column(nullable = false, unique = true)
-    @Pattern(regexp = "^[ÆØÅæøåA-Za-z][æÆøØåÅA-Za-z0-9_]{2,29}$")
     @NaturalId
     private String username;
 
     @Setter
     @NotNull
     @Column(nullable = false)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zæøå])(?=.*[ÆØÅA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,30}$")
     private String password;
 
     @NotNull
