@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -66,5 +68,25 @@ public class UserController {
         UserResponse updatedUser = userService.updateUser(userDetails.getUsername(), userUpdateDTO);
         log.info("Successfully updated user '{}' to ", updatedUser);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/streak")
+    @Operation(
+            summary = "Get User Streak",
+            description = "Get the current streak for the currently authenticated user.",
+            responses = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Streak retrieved successfully.",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = StreakResponse.class))),
+                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+            })
+    public ResponseEntity<StreakResponse> getStreak(
+            @AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
+        log.info("Received GET request for streak by user '{}'", userDetails.getUsername());
+        return ResponseEntity.ok(userService.getStreak(userDetails.getUsername()));
     }
 }

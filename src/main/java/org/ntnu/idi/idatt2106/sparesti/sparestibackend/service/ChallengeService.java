@@ -44,12 +44,44 @@ public class ChallengeService {
 
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
         Challenge challenge = findChallengeByIdAndUser(challengeId, user);
+
+        if (!user.getId().equals(challenge.getUser().getId())) {
+            throw new ChallengeNotFoundException(challengeId);
+        }
+
         if (challenge.getCompletedOn() != null) {
             throw new ChallengeAlreadyCompletedException(challengeId);
         }
+
         challenge.setCompletedOn(ZonedDateTime.now());
+        updateStreak(challenge);
         challengeRepository.save(challenge);
         return ChallengeMapper.INSTANCE.toDTO(challenge);
+    }
+
+    private void updateStreak(Challenge challenge) {
+        User user = challenge.getUser();
+
+        boolean resetStreak =
+                challenge.getCompletedOn().isAfter(challenge.getDue())
+                        || user.getChallenges().stream()
+                                .anyMatch(
+                                        _challenge ->
+                                                _challenge.getDue() != null
+                                                        && _challenge.getCompletedOn() == null
+                                                        && _challenge
+                                                                .getDue()
+                                                                .isBefore(ZonedDateTime.now()));
+
+        if (resetStreak) {
+            user.setStreak(0L);
+            user.setStreakStart(null);
+        } else {
+            user.setStreak(user.getStreak() + 1);
+            if (user.getStreakStart() == null) {
+                user.setStreakStart(ZonedDateTime.now());
+            }
+        }
     }
 
     private Challenge findChallengeByIdAndUser(Long challengeId, User user) {
@@ -87,7 +119,6 @@ public class ChallengeService {
     }
 
     private Challenge privateGetChallenge(Long challengeId, User user) {
-
         return challengeRepository
                 .findByIdAndUser(challengeId, user)
                 .orElseThrow(() -> new ChallengeNotFoundException(challengeId));

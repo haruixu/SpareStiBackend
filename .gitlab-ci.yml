@@ -31,6 +31,7 @@ test:
   stage: test
   script:
     - mvn $MAVEN_TEST_CLI_OPTS test
+  retry: 1
 
 linting:
   stage: linting

@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -22,7 +23,11 @@ public interface UserMapper {
         @Mapping(target = "goals", ignore = true),
         @Mapping(target = "challenges", ignore = true),
         @Mapping(target = "badges", ignore = true),
-        @Mapping(target = "password", source = "encodedPassword")
+        @Mapping(target = "password", source = "encodedPassword"),
+        @Mapping(target = "streakStart", ignore = true),
+        @Mapping(target = "streak", ignore = true)
     })
     void updateEntity(@MappingTarget User user, UserUpdateDTO updateDTO, String encodedPassword);
+
+    StreakResponse toStreakResponse(User user);
 }
