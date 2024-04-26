@@ -1,10 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import jakarta.validation.constraints.PositiveOrZero;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
 
 public record AccountUpdateDTO(
