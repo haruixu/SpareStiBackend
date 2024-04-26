@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SortNatural;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,12 +19,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @Table(name = "\"USER\"")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @NotNull
@@ -38,17 +39,14 @@ public class User implements UserDetails {
 
     @NotNull
     @Column(nullable = false, unique = true)
-    @NaturalId
     private String username;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private String password;
 
     @NotNull
     @Column(nullable = false, unique = true)
-    @NaturalId
     @Email
     private String email;
 
@@ -59,17 +57,16 @@ public class User implements UserDetails {
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @SortNatural
     @JsonManagedReference
+    @Setter(AccessLevel.NONE)
     private final Set<Goal> goals = new TreeSet<>();
 
     @OneToMany(mappedBy = "user")
     private final Set<Challenge> challenges = new HashSet<>();
 
-    @Setter
     @AttributeOverride(name = "accNumber", column = @Column(name = "spending_acc_number"))
     @AttributeOverride(name = "balance", column = @Column(name = "spending_balance"))
     private Account spendingAccount = new Account();
 
-    @Setter
     @AttributeOverride(name = "accNumber", column = @Column(name = "saving_acc_number"))
     @AttributeOverride(name = "balance", column = @Column(name = "saving_balance"))
     private Account savingAccount = new Account();
@@ -80,6 +77,7 @@ public class User implements UserDetails {
             name = "USER_BADGE",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "BADGE_ID"))
+    @Setter(AccessLevel.NONE)
     private final Set<Badge> badges = new HashSet<>();
 
     @Override

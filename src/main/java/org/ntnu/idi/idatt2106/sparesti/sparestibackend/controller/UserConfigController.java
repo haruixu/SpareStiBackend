@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("users/me/config")
+@RequestMapping("/config")
 @RequiredArgsConstructor
 public class UserConfigController {
 

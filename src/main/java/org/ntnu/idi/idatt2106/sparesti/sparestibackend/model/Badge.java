@@ -12,8 +12,8 @@ public class Badge {
     private Long id;
 
     @Column(nullable = false)
-    private String description;
+    private String title;
 
     @Column(nullable = false)
-    private Boolean achieved;
+    private String description;
 }

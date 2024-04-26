@@ -1,13 +1,13 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -30,7 +30,7 @@ public class ChallengeConfigMapperTest {
     private Set<ChallengeTypeConfigDTO> challengeTypeConfigDTOs;
     private ChallengeTypeConfigDTO challengeTypeConfigDTO;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         challengeTypeConfig =

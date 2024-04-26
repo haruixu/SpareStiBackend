@@ -73,7 +73,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void postValidSavingAccount() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/accounts")
+                        MockMvcRequestBuilders.post("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(savingAccountDTOJsonRequest))
@@ -84,7 +84,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void postValidSpendingAccount() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/accounts")
+                        MockMvcRequestBuilders.post("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(spendingAccountDTOJsonRequest))
@@ -100,7 +100,7 @@ class AccountIntegrationTest {
                         "\"accountType\":\"SAVING\"", "\"accountType\":\"INVALID_TYPE\"");
 
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/accounts")
+                        MockMvcRequestBuilders.post("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(invalidAccountDTOJsonRequest))
@@ -113,7 +113,7 @@ class AccountIntegrationTest {
         String modifiedJson = savingAccountDTOJsonRequest.replace(",\"accNumber\":50", "");
 
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/accounts")
+                        MockMvcRequestBuilders.post("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))
@@ -126,7 +126,7 @@ class AccountIntegrationTest {
         String modifiedJson = savingAccountDTOJsonRequest.replace(",\"balance\":200.55", "");
 
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/accounts")
+                        MockMvcRequestBuilders.post("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))
@@ -137,13 +137,13 @@ class AccountIntegrationTest {
     @WithMockUser
     void postValidSavingAccountWhenSavingAccountAlreadyExists() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
 
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/accounts")
+                        MockMvcRequestBuilders.post("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(savingAccountDTOJsonRequest))
@@ -154,19 +154,18 @@ class AccountIntegrationTest {
     @WithMockUser
     void getValidAccounts() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
 
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(spendingAccountDTOJsonRequest));
 
-        MvcResult result =
-                mvc.perform(MockMvcRequestBuilders.get("/users/me/accounts")).andReturn();
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/accounts")).andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
@@ -186,7 +185,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putValidSavingAccountBalance() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
@@ -197,13 +196,12 @@ class AccountIntegrationTest {
         String modifiedJson = updateAccountDTOJsonRequest.replace(",\"accNumber\":191", "");
 
         mvc.perform(
-                MockMvcRequestBuilders.put("/users/me/accounts")
+                MockMvcRequestBuilders.put("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(modifiedJson));
 
-        MvcResult result =
-                mvc.perform(MockMvcRequestBuilders.get("/users/me/accounts")).andReturn();
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/accounts")).andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
@@ -219,7 +217,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putValidSpendingAccountBalanceWithoutAccNumber() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(spendingAccountDTOJsonRequest));
@@ -230,13 +228,12 @@ class AccountIntegrationTest {
         String modifiedJson = updateAccountDTOJsonRequest.replace(",\"accNumber\":191", "");
 
         mvc.perform(
-                MockMvcRequestBuilders.put("/users/me/accounts")
+                MockMvcRequestBuilders.put("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(modifiedJson));
 
-        MvcResult result =
-                mvc.perform(MockMvcRequestBuilders.get("/users/me/accounts")).andReturn();
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/accounts")).andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
@@ -252,7 +249,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putValidSpendingAccNumberWithoutBalance() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(spendingAccountDTOJsonRequest));
@@ -263,13 +260,12 @@ class AccountIntegrationTest {
         String modifiedJson = updateAccountDTOJsonRequest.replace(",\"balance\":234", "");
 
         mvc.perform(
-                MockMvcRequestBuilders.put("/users/me/accounts")
+                MockMvcRequestBuilders.put("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(modifiedJson));
 
-        MvcResult result =
-                mvc.perform(MockMvcRequestBuilders.get("/users/me/accounts")).andReturn();
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/accounts")).andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
@@ -285,7 +281,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putValidAccountBalanceWithAccNumber() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
@@ -295,13 +291,12 @@ class AccountIntegrationTest {
         String updateAccountDTOJsonRequest = objectMapper.writeValueAsString(accountUpdateDTO);
 
         mvc.perform(
-                MockMvcRequestBuilders.put("/users/me/accounts")
+                MockMvcRequestBuilders.put("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(updateAccountDTOJsonRequest));
 
-        MvcResult result =
-                mvc.perform(MockMvcRequestBuilders.get("/users/me/accounts")).andReturn();
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/accounts")).andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
         JsonNode responseJson = objectMapper.readTree(responseBody);
@@ -321,7 +316,7 @@ class AccountIntegrationTest {
         String updateAccountDTOJsonRequest = objectMapper.writeValueAsString(accountUpdateDTO);
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/accounts")
+                        MockMvcRequestBuilders.put("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(updateAccountDTOJsonRequest))
@@ -332,7 +327,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putAccountWithInvalidAccountType() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
@@ -345,7 +340,7 @@ class AccountIntegrationTest {
                         "\"accountType\":\"SAVING\"", "\"accountType\":\"INVALID_TYPE\"");
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/accounts")
+                        MockMvcRequestBuilders.put("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))
@@ -356,7 +351,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putAccountWithMissingBalance() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
@@ -367,7 +362,7 @@ class AccountIntegrationTest {
         String modifiedJson = updateAccountDTOJsonRequest.replace(",\"balance\":660.21", "");
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/accounts")
+                        MockMvcRequestBuilders.put("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))
@@ -378,7 +373,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putAccountWithMissingAccNumber() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
@@ -389,7 +384,7 @@ class AccountIntegrationTest {
         String modifiedJson = updateAccountDTOJsonRequest.replace(",\"accNumber\":191", "");
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/accounts")
+                        MockMvcRequestBuilders.put("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))
@@ -400,7 +395,7 @@ class AccountIntegrationTest {
     @WithMockUser
     void putAccountWithMissingAccountType() throws Exception {
         mvc.perform(
-                MockMvcRequestBuilders.post("/users/me/accounts")
+                MockMvcRequestBuilders.post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(savingAccountDTOJsonRequest));
@@ -412,7 +407,7 @@ class AccountIntegrationTest {
                 updateAccountDTOJsonRequest.replace("\"accountType\":\"SAVING\",", "");
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/accounts")
+                        MockMvcRequestBuilders.put("/accounts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(modifiedJson))

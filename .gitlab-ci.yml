@@ -20,6 +20,7 @@ variables:
     -DskipTests -Dspotless.check.skip=true
   MAVEN_TEST_CLI_OPTS: >-
     -Dspotless.check.skip=true
+    
 
 build:
   stage: build
@@ -28,12 +29,10 @@ build:
 
 test:
   stage: test
-  needs: ["build"]
   script:
-    - mvn test
+    - mvn $MAVEN_TEST_CLI_OPTS test
 
 linting:
-  needs: ["build"]
   stage: linting
   script:
     - mvn spotless:check

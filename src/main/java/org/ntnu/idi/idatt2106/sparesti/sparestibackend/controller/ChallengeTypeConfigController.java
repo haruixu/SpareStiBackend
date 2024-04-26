@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
@@ -21,12 +22,33 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/users/me/config/challenge/type")
+@RequestMapping("/config/challenge/type")
+@Tag(
+        name = "Challenge Type Config",
+        description = "Endpoints for managing challenge type configurations")
 public class ChallengeTypeConfigController {
 
     private final UserConfigService userConfigService;
 
     @PostMapping
+    @Operation(
+            summary = "Create Challenge Type Config",
+            description = "Creates a new challenge type configuration for the authenticated user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge type config created",
+                        content = {
+                            @io.swagger.v3.oas.annotations.media.Content(
+                                    mediaType = "application/json",
+                                    schema =
+                                            @io.swagger.v3.oas.annotations.media.Schema(
+                                                    implementation = ChallengeTypeConfigDTO.class))
+                        }),
+                @ApiResponse(responseCode = "400", description = "Bad input"),
+                @ApiResponse(responseCode = "404", description = "Challenge config not found")
+            })
     public ResponseEntity<ChallengeTypeConfigDTO> createChallengeTypeConfig(
             @RequestBody ChallengeTypeConfigDTO challengeTypeConfigDTO,
             @AuthenticationPrincipal UserDetails userDetails)
@@ -42,6 +64,25 @@ public class ChallengeTypeConfigController {
     }
 
     @GetMapping("/{type}")
+    @Operation(
+            summary = "Get Challenge Type Config",
+            description =
+                    "Retrieves the challenge type configuration for the authenticated user by"
+                            + " type.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge type config retrieved",
+                        content = {
+                            @io.swagger.v3.oas.annotations.media.Content(
+                                    mediaType = "application/json",
+                                    schema =
+                                            @io.swagger.v3.oas.annotations.media.Schema(
+                                                    implementation = ChallengeTypeConfigDTO.class))
+                        }),
+                @ApiResponse(responseCode = "404", description = "Challenge type config not found")
+            })
     public ResponseEntity<ChallengeTypeConfigDTO> getChallengeTypeConfig(
             @PathVariable String type, @AuthenticationPrincipal UserDetails userDetails)
             throws ChallengeTypeConfigNotFoundException {
@@ -55,16 +96,25 @@ public class ChallengeTypeConfigController {
         return ResponseEntity.ok(config);
     }
 
+    @PutMapping
     @Operation(
-            summary = "Update challenge type config",
-            description = "Updates the challenge type config for the authenticated user.")
+            summary = "Update Challenge Type Config",
+            description = "Updates the challenge type configuration for the authenticated user.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Challenge type config updated"),
-                @ApiResponse(responseCode = "404", description = "Challenge type config not found"),
-                @ApiResponse(responseCode = "400", description = "Bad input")
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Challenge type config updated",
+                        content = {
+                            @io.swagger.v3.oas.annotations.media.Content(
+                                    mediaType = "application/json",
+                                    schema =
+                                            @io.swagger.v3.oas.annotations.media.Schema(
+                                                    implementation = ChallengeTypeConfigDTO.class))
+                        }),
+                @ApiResponse(responseCode = "400", description = "Bad input"),
+                @ApiResponse(responseCode = "404", description = "Challenge type config not found")
             })
-    @PutMapping
     public ResponseEntity<ChallengeTypeConfigDTO> updateChallengeTypeConfig(
             @Parameter(description = "Updated challenge type config details") @RequestBody
                     ChallengeTypeConfigDTO challengeTypeConfigDTO,
@@ -85,15 +135,16 @@ public class ChallengeTypeConfigController {
         return ResponseEntity.ok(updatedConfig);
     }
 
+    @DeleteMapping("/{type}")
     @Operation(
-            summary = "Delete challenge type config",
-            description = "Deletes the challenge type config for the authenticated user by type.")
+            summary = "Delete Challenge Type Config",
+            description =
+                    "Deletes the challenge type configuration for the authenticated user by type.")
     @ApiResponses(
             value = {
                 @ApiResponse(responseCode = "204", description = "Challenge type config deleted"),
                 @ApiResponse(responseCode = "404", description = "Challenge type config not found")
             })
-    @DeleteMapping("/{type}")
     public ResponseEntity<Void> deleteChallengeTypeConfig(
             @Parameter(description = "Type of the challenge config to delete") @PathVariable
                     String type,
