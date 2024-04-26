@@ -69,7 +69,8 @@ public class ChallengeService {
                                         _challenge ->
                                                 _challenge.getDue() != null
                                                         && _challenge.getCompletedOn() == null
-                                                        && _challenge.getDue()
+                                                        && _challenge
+                                                                .getDue()
                                                                 .isBefore(ZonedDateTime.now()));
 
         if (resetStreak) {
