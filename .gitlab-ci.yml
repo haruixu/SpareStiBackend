@@ -6,7 +6,7 @@ stages:
 
 default:
   # Cache maven docker image in GitLab
-  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
+  image: maven:latest
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
@@ -29,12 +29,10 @@ build:
 
 test:
   stage: test
-  needs: ["build"]
   script:
     - mvn $MAVEN_TEST_CLI_OPTS test
 
 linting:
-  stage: test
-  needs: ["build"]
+  stage: linting
   script:
     - mvn spotless:check
