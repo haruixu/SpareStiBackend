@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
@@ -282,5 +283,11 @@ public class ChallengeController {
     private User getUser(@Parameter(hidden = true) UserDetails userDetails)
             throws UserNotFoundException {
         return userService.findUserByUsername(userDetails.getUsername());
+    }
+
+    @GetMapping("/generate")
+    public ResponseEntity<List<ChallengeDTO>> generateChallenges(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(challengeService.getGeneratedChallenges(getUser(userDetails)));
     }
 }
