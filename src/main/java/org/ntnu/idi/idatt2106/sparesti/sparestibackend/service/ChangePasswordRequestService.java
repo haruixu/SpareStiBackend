@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -15,6 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputExcepti
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChangePasswordRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.ChangePasswordRequestRepository;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.RegexValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class ChangePasswordRequestService {
     public void sendForgotPasswordEmail(ChangePasswordRequestRequest request)
             throws MessagingException {
         changePasswordRequestRequestValidator.validate(request);
-        if (!isEmailValid(request.email())) {
+        if (!RegexValidator.isEmailValid(request.email())) {
             throw new BadInputException("The email address is invalid.");
         }
         if (!userService.userExistByEmail(request.email())) {
@@ -64,7 +64,7 @@ public class ChangePasswordRequestService {
                         .getTime())) {
             return;
         }
-        if (!isPasswordStrong(request.newPassword())) {
+        if (!RegexValidator.isPasswordStrong(request.newPassword())) {
             throw new BadInputException(
                     "Password must be at least 8 characters long, include numbers, upper and lower"
                             + " case letters, and at least one special character");
@@ -103,31 +103,10 @@ public class ChangePasswordRequestService {
         }
     }
 
-    /**
-     * Checks if a password meets the strength criteria.
-     *
-     * @param password
-     *            The password to check
-     * @return true if the password meets the criteria, false otherwise
-     */
-    private boolean isPasswordStrong(String password) {
-        // Example criteria: at least 8 characters, including numbers, letters and at least one
-        // special character
-        String passwordPattern =
-                "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-        return Pattern.compile(passwordPattern).matcher(password).matches();
-    }
-
     private boolean changePasswordRequestExistsByUserID(Long userID) {
         return changePasswordRequestRepository
                 .findChangePasswordRequestByUserID(userID)
                 .isPresent();
-    }
-
-    private boolean isEmailValid(String email) {
-        String emailPattern =
-                "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return Pattern.compile(emailPattern).matcher(email).matches();
     }
 
     private void sendEmail(String email, String uniqueKey) throws MessagingException {
