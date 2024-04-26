@@ -1,6 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
+import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
@@ -111,7 +113,22 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    public StreakResponse getStreak(String username) throws UserNotFoundException {
+        User user = findUserByUsername(username);
+
+        boolean resetStreak =
+                user.getChallenges().stream()
+                        .filter(challenge -> challenge.getDue() != null)
+                        .anyMatch(
+                                goal ->
+                                        goal.getCompletedOn() == null
+                                                && goal.getDue().isBefore(ZonedDateTime.now()));
+
+        if (resetStreak) {
+            user.setStreak(0L);
+            user.setStreakStart(null);
+        }
+
+        return UserMapper.INSTANCE.toStreakResponse(user);
     }
 }
