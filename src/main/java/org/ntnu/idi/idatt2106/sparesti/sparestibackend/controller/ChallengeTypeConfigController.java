@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("//config/challenge/type")
+@RequestMapping("/config/challenge/type")
 @Tag(
         name = "Challenge Type Config",
         description = "Endpoints for managing challenge type configurations")
@@ -52,13 +51,9 @@ public class ChallengeTypeConfigController {
                 @ApiResponse(responseCode = "404", description = "Challenge config not found")
             })
     public ResponseEntity<ChallengeTypeConfigDTO> createChallengeTypeConfig(
-            @Valid @RequestBody ChallengeTypeConfigDTO challengeTypeConfigDTO,
-            @AuthenticationPrincipal UserDetails userDetails,
-            BindingResult bindingResult)
-            throws ChallengeConfigNotFoundException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
+            @RequestBody ChallengeTypeConfigDTO challengeTypeConfigDTO,
+            @AuthenticationPrincipal UserDetails userDetails)
+            throws ChallengeConfigNotFoundException, ObjectNotValidException {
         log.info(
                 "Creating challenge type config: {} for user: {}",
                 challengeTypeConfigDTO,
@@ -122,16 +117,11 @@ public class ChallengeTypeConfigController {
                 @ApiResponse(responseCode = "404", description = "Challenge type config not found")
             })
     public ResponseEntity<ChallengeTypeConfigDTO> updateChallengeTypeConfig(
-            @Parameter(description = "Updated challenge type config details") @Valid @RequestBody
+            @Parameter(description = "Updated challenge type config details") @RequestBody
                     ChallengeTypeConfigDTO challengeTypeConfigDTO,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
-                    UserDetails userDetails,
-            BindingResult bindingResult)
+                    UserDetails userDetails)
             throws ChallengeTypeConfigNotFoundException, BadInputException {
-        if (bindingResult.hasErrors()) {
-            throw new BadInputException(ApplicationUtil.BINDING_RESULT_ERROR);
-        }
-
         log.info(
                 "Received request to update challenge type config for user: {}",
                 userDetails.getUsername());
