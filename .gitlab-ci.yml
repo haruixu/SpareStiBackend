@@ -6,7 +6,7 @@ stages:
 
 default:
   # Cache maven docker image in GitLab
-  image: maven:latest
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
