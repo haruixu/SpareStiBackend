@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
@@ -66,5 +67,12 @@ public class UserController {
         UserResponse updatedUser = userService.updateUser(userDetails.getUsername(), userUpdateDTO);
         log.info("Successfully updated user '{}' to ", updatedUser);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/streak")
+    public ResponseEntity<StreakResponse> getStreak(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Received GET request for streak by user '{}'", userDetails.getUsername());
+        return ResponseEntity.ok(userService.getStreak(userDetails.getUsername()));
     }
 }
