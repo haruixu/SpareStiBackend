@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Class to represent the different regexes that are used to validate input fields.
@@ -10,6 +11,7 @@ import lombok.Getter;
  * @since 25.4.24
  */
 @Getter
+@RequiredArgsConstructor
 public enum RegexPattern {
 
     /**
@@ -44,12 +46,4 @@ public enum RegexPattern {
      * The regex pattern
      */
     private final String pattern;
-
-    /**
-     * Constructor for regex pattern
-     * @param pattern The pattern to be used
-     */
-    RegexPattern(String pattern) {
-        this.pattern = pattern;
-    }
 }
