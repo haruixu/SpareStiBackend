@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +50,13 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     @Email
     private String email;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private ZonedDateTime streakStart;
+
+    @NotNull
+    @Column(nullable = false)
+    private Long streak;
 
     @Setter @Embedded private UserConfig userConfig;
 
