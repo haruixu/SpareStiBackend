@@ -32,6 +32,8 @@ public class GoalMapperTest {
                         "testUsername",
                         "testPassword123!",
                         "testEmail@test.com",
+                        null,
+                        0L,
                         new UserConfig(Role.USER, null),
                         new Account(),
                         new Account());

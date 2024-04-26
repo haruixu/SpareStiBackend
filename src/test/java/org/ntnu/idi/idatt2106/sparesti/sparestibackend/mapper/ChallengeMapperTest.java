@@ -30,6 +30,8 @@ public class ChallengeMapperTest {
                         "username",
                         "password",
                         "test@mail.com",
+                        null,
+                        0L,
                         new UserConfig(Role.USER, null),
                         new Account(),
                         new Account());
