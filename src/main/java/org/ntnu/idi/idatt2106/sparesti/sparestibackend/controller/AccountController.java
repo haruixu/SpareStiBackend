@@ -1,5 +1,10 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountResponseDTO;
@@ -26,6 +31,13 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping
+    @Operation(summary = "Create User Account", description = "Creates a new user account.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account created successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AccountDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input or request body",
+                    content = @Content)})
     public ResponseEntity<AccountDTO> createUserAccount(
             @RequestBody AccountDTO accountDTO, @AuthenticationPrincipal UserDetails userDetails)
             throws ObjectNotValidException {
@@ -36,6 +48,13 @@ public class AccountController {
     }
 
     @GetMapping
+    @Operation(summary = "Get User Account", description = "Retrieves the user's account information.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account retrieved successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AccountResponseDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content)})
     public ResponseEntity<AccountResponseDTO> getUserAccount(
             @AuthenticationPrincipal UserDetails userDetails) {
         logger.info("Receive GET request for user account");
@@ -45,6 +64,15 @@ public class AccountController {
     }
 
     @PutMapping
+    @Operation(summary = "Update User Account", description = "Updates the user's account information.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account updated successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AccountResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input or request body",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content)})
     public ResponseEntity<AccountResponseDTO> updateUserAccount(
             @RequestBody AccountUpdateDTO accountUpdateDTO,
             @AuthenticationPrincipal UserDetails userDetails)
