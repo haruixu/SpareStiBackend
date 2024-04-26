@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("//config/challenge")
+@RequestMapping("/config/challenge")
 @Tag(name = "Challenge Config", description = "Endpoints for managing challenge configurations")
 public class ChallengeConfigController {
 
