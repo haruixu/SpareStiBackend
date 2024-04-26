@@ -31,17 +31,17 @@ public class Challenge {
     @Column(nullable = false)
     @NotNull
     @ColumnDefault("0.00")
-    @PositiveOrZero
+    @PositiveOrZero(message = "Saved amount must be equal to or greater than zero")
     private BigDecimal saved;
 
     @Column(nullable = false)
     @NotNull
-    @Positive
+    @Positive(message = "Target amount must be positive")
     private BigDecimal target;
 
     @Column(nullable = false)
     @NotNull
-    @Positive
+    @Positive(message = "Per purchase amount must be positive")
     private BigDecimal perPurchase;
 
     @Size(max = 280, message = "Description can have max 280 characters")
