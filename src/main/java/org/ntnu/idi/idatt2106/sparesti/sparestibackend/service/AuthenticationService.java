@@ -18,6 +18,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.RegexValidator
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -105,19 +106,13 @@ public class AuthenticationService {
      * Log in user with credentials (username and password)
      * @param request Wrapper for username and password
      * @return Jwt tokens upon successful login
-     * @throws BadInputException if no user has a matching username or password
+     * @throws ObjectNotValidException If request object is invalid
+     * @throws BadCredentialsException If credentials don't match
      */
     public LoginRegisterResponse login(AuthenticationRequest request)
-            throws BadInputException, ObjectNotValidException {
+            throws ObjectNotValidException, BadCredentialsException {
         authenticationRequestValidator.validate(request);
-        if (!userService.userExistsByUsername(request.username())
-                || !matches(
-                        request.password(),
-                        userService.findUserByUsername(request.username()).getPassword())) {
-            throw new BadInputException("Username or password is incorrect");
-        }
-
-        logger.info("Setting authentication context");
+        // Check credentials
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userService.findUserByUsername(request.username());
