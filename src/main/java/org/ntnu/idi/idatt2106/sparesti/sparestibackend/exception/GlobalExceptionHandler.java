@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -108,6 +109,7 @@ public class GlobalExceptionHandler {
                 IllegalArgumentException.class,
                 HttpMessageNotReadableException.class,
                 BadInputException.class,
+                BadCredentialsException.class,
                 NullPointerException.class,
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
