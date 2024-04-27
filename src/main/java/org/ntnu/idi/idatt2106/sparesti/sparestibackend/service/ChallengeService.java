@@ -17,7 +17,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.ChallengeRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ChallengeValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,8 +27,8 @@ import org.springframework.stereotype.Service;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-    private final ObjectValidator<ChallengeCreateDTO> createChallengeValidator;
-    private final ObjectValidator<ChallengeUpdateDTO> updateChallengeValidator;
+    private final ChallengeValidator<ChallengeUpdateDTO> updateChallengeValidator;
+    private final ChallengeValidator<ChallengeCreateDTO> createChallengeValidator;
 
     public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable)
             throws ChallengeNotFoundException {

@@ -7,16 +7,22 @@ import jakarta.validation.ValidatorFactory;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
+@Primary
 public class ObjectValidator<T> {
 
     private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
-    private final Validator validator = validatorFactory.getValidator();
+    protected final Validator validator = validatorFactory.getValidator();
 
     public void validate(T object) {
+        checkConstraints(object);
+    }
+
+    protected void checkConstraints(T object) {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
         if (!violations.isEmpty()) {
             Set<String> errorMessages =

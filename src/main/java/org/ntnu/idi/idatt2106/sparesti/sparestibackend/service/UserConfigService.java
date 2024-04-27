@@ -14,6 +14,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ChallengeConfigValidator;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class UserConfigService {
 
     private final UserRepository userRepository;
 
-    private final ObjectValidator<ChallengeConfigDTO> challengeConfigValidator;
+    private final ChallengeConfigValidator challengeConfigValidator;
     private final ObjectValidator<ChallengeTypeConfigDTO> challengeTypeConfigValidator;
     private final ObjectValidator<UserConfigDTO> userConfigValidator;
 
