@@ -215,7 +215,7 @@ public class ChallengeService {
                 new Challenge(
                         null,
                         title,
-                        new BigDecimal(0),
+                        BigDecimal.ZERO,
                         target,
                         specificAmount,
                         null,
@@ -224,7 +224,7 @@ public class ChallengeService {
                         ZonedDateTime.now().plusDays(7 + dayRandomizerValue),
                         type,
                         user,
-                        new BigDecimal(0));
+                        BigDecimal.ZERO);
         Challenge savedChallenge = challengeRepository.save(challenge);
         return ChallengeMapper.INSTANCE.toDTO(savedChallenge);
     }

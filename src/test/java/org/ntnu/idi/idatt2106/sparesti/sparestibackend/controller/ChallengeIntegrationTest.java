@@ -49,7 +49,6 @@ public class ChallengeIntegrationTest {
 
     private ChallengeUpdateDTO challengeUpdateDTO;
 
-    // TODO: Generate
     @BeforeEach
     void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(context).build();
