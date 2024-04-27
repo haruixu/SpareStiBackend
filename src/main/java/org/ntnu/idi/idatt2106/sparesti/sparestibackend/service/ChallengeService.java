@@ -18,8 +18,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.ChallengeRepository;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,8 +29,6 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ObjectValidator<ChallengeCreateDTO> createChallengeValidator;
     private final ObjectValidator<ChallengeUpdateDTO> updateChallengeValidator;
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable)
             throws ChallengeNotFoundException {
@@ -133,96 +129,103 @@ public class ChallengeService {
                 .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
     }
 
+    /**
+     * Gets list of generated challenges
+     * @param user The user who challenges are generated for.
+     * @return List of generated challenges
+     */
     public List<ChallengeDTO> getGeneratedChallenges(User user) {
-        logger.info("challenge config: {}", user.getUserConfig().getChallengeConfig());
         if (user.getUserConfig().getChallengeConfig().getMotivation() == null) {
             throw new ChallengeConfigNotFoundException(user.getId());
         }
-        List<String> types =
-                user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
-                        .map(ChallengeTypeConfig::getType)
-                        .distinct()
-                        .filter(
-                                type ->
-                                        !challengeRepository
-                                                .findAllByCompletedOnIsNullAndUser(user)
-                                                .stream()
-                                                .map(Challenge::getType)
-                                                .toList()
-                                                .contains(type))
-                        .toList();
-        logger.info("Available types: {}", types);
+        List<String> types = getAvailableTypes(user);
         return generateChallenges(types, user);
     }
 
+    /**
+     * Gets the types that challenges can be generated for. An available type is a type
+     * defined in the user config that currently has no active challenges.
+     * @param user The user that the config is based on.
+     * @return List of types as strings
+     */
+    private List<String> getAvailableTypes(User user) {
+        return user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
+                .map(ChallengeTypeConfig::getType)
+                .distinct()
+                .filter(
+                        type ->
+                                !challengeRepository
+                                        .findAllByCompletedOnIsNullAndUser(user)
+                                        .stream()
+                                        .map(challenge -> challenge.getType().toLowerCase())
+                                        .toList()
+                                        .contains(type.toLowerCase()))
+                .toList();
+    }
+
+    /**
+     * Generates a list of randomized challenges. The randomization is in the target amount
+     * and due date
+     * @param availableTypes Types that challenges are generated for.
+     * @param user The user who challenges is generated for.
+     * @return List of generated challenges with slight randomization.
+     */
     private List<ChallengeDTO> generateChallenges(List<String> availableTypes, User user) {
         double motivationValue = user.getUserConfig().getChallengeConfig().getMotivation().getVal();
-        logger.info("Motivation value: {}", motivationValue);
         Random random = new Random();
 
-        List<ChallengeDTO> generated =
-                availableTypes.stream()
-                        .map(
-                                type -> {
-                                    String title =
-                                            type.substring(0, 1).toUpperCase()
-                                                    + type.substring(1).toLowerCase();
-                                    logger.info("title: {}", title);
-                                    double targetRandomizerValue = random.nextDouble(0.9, 1.1);
-                                    logger.info(
-                                            "target randomizer value: {}", targetRandomizerValue);
-                                    int dayRandomizerValue = random.nextInt(0, 4);
-                                    logger.info("day randomizer value: {}", dayRandomizerValue);
+        return availableTypes.stream()
+                .map(type -> generateChallenge(user, type, motivationValue, random))
+                .toList();
+    }
 
-                                    // TODO: If user can create own type? => Then
-                                    ChallengeTypeConfig challengeTypeConfig =
-                                            user
-                                                    .getUserConfig()
-                                                    .getChallengeConfig()
-                                                    .getChallengeTypeConfigs()
-                                                    .stream()
-                                                    .filter(config -> config.getType().equals(type))
-                                                    .findFirst()
-                                                    .get();
-                                    double generalAmount =
-                                            challengeTypeConfig.getGeneralAmount().doubleValue();
-                                    BigDecimal specificAmount =
-                                            challengeTypeConfig.getSpecificAmount();
+    /**
+     * Generates a single challenge based on a type from user config
+     * The generated challenge introduces some level of randomization in
+     * target value which is +/- 10% of the config type's general amount (amount spent in week)
+     * Due date is also random, from 7-10 days.
+     * @param user User who challenge is generated for
+     * @param type Challenge type
+     * @param motivationValue Willingness for saving
+     * @param random Randomizer
+     * @return Generated challenge of a given type
+     */
+    private ChallengeDTO generateChallenge(
+            User user, String type, double motivationValue, Random random) {
+        String title = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
+        double targetRandomizerValue = random.nextDouble(0.9, 1.1);
+        int dayRandomizerValue = random.nextInt(0, 4);
 
-                                    // .map(config -> config.getGeneralAmount().intValue())
-                                    // .reduce(0, Integer::sum);
-                                    logger.info("General amount: {}", generalAmount);
-                                    // Save a fraction of general amount, based on level of
-                                    // motivation
-                                    int targetValue =
-                                            (int)
-                                                            Math.round(
-                                                                    generalAmount
-                                                                            / motivationValue
-                                                                            * targetRandomizerValue
-                                                                            / 10)
-                                                    * 10;
-                                    logger.info("Target value: {}", targetValue);
-                                    BigDecimal target = new BigDecimal(targetValue);
-                                    Challenge challenge =
-                                            new Challenge(
-                                                    null,
-                                                    title,
-                                                    new BigDecimal(0),
-                                                    target,
-                                                    specificAmount,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    ZonedDateTime.now()
-                                                            .plusDays(7 + dayRandomizerValue),
-                                                    type,
-                                                    user,
-                                                    new BigDecimal(0));
-                                    Challenge savedChallenge = challengeRepository.save(challenge);
-                                    return ChallengeMapper.INSTANCE.toDTO(savedChallenge);
-                                })
-                        .toList();
-        return generated;
+        // Finding challenge type config from available types
+        ChallengeTypeConfig challengeTypeConfig =
+                user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
+                        .filter(config -> config.getType().equalsIgnoreCase(type))
+                        .findFirst()
+                        .get();
+
+        // Extract data from config type to be used later
+        double generalAmount = challengeTypeConfig.getGeneralAmount().doubleValue();
+        BigDecimal specificAmount = challengeTypeConfig.getSpecificAmount();
+
+        // Save a fraction of general amount, based on level of motivation, rounded to nearest 10
+        int targetValue =
+                (int) Math.round(generalAmount / motivationValue * targetRandomizerValue / 10) * 10;
+        BigDecimal target = new BigDecimal(targetValue);
+        Challenge challenge =
+                new Challenge(
+                        null,
+                        title,
+                        new BigDecimal(0),
+                        target,
+                        specificAmount,
+                        null,
+                        null,
+                        null,
+                        ZonedDateTime.now().plusDays(7 + dayRandomizerValue),
+                        type,
+                        user,
+                        new BigDecimal(0));
+        Challenge savedChallenge = challengeRepository.save(challenge);
+        return ChallengeMapper.INSTANCE.toDTO(savedChallenge);
     }
 }

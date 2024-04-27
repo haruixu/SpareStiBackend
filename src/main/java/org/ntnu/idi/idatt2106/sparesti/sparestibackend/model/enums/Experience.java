@@ -31,7 +31,6 @@ public enum Experience {
     /**
      * Less than average experience
      */
-
     LOW(2),
     /**
      * Very little experience

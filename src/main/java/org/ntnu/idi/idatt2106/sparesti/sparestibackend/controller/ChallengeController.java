@@ -273,6 +273,12 @@ public class ChallengeController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/generate")
+    public ResponseEntity<List<ChallengeDTO>> generateChallenges(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(challengeService.getGeneratedChallenges(getUser(userDetails)));
+    }
+
     /**
      * Retrieves the user based on the UserDetails.
      *
@@ -283,11 +289,5 @@ public class ChallengeController {
     private User getUser(@Parameter(hidden = true) UserDetails userDetails)
             throws UserNotFoundException {
         return userService.findUserByUsername(userDetails.getUsername());
-    }
-
-    @GetMapping("/generate")
-    public ResponseEntity<List<ChallengeDTO>> generateChallenges(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(challengeService.getGeneratedChallenges(getUser(userDetails)));
     }
 }
