@@ -34,9 +34,9 @@ public class ChallengeConfigMapperTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
         challengeTypeConfig =
-                new ChallengeTypeConfig("CLOTHING", new BigDecimal(100), new BigDecimal(1));
+                new ChallengeTypeConfig("Clothing", new BigDecimal(100), new BigDecimal(1));
         challengeTypeConfigDTO =
-                new ChallengeTypeConfigDTO("CLOTHING", new BigDecimal(100), new BigDecimal(1));
+                new ChallengeTypeConfigDTO("Clothing", new BigDecimal(100), new BigDecimal(1));
 
         challengeTypeConfigs = new HashSet<>();
         challengeTypeConfigs.add(challengeTypeConfig);
