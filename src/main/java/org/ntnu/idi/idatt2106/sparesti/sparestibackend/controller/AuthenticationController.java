@@ -38,6 +38,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(
+        name = "authentication",
+        description =
+                "Endpoints for user authentication including registration, login, and token"
+                        + " management.")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -51,7 +56,6 @@ public class AuthenticationController {
      * @throws BadInputException If the username, first name last name or email is invalid or the password is too weak
      * @throws UserAlreadyExistsException If the username is already taken
      */
-    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @Operation(
             summary = "Register user",
             description =
@@ -93,7 +97,6 @@ public class AuthenticationController {
      * @return ResponseEntity containing access and refresh tokens upon successful login
      * @throws BadInputException If the username or password is incorrect
      */
-    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @Operation(
             summary = "Log in user",
             description = "Log in user with username and password",
@@ -141,7 +144,6 @@ public class AuthenticationController {
                                     schema = @Schema(implementation = AccessTokenResponse.class))
                         })
             })
-    @Tag(name = "token", description = "CRUD methods related to JWT tokens")
     @GetMapping("/renewToken")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(
             @Parameter(description = "Authorization header with bearer token")
