@@ -14,13 +14,13 @@ public class ChallengeValidator<T> extends ObjectValidator<T> {
     public void validate(T object) {
         checkConstraints(object);
         if (object instanceof ChallengeUpdateDTO) {
-            if (((ChallengeUpdateDTO) object).perPurchase().intValue()
-                    > ((ChallengeUpdateDTO) object).target().intValue()) {
+            if (((ChallengeUpdateDTO) object).perPurchase().doubleValue()
+                    > ((ChallengeUpdateDTO) object).target().doubleValue()) {
                 throw new BadInputException("Enhetsprisen kan ikke være større enn sparemålet");
             }
         } else if (object instanceof ChallengeCreateDTO) {
-            if (((ChallengeCreateDTO) object).perPurchase().intValue()
-                    > ((ChallengeCreateDTO) object).target().intValue()) {
+            if (((ChallengeCreateDTO) object).perPurchase().doubleValue()
+                    > ((ChallengeCreateDTO) object).target().doubleValue()) {
                 throw new BadInputException("Enhetsprisen kan ikke være større enn sparemålet");
             }
         } else

@@ -44,8 +44,8 @@ public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO
         if (config.challengeTypeConfigs().stream()
                 .anyMatch(
                         configType ->
-                                configType.specificAmount().intValue()
-                                        > configType.generalAmount().intValue())) {
+                                configType.specificAmount().doubleValue()
+                                        > configType.generalAmount().doubleValue())) {
             throw new BadInputException("Enhetspris kan ikke være større enn ukentlig kostnad");
         }
     }
