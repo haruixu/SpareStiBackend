@@ -67,7 +67,10 @@ public class ChallengeMapperTest {
         assertEquals(createDTO.saved(), challenge.getSaved());
         assertEquals(createDTO.due(), challenge.getDue());
         assertEquals(createDTO.perPurchase(), challenge.getPerPurchase());
-        assertEquals(createDTO.type(), challenge.getType());
+        assertEquals(
+                createDTO.type().substring(0, 1).toUpperCase()
+                        + createDTO.type().substring(1).toLowerCase(),
+                challenge.getType());
         assertEquals(createDTO.target(), challenge.getTarget());
         assertEquals(user, challenge.getUser());
         assertEquals(new BigDecimal("10.000"), challenge.getCompletion());
@@ -87,7 +90,10 @@ public class ChallengeMapperTest {
         assertEquals(updateDTO.due(), updatedChallenge.getDue());
         assertEquals(updateDTO.target(), updatedChallenge.getTarget());
         assertEquals(updateDTO.perPurchase(), updatedChallenge.getPerPurchase());
-        assertEquals(updateDTO.type(), updatedChallenge.getType());
+        assertEquals(
+                updateDTO.type().substring(0, 1).toUpperCase()
+                        + updateDTO.type().substring(1).toLowerCase(),
+                challenge.getType());
     }
 
     private Challenge createSampleChallenge() {

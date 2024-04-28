@@ -36,7 +36,7 @@ public class ChallengeTypeConfigMapperTest {
                 challengeTypeConfigMapper.toEntity(challengeTypeConfigDTO);
 
         assertNotNull(challengeTypeConfig);
-        assertEquals("TestType", challengeTypeConfig.getType());
+        assertEquals("Testtype", challengeTypeConfig.getType());
         assertEquals(BigDecimal.TEN, challengeTypeConfig.getGeneralAmount());
         assertEquals(BigDecimal.ONE, challengeTypeConfig.getSpecificAmount());
     }

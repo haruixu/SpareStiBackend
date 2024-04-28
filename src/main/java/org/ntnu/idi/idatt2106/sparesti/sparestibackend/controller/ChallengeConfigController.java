@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
@@ -19,7 +18,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserConfigService
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -53,9 +51,8 @@ public class ChallengeConfigController {
                 @ApiResponse(responseCode = "400", description = "Bad input")
             })
     public ResponseEntity<ChallengeConfigDTO> createChallengeConfig(
-            @Parameter(description = "Challenge config details to create") @Valid @RequestBody
+            @Parameter(description = "Challenge config details to create") @RequestBody
                     ChallengeConfigDTO challengeConfigDTO,
-            BindingResult bindingResult,
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
                     UserDetails userDetails)
             throws UserNotFoundException, BadInputException, ObjectNotValidException {
