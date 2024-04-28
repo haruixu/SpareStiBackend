@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.yubico.webauthn.data.ByteArray;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,8 @@ public class GoalMapperTest {
                         0L,
                         new UserConfig(Role.USER, null),
                         new Account(),
-                        new Account());
+                        new Account(),
+                        new ByteArray(new byte[0]));
 
         // Goal
         String title = "title";
