@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
@@ -270,6 +271,38 @@ public class ChallengeController {
         challengeService.deleteChallenge(id, user);
         log.info("Deleted challenge with id: {}", id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Generate user challenges",
+            description = "Generates challenges based on the configuration set by the user")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Generated challenges",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ChallengeDTO.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid or expired JWT token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "No JWT token provided",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "User config or user not found",
+                        content = @Content)
+            })
+    @GetMapping("/generate")
+    public ResponseEntity<List<ChallengeDTO>> generateChallenges(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(challengeService.getGeneratedChallenges(getUser(userDetails)));
     }
 
     /**

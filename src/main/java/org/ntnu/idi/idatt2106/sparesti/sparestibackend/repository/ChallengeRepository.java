@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
@@ -14,6 +15,8 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     Optional<Challenge> findByIdAndUser(Long id, User user);
 
     Page<Challenge> findAllByCompletedOnIsNullAndUser(User user, Pageable pageable);
+
+    List<Challenge> findAllByCompletedOnIsNullAndUser(User user);
 
     Page<Challenge> findAllByCompletedOnIsNotNullAndUser(User user, Pageable pageable);
 }

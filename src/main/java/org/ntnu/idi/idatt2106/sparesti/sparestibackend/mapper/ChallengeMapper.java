@@ -28,7 +28,12 @@ public interface ChallengeMapper {
                 target = "completion",
                 expression =
                         "java(ApplicationUtil.percent(challengeCreateDTO.saved(),"
-                                + " challengeCreateDTO.target()))")
+                                + " challengeCreateDTO.target()))"),
+        @Mapping(
+                target = "type",
+                expression =
+                        "java((challengeCreateDTO.type().substring(0,1).toUpperCase() +"
+                                + " challengeCreateDTO.type().substring(1).toLowerCase()).trim())")
     })
     Challenge toEntity(ChallengeCreateDTO challengeCreateDTO, User user);
 
@@ -40,7 +45,12 @@ public interface ChallengeMapper {
         @Mapping(
                 target = "completion",
                 expression =
-                        "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))")
+                        "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))"),
+        @Mapping(
+                target = "type",
+                expression =
+                        "java((challengeDTO.type().substring(0,1).toUpperCase()+"
+                                + " challengeDTO.type().substring(1).toLowerCase()).trim())")
     })
     Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO);
 }
