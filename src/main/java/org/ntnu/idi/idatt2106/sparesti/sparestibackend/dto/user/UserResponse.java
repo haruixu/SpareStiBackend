@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.BadgeDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
@@ -20,5 +21,6 @@ public record UserResponse(
         @NotNull @Email String email,
         @NotNull AccountDTO spendingAccount,
         @NotNull AccountDTO savingAccount,
+        @NotNull BigDecimal savedAmount,
         @NotNull Set<BadgeDTO> badges)
         implements Serializable {}

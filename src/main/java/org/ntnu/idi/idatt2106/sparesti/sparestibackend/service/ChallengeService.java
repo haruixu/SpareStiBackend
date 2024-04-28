@@ -104,6 +104,9 @@ public class ChallengeService {
             throws ChallengeNotFoundException, ObjectNotValidException {
         createChallengeValidator.validate(challengeCreateDTO);
         Challenge newChallenge = ChallengeMapper.INSTANCE.toEntity(challengeCreateDTO, user);
+        if (newChallenge.getSaved().doubleValue() >= newChallenge.getTarget().doubleValue()) {
+            return completeChallenge(newChallenge.getId(), user);
+        }
         Challenge persistedChallenge = challengeRepository.save(newChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
@@ -114,7 +117,6 @@ public class ChallengeService {
         Challenge challenge = privateGetChallenge(id, user);
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
-        // TODO: if saved > target, complete challenge
         if (challenge.getSaved().doubleValue() >= challenge.getTarget().doubleValue()) {
             return completeChallenge(updatedChallenge.getId(), user);
         }
@@ -218,7 +220,7 @@ public class ChallengeService {
 
         // Save a fraction of general amount, based on level of motivation, rounded to nearest 10
         int targetValue =
-                (int) Math.round(generalAmount / motivationValue * targetRandomizerValue / 10) * 10;
+                (int) Math.round(generalAmount * motivationValue * targetRandomizerValue / 10) * 10;
         BigDecimal target = new BigDecimal(targetValue);
         Challenge challenge =
                 new Challenge(
