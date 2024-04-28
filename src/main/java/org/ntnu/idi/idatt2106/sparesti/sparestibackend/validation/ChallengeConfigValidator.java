@@ -1,8 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation;
 
-import java.util.Collections;
+import java.util.stream.Collectors;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -29,16 +28,19 @@ public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO
     }
 
     private void validateDuplicateType(ChallengeConfigDTO config) {
+        int nrTypes = config.challengeTypeConfigs().size();
+        System.out.println(nrTypes);
+        System.out.println(
+                config.challengeTypeConfigs().stream()
+                        .map(configType -> configType.type().toLowerCase().trim())
+                        .collect(Collectors.toSet())
+                        .size());
         if (config.challengeTypeConfigs().stream()
-                        .map(ChallengeTypeConfigDTO::type)
-                        .filter(
-                                type ->
-                                        Collections.frequency(config.challengeTypeConfigs(), type)
-                                                > 1)
-                        .toList()
+                        .map(configType -> configType.type().toLowerCase().trim())
+                        .collect(Collectors.toSet())
                         .size()
-                > 1) {
-            throw new BadInputException("Type må være unik");
+                < nrTypes) {
+            throw new BadInputException("Duplikate typer er ikke tillatt");
         }
     }
 }
