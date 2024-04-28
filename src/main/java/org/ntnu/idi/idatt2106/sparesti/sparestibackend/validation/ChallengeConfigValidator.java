@@ -1,7 +1,9 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation;
 
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Qualifier("challengeConfigValidator")
+@RequiredArgsConstructor
 public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO> {
+
+    private final ObjectValidator<ChallengeTypeConfigDTO> configTypeValidator;
 
     /**
      * Checks field constraints and validates that specific amount is not greater than general amount and that there are no duplicate types.
@@ -25,6 +30,7 @@ public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO
     @Override
     public void validate(ChallengeConfigDTO challengeConfigDTO) {
         checkConstraints(challengeConfigDTO);
+        challengeConfigDTO.challengeTypeConfigs().forEach(configTypeValidator::validate);
         validateSpecificAmountLessThanOrEqualToGeneralAmount(challengeConfigDTO);
         validateDuplicateType(challengeConfigDTO);
     }
