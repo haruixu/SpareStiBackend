@@ -162,4 +162,6 @@ public class ChallengeIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
     }
+
+    // TODO - test savedAmount increases when completing or when saved >= target
 }
