@@ -25,7 +25,8 @@ public interface UserMapper {
         @Mapping(target = "badges", ignore = true),
         @Mapping(target = "password", source = "encodedPassword"),
         @Mapping(target = "streakStart", ignore = true),
-        @Mapping(target = "streak", ignore = true)
+        @Mapping(target = "streak", ignore = true),
+        @Mapping(target = "savedAmount", ignore = true)
     })
     void updateEntity(@MappingTarget User user, UserUpdateDTO updateDTO, String encodedPassword);
 

@@ -11,7 +11,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 @Mapper(
         componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.ERROR,
-        imports = UserConfig.class)
+        imports = {UserConfig.class, java.math.BigDecimal.class})
 public interface RegisterMapper {
 
     RegisterMapper INSTANCE = Mappers.getMapper(RegisterMapper.class);
@@ -23,7 +23,8 @@ public interface RegisterMapper {
         @Mapping(target = "spendingAccount", ignore = true),
         @Mapping(target = "savingAccount", ignore = true),
         @Mapping(target = "streakStart", ignore = true),
-        @Mapping(target = "streak", expression = "java( 0L )")
+        @Mapping(target = "streak", expression = "java( 0L )"),
+        @Mapping(target = "savedAmount", expression = "java( BigDecimal.ZERO )")
     })
     User toEntity(RegisterRequest request, Role role, String encodedPassword);
 

@@ -59,6 +59,7 @@ public class ChallengeService {
         }
 
         challenge.setCompletedOn(ZonedDateTime.now());
+        updateUserSavedAmount(user, challenge.getSaved().doubleValue());
         updateStreak(challenge);
         challengeRepository.save(challenge);
         return ChallengeMapper.INSTANCE.toDTO(challenge);
@@ -89,6 +90,10 @@ public class ChallengeService {
         }
     }
 
+    private void updateUserSavedAmount(User user, double increment) {
+        user.setSavedAmount(BigDecimal.valueOf(user.getSavedAmount().doubleValue() + increment));
+    }
+
     private Challenge findChallengeByIdAndUser(Long challengeId, User user) {
         return challengeRepository
                 .findByIdAndUser(challengeId, user)
@@ -109,6 +114,10 @@ public class ChallengeService {
         Challenge challenge = privateGetChallenge(id, user);
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
+        // TODO: if saved > target, complete challenge
+        if (challenge.getSaved().doubleValue() >= challenge.getTarget().doubleValue()) {
+            return completeChallenge(updatedChallenge.getId(), user);
+        }
         Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
