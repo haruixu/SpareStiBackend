@@ -164,8 +164,8 @@ public class AuthenticationController {
     @Operation(
             summary = "Initiate biometric authentication registration",
             description =
-                    "Starts the process of registering biometric authentication for the authenticated"
-                            + " user",
+                    "Starts the process of registering biometric authentication for the"
+                            + " authenticated user",
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -181,7 +181,8 @@ public class AuthenticationController {
             @AuthenticationPrincipal UserDetails userDetails)
             throws UserNotFoundException, JsonProcessingException {
         logger.info(
-                "Received POST request to configure biometric auth by '{}'", userDetails.getUsername());
+                "Received POST request to configure biometric auth by '{}'",
+                userDetails.getUsername());
         String registration = authenticationService.bioAuthRegistration(userDetails.getUsername());
 
         logger.info("Successfully returned credential request options: {}", registration);
@@ -200,8 +201,8 @@ public class AuthenticationController {
     @Operation(
             summary = "Complete biometric authentication registration",
             description =
-                    "Completes the process of registering biometric authentication for the authenticated"
-                            + " user",
+                    "Completes the process of registering biometric authentication for the"
+                            + " authenticated user",
             responses = {
                 @ApiResponse(
                         responseCode = "204",
