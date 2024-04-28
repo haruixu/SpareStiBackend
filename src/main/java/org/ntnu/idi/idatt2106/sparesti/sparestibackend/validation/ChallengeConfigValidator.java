@@ -6,10 +6,22 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputExcepti
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+/**
+ * Validator for ChallengeConfigDTO's from HTTP requests
+ *
+ * @author Harry L.X
+ * @version 1.0
+ * @since 24.4.24
+ */
 @Component
 @Qualifier("challengeConfigValidator")
 public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO> {
 
+    /**
+     * Checks field constraints and validates that specific amount is not greater than general amount and that there are no duplicate types.
+     * Overrides 'validate' from ObjectValidator
+     * @param challengeConfigDTO Object of type T
+     */
     @Override
     public void validate(ChallengeConfigDTO challengeConfigDTO) {
         checkConstraints(challengeConfigDTO);
@@ -17,7 +29,12 @@ public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO
         validateDuplicateType(challengeConfigDTO);
     }
 
-    private void validateSpecificAmountLessThanOrEqualToGeneralAmount(ChallengeConfigDTO config) {
+    /**
+     * Checks specific amount is less than general amount
+     * @param config Challenge config DTO
+     */
+    private void validateSpecificAmountLessThanOrEqualToGeneralAmount(ChallengeConfigDTO config)
+            throws BadInputException {
         if (config.challengeTypeConfigs().stream()
                 .anyMatch(
                         configType ->
@@ -27,14 +44,13 @@ public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO
         }
     }
 
-    private void validateDuplicateType(ChallengeConfigDTO config) {
+    /**
+     * Checks there are no duplicate types
+     * @param config Challenge config DTO
+     * @throws BadInputException For duplicate types
+     */
+    private void validateDuplicateType(ChallengeConfigDTO config) throws BadInputException {
         int nrTypes = config.challengeTypeConfigs().size();
-        System.out.println(nrTypes);
-        System.out.println(
-                config.challengeTypeConfigs().stream()
-                        .map(configType -> configType.type().toLowerCase().trim())
-                        .collect(Collectors.toSet())
-                        .size());
         if (config.challengeTypeConfigs().stream()
                         .map(configType -> configType.type().toLowerCase().trim())
                         .collect(Collectors.toSet())

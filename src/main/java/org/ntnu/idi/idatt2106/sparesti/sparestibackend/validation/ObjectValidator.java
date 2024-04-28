@@ -10,6 +10,15 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.Obje
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+/**
+ * Validator class for DTO objects received from HTTP-requests
+ * Its generic type allows flexibility across DTO's
+ *
+ * @author Harry L.X
+ * @version 1.0
+ * @since 24.4.24
+ * @param <T> The DTO type that class is validating
+ */
 @Component
 @Primary
 public class ObjectValidator<T> {
@@ -18,10 +27,18 @@ public class ObjectValidator<T> {
 
     protected final Validator validator = validatorFactory.getValidator();
 
+    /**
+     * Validates the object
+     * @param object Object of type T
+     */
     public void validate(T object) {
         checkConstraints(object);
     }
 
+    /**
+     * Checks that no field constraints are violated in the object
+     * @param object The object of type T
+     */
     protected void checkConstraints(T object) {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
         if (!violations.isEmpty()) {
