@@ -8,15 +8,14 @@ import com.yubico.webauthn.exception.RegistrationFailedException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.AccessTokenResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.BioAuthRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.BioAuthMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;
@@ -178,9 +177,12 @@ public class AuthenticationService {
      * @throws JsonProcessingException If an error occurs while processing JSON
      * @throws UserNotFoundException If user does not exist
      */
-    public String bioAuthRegistration(String username) throws JsonProcessingException {
+    public String bioAuthRegistration(String username)
+            throws JsonProcessingException, PasskeyAlreadyRegisteredException {
         User user = userService.findUserByUsername(username);
-
+        if (Optional.ofNullable(user.getHandle()).isPresent()) {
+            throw new PasskeyAlreadyRegisteredException(username);
+        }
         UserIdentity userIdentity =
                 UserIdentity.builder()
                         .name(username)
@@ -214,12 +216,13 @@ public class AuthenticationService {
 
         String credentialString = bioAuthMapper.credentialToString(credential);
 
-        PublicKeyCredentialCreationOptions requestOptions = requestOptionMap.get(username);
-        if (requestOptions == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Cached request expired. Try to register again!");
-        }
+        PublicKeyCredentialCreationOptions requestOptions =
+                Optional.ofNullable(requestOptionMap.get(username))
+                        .orElseThrow(
+                                () ->
+                                        new ResponseStatusException(
+                                                HttpStatus.INTERNAL_SERVER_ERROR,
+                                                "Cached request expired. Try to register again!"));
         PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs>
                 pkc = PublicKeyCredential.parseRegistrationResponseJson(credentialString);
 
@@ -251,14 +254,19 @@ public class AuthenticationService {
      * @throws BadCredentialsException If biometric authentication fails
      */
     public LoginRegisterResponse finishBioAuthLogin(String username, BioAuthRequest credential)
-            throws IOException, AssertionFailedException, BadCredentialsException {
+            throws IOException,
+                    AssertionFailedException,
+                    BadCredentialsException,
+                    AssertionRequestNotFoundException {
 
         PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
 
         pkc =
                 PublicKeyCredential.parseAssertionResponseJson(
                         bioAuthMapper.credentialToString(credential));
-        AssertionRequest request = this.assertionRequestMap.get(username);
+        AssertionRequest request =
+                Optional.ofNullable(this.assertionRequestMap.get(username))
+                        .orElseThrow(() -> new AssertionRequestNotFoundException(username));
         AssertionResult result =
                 relyingParty.finishAssertion(
                         FinishAssertionOptions.builder().request(request).response(pkc).build());
