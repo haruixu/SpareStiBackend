@@ -44,14 +44,18 @@ public class SecurityConfiguration {
                                 authorize
                                         .requestMatchers(
                                                 "/forgotPassword/**",
-                                                "/auth/**",
+                                                "/auth/login",
+                                                "/auth/bioLogin/**",
+                                                "/auth/register",
+                                                "/auth/renewToken",
+                                                "/auth/finishBioLogin/**",
                                                 "/swagger-ui/**",
                                                 "/v3/api-docs/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .sessionManagement(
-                        manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        manager -> manager.sessionCreationPolicy(SessionCreationPolicy.NEVER))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
