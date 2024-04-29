@@ -170,22 +170,51 @@ public class AuthenticationService {
     }
 
     /**
-     * Initiates the registration process for biometric authentication for the specified user.
+     * Initiates a new biometric authentication registration process for the specified user.
      *
-     * @param username The username of the user to register biometric authentication for
-     * @return A JSON representation of the credentials creation options for biometric registration
-     * @throws JsonProcessingException If an error occurs while processing JSON
-     * @throws UserNotFoundException If user does not exist
+     * @param username The username of the user for whom biometric authentication registration is initiated.
+     * @return A JSON string representing the registration request for biometric authentication.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     * @throws PasskeyAlreadyRegisteredException If the user already has a biometric passkey registered.
      */
-    public String bioAuthRegistration(String username)
+    public String newBioAuthRegistration(String username)
             throws JsonProcessingException, PasskeyAlreadyRegisteredException {
         User user = userService.findUserByUsername(username);
         if (Optional.ofNullable(user.getHandle()).isPresent()) {
             throw new PasskeyAlreadyRegisteredException(username);
         }
+        return bioAuthRegistration(user);
+    }
+
+    /**
+     * Resets the biometric authentication registration for the specified user.
+     *
+     * @param username The username of the user for whom biometric authentication registration is reset.
+     * @return A JSON string representing the registration request for biometric authentication.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     * @throws PasskeyAlreadyRegisteredException If the user does not have a biometric passkey registered.
+     */
+    public String resetBioAuthRegistration(String username)
+            throws JsonProcessingException, PasskeyAlreadyRegisteredException {
+        User user = userService.findUserByUsername(username);
+        if (Optional.ofNullable(user.getHandle()).isEmpty()) {
+            throw new UserHandleNotFoundException(username);
+        }
+        return newBioAuthRegistration(username);
+    }
+
+    /**
+     * Generates a biometric authentication registration for the given user.
+     *
+     * @param user The user for whom the biometric authentication registration is being generated.
+     * @return The JSON representation of the registration credentials.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     */
+    private String bioAuthRegistration(User user) throws JsonProcessingException {
+
         UserIdentity userIdentity =
                 UserIdentity.builder()
-                        .name(username)
+                        .name(user.getUsername())
                         .displayName(user.getFirstName() + " " + user.getLastName())
                         .id(ApplicationUtil.generateRandom(32))
                         .build();
@@ -202,13 +231,13 @@ public class AuthenticationService {
     }
 
     /**
-     * Completes the registration process for biometric authentication for the specified user.
+     * Finishes the biometric authentication registration process.
      *
-     * @param username   The username of the user to complete biometric authentication registration for
-     * @param credential The biometric authentication credential provided by the user
-     * @throws IOException               If an I/O error occurs
-     * @throws RegistrationFailedException If the registration process fails
-     * @throws JsonProcessingException If an error occurs while processing JSON
+     * @param username   The username of the user.
+     * @param credential The biometric authentication credential.
+     * @throws IOException              If an I/O error occurs.
+     * @throws RegistrationFailedException If the registration fails.
+     * @throws JsonProcessingException  If an error occurs during JSON processing.
      */
     public void finishBioAuthRegistration(String username, BioAuthRequest credential)
             throws IOException, RegistrationFailedException, JsonProcessingException {
@@ -235,6 +264,13 @@ public class AuthenticationService {
         authRepository.save(savedAuth);
     }
 
+    /**
+     * Constructs a biometric authentication credential request for the specified username.
+     *
+     * @param username The username of the user.
+     * @return The JSON representation of the credential request.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     */
     public String constructCredRequest(String username) throws JsonProcessingException {
         AssertionRequest request =
                 relyingParty.startAssertion(
@@ -244,14 +280,15 @@ public class AuthenticationService {
     }
 
     /**
-     * Completes the login process using biometric authentication for the specified user.
+     * Finishes the biometric authentication login process.
      *
-     * @param username   The username of the user attempting biometric authentication
-     * @param credential The biometric authentication credential provided by the user
-     * @return A LoginRegisterResponse containing JWT tokens upon successful login
-     * @throws IOException               If an I/O error occurs
-     * @throws AssertionFailedException If the assertion process fails
-     * @throws BadCredentialsException If biometric authentication fails
+     * @param username   The username of the user.
+     * @param credential The biometric authentication credential.
+     * @return The response containing user information and JWT tokens.
+     * @throws IOException                      If an I/O error occurs.
+     * @throws AssertionFailedException         If the assertion fails.
+     * @throws BadCredentialsException         If the biometric authentication fails.
+     * @throws AssertionRequestNotFoundException If the assertion request is not found.
      */
     public LoginRegisterResponse finishBioAuthLogin(String username, BioAuthRequest credential)
             throws IOException,
