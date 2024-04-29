@@ -91,7 +91,8 @@ public class GlobalExceptionHandler {
                 ChallengeTypeConfigNotFoundException.class,
                 ConfigNotFoundException.class,
                 AccountNotFoundException.class,
-                AssertionRequestNotFoundException.class
+                AssertionRequestNotFoundException.class,
+                UserHandleNotFoundException.class
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
