@@ -33,8 +33,8 @@ public interface ChallengeMapper {
         @Mapping(
                 target = "type",
                 expression =
-                        "java(!challengeCreateDTO.type().isBlank ? &&"
-                                + " challengeCreateDTO.type().trim().length > 1"
+                        "java(challengeCreateDTO.type() != null &&"
+                                + " challengeCreateDTO.type().trim().length() > 1 ?"
                                 + " (challengeCreateDTO.type().substring(0,1).toUpperCase() +"
                                 + " challengeCreateDTO.type().substring(1).toLowerCase()).trim() :"
                                 + " null)")
@@ -54,8 +54,8 @@ public interface ChallengeMapper {
         @Mapping(
                 target = "type",
                 expression =
-                        "java(!challengeDTO.type().isBlank() ? &&"
-                                + " challengeDTO.type().trim().length() > 1"
+                        "java(challengeDTO.type() != null && "
+                                + " challengeDTO.type().trim().length() > 1 ?"
                                 + " (challengeDTO.type().substring(0,1).toUpperCase() +"
                                 + " challengeDTO.type().substring(1).toLowerCase()).trim() : null)")
     })
