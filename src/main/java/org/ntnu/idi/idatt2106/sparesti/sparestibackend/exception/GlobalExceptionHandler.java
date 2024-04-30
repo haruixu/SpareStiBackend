@@ -109,7 +109,6 @@ public class GlobalExceptionHandler {
                 IllegalArgumentException.class,
                 HttpMessageNotReadableException.class,
                 BadInputException.class,
-                BadCredentialsException.class,
                 NullPointerException.class,
                 MissingServletRequestParameterException.class,
                 HttpRequestMethodNotSupportedException.class,
@@ -124,6 +123,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
         String msg = createErrorResponseMsg(ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentialsException(Exception ex) {
+        logError(ex);
+        String msg = "Brukernavn eller passord er feil";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
     }
 
