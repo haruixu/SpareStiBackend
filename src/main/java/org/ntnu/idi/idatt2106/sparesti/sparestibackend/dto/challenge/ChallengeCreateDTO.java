@@ -26,9 +26,6 @@ public record ChallengeCreateDTO(
         @Size(max = 280, message = "Description can at most have 280 characters")
                 String description,
         @Future(message = "Due date must be in the future") ZonedDateTime due,
-        @Size(
-                        min = 2,
-                        max = 20,
-                        message = "Type can have minimum 2 characters and max 20 characters")
+        @Size(max = 20, message = "Type can have minimum 2 characters and max 20 characters")
                 String type)
         implements Serializable {}

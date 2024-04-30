@@ -18,8 +18,10 @@ public interface ChallengeTypeConfigMapper {
     @Mapping(
             target = "type",
             expression =
-                    "java((challengeTypeConfigDTO.type().substring(0,1).toUpperCase() +"
-                            + " challengeTypeConfigDTO.type().substring(1).toLowerCase()).trim())")
+                    "java(challengeTypeConfigDTO.type()trim().length() > 1 ?"
+                            + " challengeTypeConfigDTO.type().substring(0,1).toUpperCase() +"
+                            + " challengeTypeConfigDTO.type().substring(1).toLowerCase() :"
+                            + " null)")
     ChallengeTypeConfig toEntity(ChallengeTypeConfigDTO challengeTypeConfigDTO);
 
     ChallengeTypeConfig updateEntity(
