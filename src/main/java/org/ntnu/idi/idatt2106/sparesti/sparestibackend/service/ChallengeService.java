@@ -32,6 +32,47 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ObjectValidator<ChallengeUpdateDTO> updateChallengeValidator;
     private final ChallengeValidator createChallengeValidator;
+    private final GoalService goalService;
+
+    public ChallengeDTO save(ChallengeCreateDTO challengeCreateDTO, User user)
+            throws ChallengeNotFoundException, ObjectNotValidException {
+        createChallengeValidator.validate(challengeCreateDTO);
+        Challenge newChallenge = ChallengeMapper.INSTANCE.toEntity(challengeCreateDTO, user);
+        if (newChallenge.getSaved().doubleValue() == newChallenge.getTarget().doubleValue()) {
+            completeChallenge(newChallenge.getId(), user);
+        }
+        Challenge persistedChallenge = challengeRepository.save(newChallenge);
+        return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
+    }
+
+    public ChallengeDTO updateChallenge(Long id, ChallengeUpdateDTO challengeUpdateDTO, User user)
+            throws ChallengeNotFoundException, ObjectNotValidException {
+        updateChallengeValidator.validate(challengeUpdateDTO);
+        Challenge challenge = privateGetChallenge(id, user);
+        Challenge updatedChallenge =
+                ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
+        if (challenge.getSaved().doubleValue() >= challenge.getTarget().doubleValue()) {
+            return completeChallenge(updatedChallenge.getId(), user);
+        }
+        Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
+        return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
+    }
+
+    public ChallengeDTO getChallenge(Long challengeId, User user)
+            throws ChallengeNotFoundException {
+        return ChallengeMapper.INSTANCE.toDTO(privateGetChallenge(challengeId, user));
+    }
+
+    public void deleteChallenge(Long challengeId, User user) throws ChallengeNotFoundException {
+        Challenge challenge = privateGetChallenge(challengeId, user);
+        challengeRepository.delete(challenge);
+    }
+
+    private Challenge privateGetChallenge(Long challengeId, User user) {
+        return challengeRepository
+                .findByIdAndUser(challengeId, user)
+                .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
+    }
 
     public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable)
             throws ChallengeNotFoundException {
@@ -53,10 +94,6 @@ public class ChallengeService {
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
         Challenge challenge = findChallengeByIdAndUser(challengeId, user);
 
-        if (!user.getId().equals(challenge.getUser().getId())) {
-            throw new ChallengeNotFoundException(challengeId);
-        }
-
         if (challenge.getCompletedOn() != null) {
             throw new ChallengeAlreadyCompletedException(challengeId);
         }
@@ -64,21 +101,35 @@ public class ChallengeService {
         challenge.setCompletedOn(ZonedDateTime.now());
         updateUserSavedAmount(user, challenge.getSaved().doubleValue());
 
-        // TODO updateSaving goal amount
-        while (true) {
-            Optional<Goal> optionalGoal = user.getGoals().stream().findFirst();
-            if (optionalGoal.isEmpty()) {
-                break;
-            }
-            Goal goal = optionalGoal.get();
-            goal.setSaved(
-                    BigDecimal.valueOf(
-                            goal.getSaved().doubleValue() + challenge.getSaved().doubleValue()));
-            break;
+        double overflow = challenge.getSaved().doubleValue() - challenge.getTarget().doubleValue();
+        if (overflow > 0) {
+            cascadeOverflow(user, overflow);
         }
         updateStreak(challenge);
         challengeRepository.save(challenge);
         return ChallengeMapper.INSTANCE.toDTO(challenge);
+    }
+
+    private void cascadeOverflow(User user, double overflow) {
+        while (overflow > 0) {
+            Optional<Goal> optionalGoal = user.getGoals().stream().findFirst();
+            // No goals to cascace onto
+            if (optionalGoal.isEmpty()) {
+                return;
+            }
+            Goal goal = optionalGoal.get();
+            double goalDifference = goal.getTarget().doubleValue() - goal.getSaved().doubleValue();
+            // Set saved value to original value + overflow
+            if (overflow < goalDifference) {
+                goal.setSaved(BigDecimal.valueOf(goal.getSaved().doubleValue() + overflow));
+            }
+            // if overflow >= goalDifference, complete goal
+            else {
+                goal.setSaved(goal.getTarget());
+                goalService.completeGoal(goal.getId(), user);
+            }
+            overflow = overflow - goalDifference;
+        }
     }
 
     private void updateStreak(Challenge challenge) {
@@ -111,43 +162,6 @@ public class ChallengeService {
     }
 
     private Challenge findChallengeByIdAndUser(Long challengeId, User user) {
-        return challengeRepository
-                .findByIdAndUser(challengeId, user)
-                .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
-    }
-
-    public ChallengeDTO save(ChallengeCreateDTO challengeCreateDTO, User user)
-            throws ChallengeNotFoundException, ObjectNotValidException {
-        createChallengeValidator.validate(challengeCreateDTO);
-        Challenge newChallenge = ChallengeMapper.INSTANCE.toEntity(challengeCreateDTO, user);
-        Challenge persistedChallenge = challengeRepository.save(newChallenge);
-        return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
-    }
-
-    public ChallengeDTO updateChallenge(Long id, ChallengeUpdateDTO challengeUpdateDTO, User user)
-            throws ChallengeNotFoundException, ObjectNotValidException {
-        updateChallengeValidator.validate(challengeUpdateDTO);
-        Challenge challenge = privateGetChallenge(id, user);
-        Challenge updatedChallenge =
-                ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
-        if (challenge.getSaved().doubleValue() >= challenge.getTarget().doubleValue()) {
-            return completeChallenge(updatedChallenge.getId(), user);
-        }
-        Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
-        return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
-    }
-
-    public ChallengeDTO getChallenge(Long challengeId, User user)
-            throws ChallengeNotFoundException {
-        return ChallengeMapper.INSTANCE.toDTO(privateGetChallenge(challengeId, user));
-    }
-
-    public void deleteChallenge(Long challengeId, User user) throws ChallengeNotFoundException {
-        Challenge challenge = privateGetChallenge(challengeId, user);
-        challengeRepository.delete(challenge);
-    }
-
-    private Challenge privateGetChallenge(Long challengeId, User user) {
         return challengeRepository
                 .findByIdAndUser(challengeId, user)
                 .orElseThrow(() -> new ChallengeNotFoundException(challengeId));

@@ -60,6 +60,9 @@ public class GoalService {
         updateValidator.validate(goalDTO);
         Goal currentGoal = findGoalByIdAndUser(id, user);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(currentGoal, goalDTO);
+        if (updatedGoal.getSaved().doubleValue() >= updatedGoal.getTarget().doubleValue()) {
+            completeGoal(updatedGoal.getId(), user);
+        }
         return GoalMapper.INSTANCE.toDTO(goalRepository.save(updatedGoal));
     }
 
@@ -87,7 +90,6 @@ public class GoalService {
                 .map(GoalMapper.INSTANCE::toDTO);
     }
 
-    // TODO: saved > target should ocmpleter goal
     public GoalResponseDTO completeGoal(Long goalId, User user) {
         Goal completedGoal = setCompleted(goalId, user);
         setNewPriorities(user);
