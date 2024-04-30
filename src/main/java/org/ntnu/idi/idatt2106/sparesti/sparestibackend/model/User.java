@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.yubico.webauthn.data.ByteArray;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import lombok.*;
 import org.hibernate.annotations.SortNatural;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ByteArrayAttributeConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -92,6 +94,11 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "BADGE_ID"))
     @Setter(AccessLevel.NONE)
     private final Set<Badge> badges = new HashSet<>();
+
+    @Column(length = 64)
+    @Lob
+    @Convert(converter = ByteArrayAttributeConverter.class)
+    private ByteArray handle;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

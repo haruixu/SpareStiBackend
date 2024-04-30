@@ -24,6 +24,7 @@ public interface RegisterMapper {
         @Mapping(target = "savingAccount", ignore = true),
         @Mapping(target = "streakStart", ignore = true),
         @Mapping(target = "streak", expression = "java( 0L )"),
+        @Mapping(target = "handle", ignore = true),
         @Mapping(target = "savedAmount", expression = "java( BigDecimal.ZERO )")
     })
     User toEntity(RegisterRequest request, Role role, String encodedPassword);

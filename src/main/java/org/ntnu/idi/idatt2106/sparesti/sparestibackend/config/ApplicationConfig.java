@@ -1,7 +1,10 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.config;
 
+import com.yubico.webauthn.RelyingParty;
+import com.yubico.webauthn.data.RelyingPartyIdentity;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.RegistrationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -71,5 +74,22 @@ public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public RelyingParty relyingParty(
+            RegistrationService registrationService, WebAuthConfig authConfig) {
+        RelyingPartyIdentity rpIdentity =
+                RelyingPartyIdentity.builder()
+                        .id(authConfig.getHostName())
+                        .name(authConfig.getDisplay())
+                        .build();
+
+        return RelyingParty.builder()
+                .identity(rpIdentity)
+                .credentialRepository(registrationService)
+                .origins(authConfig.getOrigin())
+                .allowOriginPort(true)
+                .build();
     }
 }

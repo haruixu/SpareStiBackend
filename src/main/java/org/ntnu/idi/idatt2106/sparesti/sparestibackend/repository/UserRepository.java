@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository;
 
+import com.yubico.webauthn.data.ByteArray;
 import java.util.Optional;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return Optional email
      */
     Optional<User> findByEmail(String email);
+
+    User findByHandle(ByteArray handle);
 }
