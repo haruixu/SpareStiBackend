@@ -71,7 +71,9 @@ public class ChallengeService {
                 break;
             }
             Goal goal = optionalGoal.get();
-            goal.setSaved(BigDecimal.valueOf(goal.getSaved().doubleValue() + challenge.getSaved().doubleValue()));
+            goal.setSaved(
+                    BigDecimal.valueOf(
+                            goal.getSaved().doubleValue() + challenge.getSaved().doubleValue()));
             break;
         }
         updateStreak(challenge);
@@ -180,7 +182,7 @@ public class ChallengeService {
                                         .findAllByCompletedOnIsNullAndUser(user)
                                         .stream()
                                         .map(Challenge::getType)
-                                    .filter(Objects::nonNull)
+                                        .filter(Objects::nonNull)
                                         .toList()
                                         .contains(type))
                 .toList();
