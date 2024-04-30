@@ -49,7 +49,7 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - apt-get update
     - apt-get install --assume-yes rsync
-    - rsync --archive --delete --exclude='.git' --exclude="'.env' . student@129.241.98.22:student
+    - rsync --archive --delete --exclude='.git' --exclude='.env' . student@129.241.98.22:student
     - ssh student@idatt2105-22 echo "Sparesti123!" | sudo -S systemctl restart sparesti_backed.service
   only:
     - dev
