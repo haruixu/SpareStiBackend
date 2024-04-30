@@ -9,13 +9,13 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.GoalMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.GoalRepository;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.goal.GoalValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class GoalService {
     private static final int ACTIVE_GOAL_LIMIT = 10;
 
     private final ObjectValidator<GoalUpdateDTO> updateValidator;
-    private final ObjectValidator<GoalCreateDTO> createValidator;
+    private final GoalValidator createValidator;
 
     public GoalResponseDTO findUserGoal(Long id, User user) {
         return GoalMapper.INSTANCE.toDTO(findGoalByIdAndUser(id, user));
@@ -87,6 +87,7 @@ public class GoalService {
                 .map(GoalMapper.INSTANCE::toDTO);
     }
 
+    // TODO: saved > target should ocmpleter goal
     public GoalResponseDTO completeGoal(Long goalId, User user) {
         Goal completedGoal = setCompleted(goalId, user);
         setNewPriorities(user);
@@ -104,7 +105,11 @@ public class GoalService {
 
     public List<GoalResponseDTO> updatePriorities(List<Long> goalIds, User user) {
         List<Long> distinctGoalIds = goalIds.stream().distinct().toList();
-        validateGoalIds(distinctGoalIds, user);
+        List<Long> activeGoalsIds =
+                goalRepository.findAllByCompletedOnIsNullAndUser(user).stream()
+                        .map(Goal::getId)
+                        .toList();
+        createValidator.validateGoalIds(distinctGoalIds, activeGoalsIds);
 
         List<Goal> updatedGoalsList = new ArrayList<>();
         for (int i = 0; i < distinctGoalIds.size(); i++) {
@@ -117,26 +122,6 @@ public class GoalService {
         return goalRepository.saveAll(updatedGoalsList).stream()
                 .map(GoalMapper.INSTANCE::toDTO)
                 .toList();
-    }
-
-    private void validateGoalIds(List<Long> goalIds, User user) {
-        List<Long> activeGoalsIds =
-                goalRepository.findAllByCompletedOnIsNullAndUser(user).stream()
-                        .map(Goal::getId)
-                        .toList();
-        for (Long goalId : goalIds) {
-            if (!activeGoalsIds.contains(goalId)) {
-                throw new NotActiveGoalException(goalId);
-            }
-        }
-
-        if (goalIds.size() > activeGoalsIds.size()) {
-            throw new ActiveGoalLimitExceededException();
-        }
-        if (goalIds.size() < activeGoalsIds.size()) {
-            throw new IllegalArgumentException(
-                    "Size of priority list does not match size of active goals");
-        }
     }
 
     public void deleteUserGoal(Long id, User user) {
