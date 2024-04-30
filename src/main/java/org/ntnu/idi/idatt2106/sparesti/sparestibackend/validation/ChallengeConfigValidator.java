@@ -31,23 +31,7 @@ public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO
     public void validate(ChallengeConfigDTO challengeConfigDTO) {
         checkConstraints(challengeConfigDTO);
         challengeConfigDTO.challengeTypeConfigs().forEach(configTypeValidator::validate);
-        validateSpecificAmountLessThanOrEqualToGeneralAmount(challengeConfigDTO);
         validateDuplicateType(challengeConfigDTO);
-    }
-
-    /**
-     * Checks specific amount is less than general amount
-     * @param config Challenge config DTO
-     */
-    private void validateSpecificAmountLessThanOrEqualToGeneralAmount(ChallengeConfigDTO config)
-            throws BadInputException {
-        if (config.challengeTypeConfigs().stream()
-                .anyMatch(
-                        configType ->
-                                configType.specificAmount().doubleValue()
-                                        > configType.generalAmount().doubleValue())) {
-            throw new BadInputException("Enhetspris kan ikke være større enn ukentlig kostnad");
-        }
     }
 
     /**
