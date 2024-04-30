@@ -68,6 +68,10 @@ public class UserValidator<T> extends ObjectValidator<T> {
             if (!RegexValidator.isEmailValid(dto.email())) {
                 throw new BadInputException("The email address is invalid.");
             }
+            if (userExistByEmail(dto.email())) {
+                throw new UserAlreadyExistsException(
+                        "User with email: " + dto.email() + " already exists");
+            }
         }
 
         if (dto.firstName() != null) {
@@ -80,13 +84,6 @@ public class UserValidator<T> extends ObjectValidator<T> {
         if (dto.lastName() != null) {
             if (!RegexValidator.isNameValid(dto.lastName())) {
                 throw new BadInputException("The last name: '" + dto.lastName() + "' is invalid.");
-            }
-        }
-
-        if (dto.email() != null) {
-            if (userExistByEmail(dto.email())) {
-                throw new UserAlreadyExistsException(
-                        "User with email: " + dto.email() + " already exists");
             }
         }
 
