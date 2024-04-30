@@ -3,6 +3,7 @@ stages:
   - build
   - linting
   - test
+  - deploy
 
 default:
   # Cache maven docker image in GitLab
@@ -37,3 +38,19 @@ linting:
   stage: linting
   script:
     - mvn spotless:check
+
+deploy:
+  stage: deploy
+  script:
+    - mkdir ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - touch ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa # Required permission by ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - apt-get update
+    - apt-get install --assume-yes rsync
+    - rsync --archive --delete --exclude='.git' --exclude="'.env' . student@129.241.98.22:student
+    - ssh student@idatt2105-22 echo "Sparesti123!" | sudo -S systemctl restart sparesti_backed.service
+  only:
+    - dev
+    - main
