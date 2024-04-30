@@ -10,8 +10,7 @@ import java.time.ZonedDateTime;
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeCreateDTO(
-        @NotEmpty(message = "Title cannot be empty")
-                @NotBlank(message = "Title cannot be blank")
+        @NotBlank(message = "Title cannot be blank")
                 @Size(max = 20, message = "Title can max have 20 characters")
                 String title,
         @NotNull(message = "Saved amount cannot be null")
