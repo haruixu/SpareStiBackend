@@ -11,8 +11,8 @@ public class ChallengeValidator extends ObjectValidator<ChallengeCreateDTO> {
     @Override
     public void validate(ChallengeCreateDTO dto) throws BadInputException {
         checkConstraints(dto);
-        if (dto.perPurchase().doubleValue() > dto.target().doubleValue()) {
-            throw new BadInputException("Enhetsprisen kan ikke være større enn målbeløpet");
+        if (dto.saved().doubleValue() > dto.target().doubleValue()) {
+            throw new BadInputException("Det du har spart kan ikke være større enn målbeløpet");
         }
     }
 }

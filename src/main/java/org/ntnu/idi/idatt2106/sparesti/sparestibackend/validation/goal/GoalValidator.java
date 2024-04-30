@@ -15,7 +15,7 @@ public class GoalValidator extends ObjectValidator<GoalCreateDTO> {
     public void validate(GoalCreateDTO dto) throws BadInputException {
         checkConstraints(dto);
         if (dto.saved().doubleValue() > dto.target().doubleValue()) {
-            throw new BadInputException("Enhetsprisen kan ikke være større enn sparemålbeløpet");
+            throw new BadInputException("Det du har spart kan ikke være større enn sparemålbeløpet");
         }
     }
 
