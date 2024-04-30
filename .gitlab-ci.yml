@@ -50,10 +50,9 @@ deploy:
     - apt-get update
     - apt-get install --assume-yes rsync
     - apt-get install --assume-yes openssh-client
-    - ssh -o StrictHostKeyChecking=no
 
-    # - rsync --archive --delete --exclude='.git' --exclude='.env' . student@129.241.98.22:idatt2106_2024_02_backend
-    - scp idatt2106_2024_02_backend student@129.241.98.22:/
+    - rsync --archive --delete --exclude='.git' --exclude='.env' . student@129.241.98.22:idatt2106_2024_02_backend
+    # - scp idatt2106_2024_02_backend student@129.241.98.22:/
     - ssh student@idatt2105-22 echo "Sparesti123!" | sudo -S systemctl restart sparesti_backed.service
   only:
     - dev
