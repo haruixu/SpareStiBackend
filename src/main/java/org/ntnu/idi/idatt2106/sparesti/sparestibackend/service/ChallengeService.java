@@ -3,7 +3,8 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Random;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeDTO;
@@ -15,9 +16,11 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.Obje
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.ChallengeRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ChallengeValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.challenge.ChallengeValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,8 +30,8 @@ import org.springframework.stereotype.Service;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-    private final ChallengeValidator<ChallengeUpdateDTO> updateChallengeValidator;
-    private final ChallengeValidator<ChallengeCreateDTO> createChallengeValidator;
+    private final ObjectValidator<ChallengeUpdateDTO> updateChallengeValidator;
+    private final ChallengeValidator createChallengeValidator;
 
     public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable)
             throws ChallengeNotFoundException {
@@ -60,6 +63,17 @@ public class ChallengeService {
 
         challenge.setCompletedOn(ZonedDateTime.now());
         updateUserSavedAmount(user, challenge.getSaved().doubleValue());
+
+        // TODO updateSaving goal amount
+        while (true) {
+            Optional<Goal> optionalGoal = user.getGoals().stream().findFirst();
+            if (optionalGoal.isEmpty()) {
+                break;
+            }
+            Goal goal = optionalGoal.get();
+            goal.setSaved(BigDecimal.valueOf(goal.getSaved().doubleValue() + challenge.getSaved().doubleValue()));
+            break;
+        }
         updateStreak(challenge);
         challengeRepository.save(challenge);
         return ChallengeMapper.INSTANCE.toDTO(challenge);
@@ -104,9 +118,6 @@ public class ChallengeService {
             throws ChallengeNotFoundException, ObjectNotValidException {
         createChallengeValidator.validate(challengeCreateDTO);
         Challenge newChallenge = ChallengeMapper.INSTANCE.toEntity(challengeCreateDTO, user);
-        if (newChallenge.getSaved().doubleValue() >= newChallenge.getTarget().doubleValue()) {
-            return completeChallenge(newChallenge.getId(), user);
-        }
         Challenge persistedChallenge = challengeRepository.save(newChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
@@ -168,9 +179,10 @@ public class ChallengeService {
                                 !challengeRepository
                                         .findAllByCompletedOnIsNullAndUser(user)
                                         .stream()
-                                        .map(challenge -> challenge.getType().toLowerCase())
+                                        .map(Challenge::getType)
+                                    .filter(Objects::nonNull)
                                         .toList()
-                                        .contains(type.toLowerCase()))
+                                        .contains(type))
                 .toList();
     }
 
@@ -183,29 +195,21 @@ public class ChallengeService {
      */
     private List<ChallengeDTO> generateChallenges(List<String> availableTypes, User user) {
         double motivationValue = user.getUserConfig().getChallengeConfig().getMotivation().getVal();
-        Random random = new Random();
 
         return availableTypes.stream()
-                .map(type -> generateChallenge(user, type, motivationValue, random))
+                .map(type -> generateChallenge(user, type, motivationValue))
+                .filter(Objects::nonNull)
                 .toList();
     }
 
     /**
      * Generates a single challenge based on a type from user config
-     * The generated challenge introduces some level of randomization in
-     * target value which is +/- 10% of the config type's general amount (amount spent in week)
-     * Due date is also random, from 7-10 days.
      * @param user User who challenge is generated for
      * @param type Challenge type
      * @param motivationValue Willingness for saving
-     * @param random Randomizer
      * @return Generated challenge of a given type
      */
-    private ChallengeDTO generateChallenge(
-            User user, String type, double motivationValue, Random random) {
-        String title = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
-        double targetRandomizerValue = random.nextDouble(0.9, 1.1);
-        int dayRandomizerValue = random.nextInt(0, 4);
+    private ChallengeDTO generateChallenge(User user, String type, double motivationValue) {
 
         // Finding challenge type config from available types
         ChallengeTypeConfig challengeTypeConfig =
@@ -214,29 +218,76 @@ public class ChallengeService {
                         .findFirst()
                         .get();
 
-        // Extract data from config type to be used later
-        double generalAmount = challengeTypeConfig.getGeneralAmount().doubleValue();
-        BigDecimal specificAmount = challengeTypeConfig.getSpecificAmount();
+        double amountPerWeek = challengeTypeConfig.getGeneralAmount().doubleValue();
+        double amountPerUnit = challengeTypeConfig.getSpecificAmount().doubleValue();
 
-        // Save a fraction of general amount, based on level of motivation, rounded to nearest 10
-        int targetValue =
-                (int) Math.round(generalAmount * motivationValue * targetRandomizerValue / 10) * 10;
+        int weeks = calculateWeeks(amountPerWeek, amountPerUnit);
+        double units = weeks * amountPerWeek / amountPerUnit;
+
+        if (units * motivationValue < 1) {
+            // Throw away challenges with unrealistic target value
+            return null;
+        } else {
+            double targetValue = Math.round(units * motivationValue) * amountPerUnit;
+            String title = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
+            return createChallenge(
+                    title, amountPerUnit, amountPerWeek, weeks, targetValue, type, user);
+        }
+    }
+
+    private ChallengeDTO createChallenge(
+            String title,
+            double amountPerUnit,
+            double amountPerWeek,
+            int weeks,
+            double targetValue,
+            String type,
+            User user) {
+        double unitsPerWeek = amountPerWeek / amountPerUnit;
+        double targetUnits = targetValue / amountPerUnit;
+        String descriptionSuffix = weeks == 1 ? "den neste uka." : "de neste " + weeks + " ukene.";
+        String description =
+                String.format(
+                                "Du bruker %.2fkr hver du kjøper denne typen. Per uke bruker du i"
+                                        + " snitt %.2fkr (%.1f enheter). Din utfordring vil være å"
+                                        + " spare %.2fkr (%.1f enheter) ",
+                                amountPerUnit,
+                                amountPerWeek,
+                                unitsPerWeek,
+                                targetValue,
+                                targetUnits)
+                        + descriptionSuffix;
+
+        // TODO: Sende penger inn i goal etter challenge fullføres
+        // TODO: Tillatte overflow mellom goal
         BigDecimal target = new BigDecimal(targetValue);
+        BigDecimal perPurchase = new BigDecimal(amountPerUnit);
         Challenge challenge =
                 new Challenge(
                         null,
                         title,
                         BigDecimal.ZERO,
                         target,
-                        specificAmount,
+                        perPurchase,
+                        description,
                         null,
                         null,
-                        null,
-                        ZonedDateTime.now().plusDays(7 + dayRandomizerValue),
+                        ZonedDateTime.now(),
                         type,
                         user,
                         BigDecimal.ZERO);
-        Challenge savedChallenge = challengeRepository.save(challenge);
-        return ChallengeMapper.INSTANCE.toDTO(savedChallenge);
+        return ChallengeMapper.INSTANCE.toDTO(challenge);
+    }
+
+    private int calculateWeeks(double amountPerWeek, double amountPerUnit) {
+        // In case amountPerWeek < amountPerUnit, e.g use 1000kr each shopping trip but use 500kr
+        // each week
+        for (int week = 1; week <= 4; week++) {
+            double units = week * amountPerWeek / amountPerUnit;
+            if (units >= 1) {
+                return week;
+            }
+        }
+        return 0;
     }
 }
