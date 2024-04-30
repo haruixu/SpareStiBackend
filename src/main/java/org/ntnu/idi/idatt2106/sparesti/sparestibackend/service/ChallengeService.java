@@ -278,6 +278,7 @@ public class ChallengeService {
         // TODO: Tillatte overflow mellom goal
         BigDecimal target = new BigDecimal(targetValue);
         BigDecimal perPurchase = new BigDecimal(amountPerUnit);
+        long days = weeks * 7L;
         Challenge challenge =
                 new Challenge(
                         null,
@@ -288,7 +289,7 @@ public class ChallengeService {
                         description,
                         null,
                         null,
-                        ZonedDateTime.now(),
+                        ZonedDateTime.now().plusDays(days),
                         type,
                         user,
                         BigDecimal.ZERO);
