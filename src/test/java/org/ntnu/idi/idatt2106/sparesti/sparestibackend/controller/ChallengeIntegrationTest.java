@@ -1,6 +1,8 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,6 +16,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeCr
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.challenge.ChallengeUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Experience;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
@@ -56,7 +59,7 @@ public class ChallengeIntegrationTest {
         challengeCreateDTO =
                 new ChallengeCreateDTO(
                         "title",
-                        BigDecimal.ZERO,
+                        BigDecimal.ONE,
                         BigDecimal.TEN,
                         BigDecimal.TEN,
                         null,
@@ -93,13 +96,67 @@ public class ChallengeIntegrationTest {
 
     @Test
     @WithMockUser
-    void testCreateValidChallenge() throws Exception {
+    void testAllCrudMethods() throws Exception {
         mvc.perform(
                         MockMvcRequestBuilders.post("/challenges")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
                 .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/challenges").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(2)));
+
+        mvc.perform(MockMvcRequestBuilders.get("/challenges/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.saved").value(1))
+                .andExpect(jsonPath("$.target").value(10))
+                .andExpect(jsonPath("$.perPurchase").value(10))
+                .andExpect(jsonPath("$.description", nullValue()))
+                .andExpect(jsonPath("$.type").value("Type"));
+
+        challengeUpdateDTO =
+                new ChallengeUpdateDTO(
+                        "newTitle",
+                        BigDecimal.ZERO,
+                        BigDecimal.ONE,
+                        BigDecimal.ONE,
+                        "test",
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+        jsonPutRequest = objectMapper.writeValueAsString(challengeUpdateDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPutRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.saved").value(0))
+                .andExpect(jsonPath("$.target").value(1))
+                .andExpect(jsonPath("$.perPurchase").value(1))
+                .andExpect(jsonPath("$.description").value("test"))
+                .andExpect(jsonPath("$.type", nullValue()));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.delete("/challenges/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser
+    void testDeletingNonExistentChallenge() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.delete("/challenges/2")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -134,6 +191,36 @@ public class ChallengeIntegrationTest {
 
     @Test
     @WithMockUser
+    void testGenerateChallengeWithUnrealisticActiveConfigTypesGeneratesNothing() throws Exception {
+        ChallengeTypeConfigDTO challengeTypeConfigDTO1 =
+                new ChallengeTypeConfigDTO("Coffee", BigDecimal.TEN, BigDecimal.valueOf(1000));
+        ChallengeTypeConfigDTO challengeTypeConfigDTO2 =
+                new ChallengeTypeConfigDTO("Snuff", BigDecimal.TEN, BigDecimal.valueOf(1000));
+        ChallengeConfigDTO challengeConfigDTO =
+                new ChallengeConfigDTO(
+                        Experience.VERY_HIGH,
+                        Motivation.VERY_HIGH,
+                        Set.of(challengeTypeConfigDTO1, challengeTypeConfigDTO2));
+
+        jsonPostRequest = objectMapper.writeValueAsString(challengeConfigDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/config/challenge")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk());
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/challenges/generate")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    @WithMockUser
     void testGenerateChallengeWithOneActiveConfigTypesDoesNotGenerateThisType() throws Exception {
         ChallengeTypeConfigDTO challengeTypeConfigDTO1 =
                 new ChallengeTypeConfigDTO("Coffee", BigDecimal.valueOf(100), BigDecimal.TEN);
@@ -163,5 +250,168 @@ public class ChallengeIntegrationTest {
                 .andExpect(jsonPath("$", hasSize(1)));
     }
 
-    // TODO - test savedAmount increases when completing or when saved >= target
+    @Test
+    @WithMockUser
+    void testSavedAmountIncreasesAfterCompletingChallenge() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1/complete")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/profile").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.savedAmount").value(1));
+    }
+
+    @Test
+    @WithMockUser
+    void testSavedAmountIncreasesWhenSavedGreaterThanTarget() throws Exception {
+        challengeUpdateDTO =
+                new ChallengeUpdateDTO(
+                        "title",
+                        BigDecimal.valueOf(11L),
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+        jsonPutRequest = objectMapper.writeValueAsString(challengeUpdateDTO);
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPutRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        mvc.perform(MockMvcRequestBuilders.get("/profile").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.savedAmount").value(11));
+    }
+
+    @Test
+    @WithMockUser
+    void testCompletingChallengeSpilloverEffect() throws Exception {
+        GoalCreateDTO goalCreateDTO =
+                new GoalCreateDTO(
+                        "title",
+                        BigDecimal.ONE,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7));
+        GoalCreateDTO goalCreateDTO1 =
+                new GoalCreateDTO(
+                        "title",
+                        BigDecimal.ONE,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7));
+
+        String goalPostRequest = objectMapper.writeValueAsString(goalCreateDTO);
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(goalPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.priority").value(1));
+
+        goalPostRequest = objectMapper.writeValueAsString(goalCreateDTO1);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(goalPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.priority").value(2));
+
+        challengeCreateDTO =
+                new ChallengeCreateDTO(
+                        "title",
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+
+        jsonPostRequest = objectMapper.writeValueAsString(challengeCreateDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/challenges")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/goals/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", notNullValue()))
+                .andExpect(jsonPath("$.saved").value(10))
+                .andExpect(jsonPath("$.priority").value(11));
+
+        mvc.perform(MockMvcRequestBuilders.get("/goals/2").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", nullValue()))
+                .andExpect(jsonPath("$.saved").value(2))
+                .andExpect(jsonPath("$.priority").value(1));
+    }
+
+    @Test
+    @WithMockUser
+    void testCompletingChallengeChangesItFromActiveToCompleted() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/challenges/active")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1/complete")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk());
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/challenges/completed")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    @WithMockUser
+    void testUpdateAlreadyUpdatedChallengeIsNotAllowed() throws Exception {
+        challengeUpdateDTO =
+                new ChallengeUpdateDTO(
+                        "newTitle",
+                        BigDecimal.ZERO,
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1/complete")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        jsonPutRequest = objectMapper.writeValueAsString(challengeUpdateDTO);
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPutRequest))
+                .andExpect(status().isBadRequest());
+    }
+    /*
+    TODO:
+     - Test validation classes (unit)
+     */
 }

@@ -55,4 +55,18 @@ class ChangePasswordRequestTests {
                 "Time should be null when not explicitly set due to @CreationTimestamp not being"
                         + " applied outside of a managed context");
     }
+
+    @Test
+    void testEquals() {
+        ChangePasswordRequest request =
+                ChangePasswordRequest.builder().id("REQ123456").userID(1001L).build();
+
+        ChangePasswordRequest request1 =
+                ChangePasswordRequest.builder().id("REQ123456").userID(1001L).build();
+        assertEquals(request, request1);
+
+        ChangePasswordRequest request2 =
+                ChangePasswordRequest.builder().id("REQ123456").userID(1002L).build();
+        assertNotEquals(request, request2);
+    }
 }

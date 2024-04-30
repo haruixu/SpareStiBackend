@@ -66,4 +66,20 @@ class AccountTests {
                 account.getBalance().compareTo(new BigDecimal("50.00")),
                 "Balance should be exactly 50.00");
     }
+
+    @Test
+    void testEquals() {
+        Account account = new Account();
+        account.setAccNumber("1234567890");
+        account.setBalance(new BigDecimal("100.00"));
+
+        Account account1 = new Account();
+        account1.setAccNumber("1234567890");
+        account1.setBalance(new BigDecimal("100.00"));
+
+        assertEquals(account, account1);
+
+        account1.setAccNumber("111111111");
+        assertNotEquals(account, account1);
+    }
 }

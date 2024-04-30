@@ -121,4 +121,43 @@ class ChallengeTests {
         System.out.println(violations);
         assertTrue(violations.isEmpty());
     }
+
+    @Test
+    void testEquals() {
+        Challenge challenge =
+                new Challenge(
+                        2L,
+                        "Valid Title",
+                        new BigDecimal("50.00"),
+                        new BigDecimal("100.00"),
+                        new BigDecimal("5.00"),
+                        "Valid Description",
+                        null,
+                        null,
+                        null,
+                        "coffe",
+                        user,
+                        new BigDecimal(1));
+
+        Challenge challenge1 =
+                new Challenge(
+                        2L,
+                        "Valid Title",
+                        new BigDecimal("50.00"),
+                        new BigDecimal("100.00"),
+                        new BigDecimal("5.00"),
+                        "Valid Description",
+                        null,
+                        null,
+                        null,
+                        "coffe",
+                        user,
+                        new BigDecimal(1));
+
+        assertEquals(challenge, challenge1);
+
+        challenge1.setTitle("HEllo");
+
+        assertNotEquals(challenge, challenge1);
+    }
 }

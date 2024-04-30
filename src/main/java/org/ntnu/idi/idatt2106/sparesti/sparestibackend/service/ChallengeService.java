@@ -38,10 +38,24 @@ public class ChallengeService {
             throws ChallengeNotFoundException, ObjectNotValidException {
         createChallengeValidator.validate(challengeCreateDTO);
         Challenge newChallenge = ChallengeMapper.INSTANCE.toEntity(challengeCreateDTO, user);
-        if (newChallenge.getSaved().doubleValue() == newChallenge.getTarget().doubleValue()) {
-            completeChallenge(newChallenge.getId(), user);
-        }
+
         Challenge persistedChallenge = challengeRepository.save(newChallenge);
+
+        double increment = persistedChallenge.getSaved().doubleValue();
+        if (increment > 0) {
+            // TODO cascade over to goal
+            cascadeToGoal(user, increment);
+        }
+
+        if (persistedChallenge.getSaved().doubleValue()
+                == persistedChallenge.getTarget().doubleValue()) {
+            persistedChallenge.setCompletedOn(ZonedDateTime.now());
+            updateUserSavedAmount(user, persistedChallenge.getSaved().doubleValue());
+
+            updateStreak(persistedChallenge);
+            Challenge completedChallenge = challengeRepository.save(persistedChallenge);
+            return ChallengeMapper.INSTANCE.toDTO(completedChallenge);
+        }
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
 
@@ -49,11 +63,24 @@ public class ChallengeService {
             throws ChallengeNotFoundException, ObjectNotValidException {
         updateChallengeValidator.validate(challengeUpdateDTO);
         Challenge challenge = privateGetChallenge(id, user);
+        if (challenge.getCompletedOn() != null) {
+            throw new ChallengeAlreadyCompletedException(challenge.getId());
+        }
+
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
-        if (challenge.getSaved().doubleValue() >= challenge.getTarget().doubleValue()) {
+
+        double increment =
+                updatedChallenge.getSaved().doubleValue() - challenge.getSaved().doubleValue();
+        if (increment > 0) {
+            cascadeToGoal(user, increment);
+        }
+
+        if (updatedChallenge.getSaved().doubleValue()
+                >= updatedChallenge.getTarget().doubleValue()) {
             return completeChallenge(updatedChallenge.getId(), user);
         }
+
         Challenge persistedChallenge = challengeRepository.save(updatedChallenge);
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
@@ -94,6 +121,8 @@ public class ChallengeService {
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
         Challenge challenge = findChallengeByIdAndUser(challengeId, user);
 
+        System.out.println("Checking completing on");
+        System.out.println("------------------");
         if (challenge.getCompletedOn() != null) {
             throw new ChallengeAlreadyCompletedException(challengeId);
         }
@@ -101,17 +130,13 @@ public class ChallengeService {
         challenge.setCompletedOn(ZonedDateTime.now());
         updateUserSavedAmount(user, challenge.getSaved().doubleValue());
 
-        double overflow = challenge.getSaved().doubleValue() - challenge.getTarget().doubleValue();
-        if (overflow > 0) {
-            cascadeOverflow(user, overflow);
-        }
         updateStreak(challenge);
-        challengeRepository.save(challenge);
-        return ChallengeMapper.INSTANCE.toDTO(challenge);
+        Challenge completedChallenge = challengeRepository.save(challenge);
+        return ChallengeMapper.INSTANCE.toDTO(completedChallenge);
     }
 
-    private void cascadeOverflow(User user, double overflow) {
-        while (overflow > 0) {
+    private void cascadeToGoal(User user, double increment) {
+        while (increment > 0) {
             Optional<Goal> optionalGoal = user.getGoals().stream().findFirst();
             // No goals to cascace onto
             if (optionalGoal.isEmpty()) {
@@ -120,15 +145,15 @@ public class ChallengeService {
             Goal goal = optionalGoal.get();
             double goalDifference = goal.getTarget().doubleValue() - goal.getSaved().doubleValue();
             // Set saved value to original value + overflow
-            if (overflow < goalDifference) {
-                goal.setSaved(BigDecimal.valueOf(goal.getSaved().doubleValue() + overflow));
+            if (increment < goalDifference) {
+                goal.setSaved(BigDecimal.valueOf(goal.getSaved().doubleValue() + increment));
             }
             // if overflow >= goalDifference, complete goal
             else {
                 goal.setSaved(goal.getTarget());
                 goalService.completeGoal(goal.getId(), user);
             }
-            overflow = overflow - goalDifference;
+            increment = increment - goalDifference;
         }
     }
 
@@ -173,7 +198,7 @@ public class ChallengeService {
      * @return List of generated challenges
      */
     public List<ChallengeDTO> getGeneratedChallenges(User user) {
-        if (user.getUserConfig().getChallengeConfig().getMotivation() == null) {
+        if (user.getUserConfig().getChallengeConfig() == null) {
             throw new ChallengeConfigNotFoundException(user.getId());
         }
         List<String> types = getAvailableTypes(user);
