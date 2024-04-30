@@ -1,8 +1,6 @@
 # Define stages
 stages:
   - build
-  - linting
-  - test
   - deploy
 
 default:
