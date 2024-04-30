@@ -1,11 +1,11 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.user;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
  * @since 24.4.24
  */
 @Component
-@Qualifier("challengeConfigValidator")
 @RequiredArgsConstructor
 public class ChallengeConfigValidator extends ObjectValidator<ChallengeConfigDTO> {
 
