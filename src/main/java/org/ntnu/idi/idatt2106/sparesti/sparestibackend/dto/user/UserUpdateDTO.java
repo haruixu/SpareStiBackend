@@ -2,7 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdateDTO;
 
@@ -11,11 +11,12 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountUpdate
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UserUpdateDTO(
-        @NotNull String firstName,
-        @NotNull String lastName,
-        @NotNull String username,
-        @NotNull String password,
-        @NotNull @Email String email,
-        @NotNull AccountUpdateDTO spendingAccount,
-        @NotNull AccountUpdateDTO savingAccount)
+        @NotBlank String firstName,
+        @NotBlank String lastName,
+        String password,
+        @Email(message = "Invalid email format") String email,
+
+        // TODO: Possibly make this @NotNull
+        AccountUpdateDTO spendingAccount,
+        AccountUpdateDTO savingAccount)
         implements Serializable {}
