@@ -37,7 +37,10 @@ public class ApplicationConfig {
         return username ->
                 repository
                         .findByUsername(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                        .orElseThrow(
+                                () ->
+                                        new UsernameNotFoundException(
+                                                "User with username '" + username + "' not found"));
     }
 
     /**

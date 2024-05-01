@@ -5,6 +5,7 @@ import com.yubico.webauthn.data.ByteArray;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashSet;
@@ -59,6 +60,10 @@ public class User implements UserDetails {
     @NotNull
     @Column(nullable = false)
     private Long streak;
+
+    @NotNull
+    @Column(nullable = false)
+    private BigDecimal savedAmount;
 
     @Setter @Embedded private UserConfig userConfig;
 

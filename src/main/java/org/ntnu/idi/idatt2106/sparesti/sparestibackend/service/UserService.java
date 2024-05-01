@@ -7,8 +7,10 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ObjectValidator<UserUpdateDTO> userUpdateValidator;
 
     /**
      * Persists a user entity
@@ -65,34 +68,16 @@ public class UserService {
     }
 
     public UserResponse updateUser(String username, UserUpdateDTO updateDTO) {
+        userUpdateValidator.validate(updateDTO);
         User user = findUserByUsername(username);
-        userAlreadyExists(user, updateDTO);
 
-        String newPassword = passwordEncoder.encode(updateDTO.password());
+        String newPassword = null;
+        if (updateDTO.password() != null) {
+            newPassword = passwordEncoder.encode(updateDTO.password());
+        }
         UserMapper.INSTANCE.updateEntity(user, updateDTO, newPassword);
         userRepository.save(user);
         return UserMapper.INSTANCE.toDTO(user);
-    }
-
-    public void userAlreadyExists(User user, UserUpdateDTO updateDTO) {
-        if (userExistsByUsername(updateDTO.username())
-                && !user.getUsername().equalsIgnoreCase(updateDTO.username())) {
-            throw new UserAlreadyExistsException("The username is already taken");
-        }
-
-        if (userExistByEmail(updateDTO.email())
-                && !user.getEmail().equalsIgnoreCase(updateDTO.email())) {
-            throw new UserAlreadyExistsException("The email is already taken");
-        }
-    }
-
-    /**
-     * Determines whether a user with the given username exists
-     * @param username The username
-     * @return True, if the user exists.
-     */
-    public boolean userExistsByUsername(String username) {
-        return userRepository.findByUsername(username).isPresent();
     }
 
     /**
@@ -120,15 +105,24 @@ public class UserService {
                 user.getChallenges().stream()
                         .filter(challenge -> challenge.getDue() != null)
                         .anyMatch(
-                                goal ->
-                                        goal.getCompletedOn() == null
-                                                && goal.getDue().isBefore(ZonedDateTime.now()));
+                                challenge ->
+                                        challenge.getCompletedOn() == null
+                                                && challenge
+                                                        .getDue()
+                                                        .isBefore(ZonedDateTime.now()));
 
         if (resetStreak) {
             user.setStreak(0L);
             user.setStreakStart(null);
         }
 
-        return UserMapper.INSTANCE.toStreakResponse(user);
+        ZonedDateTime firstDue =
+                user.getChallenges().stream()
+                        .map(Challenge::getDue)
+                        .filter(due -> due.isAfter(ZonedDateTime.now()))
+                        .findFirst()
+                        .orElse(null);
+
+        return UserMapper.INSTANCE.toStreakResponse(user, firstDue);
     }
 }

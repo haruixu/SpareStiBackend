@@ -33,6 +33,7 @@ public class ChallengeMapperTest {
                         "test@mail.com",
                         null,
                         0L,
+                        BigDecimal.ZERO,
                         new UserConfig(Role.USER, null),
                         new Account(),
                         new Account(),

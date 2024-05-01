@@ -20,7 +20,6 @@ variables:
     -DskipTests -Dspotless.check.skip=true
   MAVEN_TEST_CLI_OPTS: >-
     -Dspotless.check.skip=true
-    
 
 build:
   stage: build

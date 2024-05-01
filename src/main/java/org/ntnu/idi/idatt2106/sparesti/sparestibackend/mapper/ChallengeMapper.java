@@ -20,6 +20,7 @@ public interface ChallengeMapper {
                     "java(ApplicationUtil.percent(challenge.getSaved(), challenge.getTarget()))")
     ChallengeDTO toDTO(Challenge challenge);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "createdOn", ignore = true),
@@ -32,11 +33,15 @@ public interface ChallengeMapper {
         @Mapping(
                 target = "type",
                 expression =
-                        "java((challengeCreateDTO.type().substring(0,1).toUpperCase() +"
-                                + " challengeCreateDTO.type().substring(1).toLowerCase()).trim())")
+                        "java(challengeCreateDTO.type() != null &&"
+                                + " challengeCreateDTO.type().trim().length() > 1 ?"
+                                + " (challengeCreateDTO.type().substring(0,1).toUpperCase() +"
+                                + " challengeCreateDTO.type().substring(1).toLowerCase()).trim() :"
+                                + " null)")
     })
     Challenge toEntity(ChallengeCreateDTO challengeCreateDTO, User user);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
         @Mapping(target = "user", ignore = true),
         @Mapping(target = "id", ignore = true),
@@ -49,8 +54,10 @@ public interface ChallengeMapper {
         @Mapping(
                 target = "type",
                 expression =
-                        "java((challengeDTO.type().substring(0,1).toUpperCase()+"
-                                + " challengeDTO.type().substring(1).toLowerCase()).trim())")
+                        "java(challengeDTO.type() != null && "
+                                + " challengeDTO.type().trim().length() > 1 ?"
+                                + " (challengeDTO.type().substring(0,1).toUpperCase() +"
+                                + " challengeDTO.type().substring(1).toLowerCase()).trim() : null)")
     })
     Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO);
 }
