@@ -96,7 +96,6 @@ public class UserValidator<T> extends ObjectValidator<T> {
                                 + " special character");
             }
         }
-        // TOOD: validation on length
     }
 
     /**
