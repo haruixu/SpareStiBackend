@@ -7,6 +7,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserMapper;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -120,15 +121,24 @@ public class UserService {
                 user.getChallenges().stream()
                         .filter(challenge -> challenge.getDue() != null)
                         .anyMatch(
-                                goal ->
-                                        goal.getCompletedOn() == null
-                                                && goal.getDue().isBefore(ZonedDateTime.now()));
+                                challenge ->
+                                        challenge.getCompletedOn() == null
+                                                && challenge
+                                                        .getDue()
+                                                        .isBefore(ZonedDateTime.now()));
 
         if (resetStreak) {
             user.setStreak(0L);
             user.setStreakStart(null);
         }
 
-        return UserMapper.INSTANCE.toStreakResponse(user);
+        ZonedDateTime firstDue =
+                user.getChallenges().stream()
+                        .map(Challenge::getDue)
+                        .filter(due -> due.isAfter(ZonedDateTime.now()))
+                        .findFirst()
+                        .orElse(null);
+
+        return UserMapper.INSTANCE.toStreakResponse(user, firstDue);
     }
 }
