@@ -10,7 +10,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.user.UserValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ObjectValidator<UserUpdateDTO> userUpdateValidator;
+    private final UserValidator<UserUpdateDTO> userUpdateValidator;
 
     /**
      * Persists a user entity
