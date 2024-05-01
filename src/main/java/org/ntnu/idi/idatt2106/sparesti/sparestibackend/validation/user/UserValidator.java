@@ -34,69 +34,64 @@ public class UserValidator<T> extends ObjectValidator<T> {
 
         if (!(RegexValidator.isUsernameValid(request.username()))) {
             throw new BadInputException(
-                    "The username can only contain letters, numbers and underscore, "
-                            + "with the first character being a letter. "
-                            + "The length must be between 3 and 30 characters");
+                    "Brukernavnet kan kun inneholde bokstaver, nummer og understrek. Første"
+                            + " karakter må være en bokstav og lengden må være mellom 3 og 30"
+                            + " karakterer");
         }
         if (!RegexValidator.isEmailValid(request.email())) {
-            throw new BadInputException("The email address is invalid.");
+            throw new BadInputException("Ugylid mailadresse");
         }
         if (!RegexValidator.isNameValid(request.firstName())) {
-            throw new BadInputException(
-                    "The first name: '" + request.firstName() + "' is invalid.");
+            throw new BadInputException("Fornavnet '" + request.firstName() + "' er ugylig");
         }
         if (!RegexValidator.isNameValid(request.lastName())) {
-            throw new BadInputException("The last name: '" + request.lastName() + "' is invalid.");
+            throw new BadInputException("Etternavnet '" + request.lastName() + "' er ugyldig");
         }
         if (userExistsByUsername(request.username())) {
             throw new UserAlreadyExistsException(
-                    "User with username: " + request.username() + " already exists");
+                    "Brukernavnet '" + request.username() + "' er allerede tatt");
         }
         if (userExistByEmail(request.email())) {
             throw new UserAlreadyExistsException(
-                    "User with email: " + request.email() + " already exists");
+                    "Mailen '" + request.email() + "' er allerede tatt");
         }
         if (!RegexValidator.isPasswordStrong(request.password())) {
             throw new BadInputException(
-                    "Password must be at least 8 characters long and at max 30 characters, include"
-                            + " numbers, upper and lower case letters, and at least one special"
-                            + " character");
+                    "Passordet må være mellom 8 og 30 bokstaver, inkludere numre, store og små"
+                            + " bokstaver og minst et spesielt tegn");
         }
     }
 
     public void validateUserUpdateDTO(UserUpdateDTO dto) {
         if (dto.email() != null) {
             if (!RegexValidator.isEmailValid(dto.email())) {
-                throw new BadInputException("The email address is invalid.");
+                throw new BadInputException("Ugylid mailadresse");
             }
             if (userExistByEmail(dto.email()) && !isEmailOwn(dto.email(), dto.username())) {
                 throw new UserAlreadyExistsException(
-                        "User with email: " + dto.email() + " already exists");
+                        "Mailen '" + dto.email() + "' er allerede tatt");
             }
         }
 
         if (dto.firstName() != null) {
             if (!RegexValidator.isNameValid(dto.firstName())) {
-                throw new BadInputException(
-                        "The first name: '" + dto.firstName() + "' is invalid.");
+                throw new BadInputException("Fornavnet '" + dto.firstName() + "' er ugyldig");
             }
         }
 
         if (dto.lastName() != null) {
             if (!RegexValidator.isNameValid(dto.lastName())) {
-                throw new BadInputException("The last name: '" + dto.lastName() + "' is invalid.");
+                throw new BadInputException("Etternavnet '" + dto.lastName() + "' er ugyldig");
             }
         }
 
         if (dto.password() != null) {
             if (!RegexValidator.isPasswordStrong(dto.password())) {
                 throw new BadInputException(
-                        "Password must be at least 8 characters long and at max 30 characters,"
-                                + " include numbers, upper and lower case letters, and at least one"
-                                + " special character");
+                        "Passordet må være mellom 8 og 30 bokstaver, inkludere numre, store og små"
+                                + " bokstaver og minst et spesielt tegn");
             }
         }
-        // TOOD: validation on length
     }
 
     /**
