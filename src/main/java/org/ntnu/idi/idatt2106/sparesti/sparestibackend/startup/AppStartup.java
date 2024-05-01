@@ -58,6 +58,7 @@ public class AppStartup implements CommandLineRunner {
         if (userService.userExistByEmail("testMail@testMail.no")) {
             return;
         }
+        logger.info("Preparing user");
         User user = prepareUser();
         logger.info("Preparing goals");
         prepareGoals(user);
@@ -69,11 +70,10 @@ public class AppStartup implements CommandLineRunner {
     private User prepareUser() {
         // Creating user
         RegisterRequest registerRequest =
-                new RegisterRequest(
-                        "test", "test", "testBrukernavn", "Test123!", "testMail@testMail.no");
+                new RegisterRequest("test", "test", "username", "Test123!", "testMail@testMail.no");
         authenticationService.register(registerRequest);
 
-        User user = userRepository.findByUsername("testBrukernavn").get();
+        User user = userRepository.findByUsername("username").get();
 
         // Creating config
         ChallengeConfigDTO challengeConfigDTO =
