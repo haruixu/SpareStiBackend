@@ -67,6 +67,7 @@ public class AuthenticationService {
 
     private final UserValidator<RegisterRequest> registerRequestValidator;
     private final ObjectValidator<AuthenticationRequest> authenticationRequestValidator;
+    private final RegistrationService registrationService;
 
     /**
      * Registers a new, valid user. For a user to be valid, they have to
@@ -134,49 +135,17 @@ public class AuthenticationService {
      * @param username The username of the user for whom biometric authentication registration is initiated.
      * @return A JSON string representing the registration request for biometric authentication.
      * @throws JsonProcessingException If an error occurs during JSON processing.
-     * @throws PasskeyAlreadyRegisteredException If the user already has a biometric passkey registered.
      */
-    public String newBioAuthRegistration(String username)
-            throws JsonProcessingException, PasskeyAlreadyRegisteredException {
+    public String bioAuthRegistration(String username) throws JsonProcessingException {
         User user = userService.findUserByUsername(username);
-        if (Optional.ofNullable(user.getHandle()).isPresent()) {
-            throw new PasskeyAlreadyRegisteredException(username);
-        }
-        return bioAuthRegistration(user);
-    }
-
-    /**
-     * Resets the biometric authentication registration for the specified user.
-     *
-     * @param username The username of the user for whom biometric authentication registration is reset.
-     * @return A JSON string representing the registration request for biometric authentication.
-     * @throws JsonProcessingException If an error occurs during JSON processing.
-     * @throws PasskeyAlreadyRegisteredException If the user does not have a biometric passkey registered.
-     */
-    public String resetBioAuthRegistration(String username)
-            throws JsonProcessingException, PasskeyAlreadyRegisteredException {
-        User user = userService.findUserByUsername(username);
-        if (Optional.ofNullable(user.getHandle()).isEmpty()) {
-            throw new UserHandleNotFoundException(username);
-        }
-        return newBioAuthRegistration(username);
-    }
-
-    /**
-     * Generates a biometric authentication registration for the given user.
-     *
-     * @param user The user for whom the biometric authentication registration is being generated.
-     * @return The JSON representation of the registration credentials.
-     * @throws JsonProcessingException If an error occurs during JSON processing.
-     */
-    private String bioAuthRegistration(User user) throws JsonProcessingException {
-
         UserIdentity userIdentity =
                 UserIdentity.builder()
                         .name(user.getUsername())
                         .displayName(user.getFirstName() + " " + user.getLastName())
                         .id(ApplicationUtil.generateRandom(32))
                         .build();
+
+
 
         user.setHandle(userIdentity.getId());
 

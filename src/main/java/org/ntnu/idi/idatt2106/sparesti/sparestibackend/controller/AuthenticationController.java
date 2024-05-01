@@ -16,7 +16,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterRe
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserHandleNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.AuthenticationService;
@@ -188,21 +187,8 @@ public class AuthenticationController {
         logger.info(
                 "Received POST request to configure biometric auth by '{}'",
                 userDetails.getUsername());
-        String registration =
-                authenticationService.newBioAuthRegistration(userDetails.getUsername());
+        String registration = authenticationService.bioAuthRegistration(userDetails.getUsername());
 
-        logger.info("Successfully returned credential request options: {}", registration);
-        return ResponseEntity.ok(registration);
-    }
-
-    @PostMapping("/resetBioAuthentication")
-    public ResponseEntity<String> resetBioAuthentication(
-            @AuthenticationPrincipal UserDetails userDetails)
-            throws UserHandleNotFoundException, JsonProcessingException {
-        logger.info(
-                "Received POST request to reset biometric auth by '{}'", userDetails.getUsername());
-        String registration =
-                authenticationService.resetBioAuthRegistration(userDetails.getUsername());
         logger.info("Successfully returned credential request options: {}", registration);
         return ResponseEntity.ok(registration);
     }
