@@ -29,6 +29,8 @@ services:
     build: .
     # Make app container to wait on mysql container to spin up by restarting it
     restart: always
+    volumes:
+      - ./images:/upload-dir
     environment:
       MYSQL_HOST: db
       SPRING_DATASOURCE_URL: ${MYSQL_URL}
