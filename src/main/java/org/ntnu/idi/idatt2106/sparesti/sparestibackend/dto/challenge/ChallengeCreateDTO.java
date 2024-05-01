@@ -10,8 +10,7 @@ import java.time.ZonedDateTime;
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeCreateDTO(
-        @NotEmpty(message = "Title cannot be empty")
-                @NotBlank(message = "Title cannot be blank")
+        @NotBlank(message = "Title cannot be blank")
                 @Size(max = 20, message = "Title can max have 20 characters")
                 String title,
         @NotNull(message = "Saved amount cannot be null")
@@ -26,5 +25,6 @@ public record ChallengeCreateDTO(
         @Size(max = 280, message = "Description can at most have 280 characters")
                 String description,
         @Future(message = "Due date must be in the future") ZonedDateTime due,
-        @Size(max = 20, message = "Type can have max 20 characters") String type)
+        @Size(max = 20, message = "Type can have minimum 2 characters and max 20 characters")
+                String type)
         implements Serializable {}

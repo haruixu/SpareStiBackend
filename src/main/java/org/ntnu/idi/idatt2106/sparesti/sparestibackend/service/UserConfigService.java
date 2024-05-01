@@ -14,8 +14,8 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ChallengeConfigValidator;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.user.ChallengeConfigValidator;
 import org.springframework.stereotype.Service;
 
 @Service
