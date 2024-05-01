@@ -7,7 +7,11 @@ import java.io.Serializable;
 
 /**
  * DTO used when registering a new user
- *
+ * @param firstName First name
+ * @param lastName last name
+ * @param username Username
+ * @param password Password
+ * @param email Email
  * @author Harry L.X & Lars M.L.N
  * @version 1.0
  * @since 17.4.24

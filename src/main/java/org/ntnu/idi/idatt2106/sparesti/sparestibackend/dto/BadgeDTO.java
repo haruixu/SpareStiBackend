@@ -9,6 +9,9 @@ import java.io.Serializable;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Badge}
+ * @param id Id of badge
+ * @param title title
+ * @param description description
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record BadgeDTO(

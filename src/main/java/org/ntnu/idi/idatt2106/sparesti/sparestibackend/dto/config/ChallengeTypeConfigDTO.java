@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig}
+ * @param type Challenge type
+ * @param generalAmount Average expenditure per week
+ * @param specificAmount Price per unit
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeTypeConfigDTO(
