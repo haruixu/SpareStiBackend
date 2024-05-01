@@ -118,7 +118,7 @@ public class ChallengeService {
     }
 
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
-        Challenge challenge = findChallengeByIdAndUser(challengeId, user);
+        Challenge challenge = privateGetChallenge(challengeId, user);
 
         if (challenge.getCompletedOn() != null) {
             throw new ChallengeAlreadyCompletedException(challengeId);
@@ -187,12 +187,6 @@ public class ChallengeService {
 
     private void updateUserSavedAmount(User user, double increment) {
         user.setSavedAmount(BigDecimal.valueOf(user.getSavedAmount().doubleValue() + increment));
-    }
-
-    private Challenge findChallengeByIdAndUser(Long challengeId, User user) {
-        return challengeRepository
-                .findByIdAndUser(challengeId, user)
-                .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
     }
 
     /**
