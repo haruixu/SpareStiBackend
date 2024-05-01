@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -74,5 +75,21 @@ public class ChallengeConfigMapperTest {
         assertEquals(0, challengeConfig.getExperience().compareTo(Experience.VERY_HIGH));
         assertEquals(0, challengeConfig.getMotivation().compareTo(Motivation.VERY_HIGH));
         assertEquals(challengeTypeConfigs, challengeConfig.getChallengeTypeConfigs());
+    }
+
+    @Test
+    public void testToEntityAndDTOWithNull() {
+        assertNull(challengeConfigMapper.toDTO(null));
+        assertNull(challengeConfigMapper.toEntity(null));
+    }
+
+    @Test
+    public void testUpdateEntityWithNull() {
+        ChallengeConfig challengeConfig =
+                new ChallengeConfig(Experience.VERY_HIGH, Motivation.HIGH, challengeTypeConfigs);
+        ChallengeConfig updateEntity = challengeConfigMapper.updateEntity(challengeConfig, null);
+
+        assertEquals(challengeConfig.getMotivation(), updateEntity.getMotivation());
+        assertEquals(challengeConfig.getExperience(), updateEntity.getExperience());
     }
 }

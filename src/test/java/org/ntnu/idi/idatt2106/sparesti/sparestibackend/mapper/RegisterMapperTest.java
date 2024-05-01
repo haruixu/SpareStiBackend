@@ -28,6 +28,16 @@ public class RegisterMapperTest {
     }
 
     @Test
+    public void testToEntityWithNull() {
+        assertEquals(null, RegisterMapper.INSTANCE.toEntity(null, null, null));
+    }
+
+    @Test
+    public void testToDTOWithNull() {
+        assertEquals(null, RegisterMapper.INSTANCE.toDTO(null, null, null));
+    }
+
+    @Test
     public void toLoginRegisterResponse() {
         User user = User.builder().id(1L).build();
         String accessToken = "accessToken";
