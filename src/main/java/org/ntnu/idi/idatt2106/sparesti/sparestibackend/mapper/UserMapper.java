@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
+import java.time.ZonedDateTime;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
@@ -33,5 +34,5 @@ public interface UserMapper {
     })
     void updateEntity(@MappingTarget User user, UserUpdateDTO updateDTO, String encodedPassword);
 
-    StreakResponse toStreakResponse(User user);
+    StreakResponse toStreakResponse(User user, ZonedDateTime firstDue);
 }
