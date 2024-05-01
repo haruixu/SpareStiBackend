@@ -15,7 +15,7 @@ public interface AuthenticatorRepository extends JpaRepository<Authenticator, Lo
 
     List<Authenticator> findAllByUser(User user);
 
-    List<Authenticator> deleteAllByUser(User user);
+    void deleteAllByUser(User user);
 
     List<Authenticator> findAllByCredentialId(ByteArray credentialId);
 }
