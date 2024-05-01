@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     }
 
     private String createErrorResponseMsg(Exception ex) {
-        return ex.getClass().getSimpleName() + ": " + ex.getMessage();
+        return ex.getMessage();
     }
 
     /**
@@ -122,6 +122,8 @@ public class GlobalExceptionHandler {
                 ChallengeAlreadyCompletedException.class,
                 ActiveGoalLimitExceededException.class,
                 NotActiveGoalException.class,
+                StorageException.class,
+                StorageFileNotFoundException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);

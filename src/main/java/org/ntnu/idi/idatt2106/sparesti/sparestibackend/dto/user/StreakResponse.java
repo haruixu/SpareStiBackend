@@ -9,5 +9,6 @@ import java.time.ZonedDateTime;
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record StreakResponse(ZonedDateTime streakStart, @PositiveOrZero Long streak)
+public record StreakResponse(
+        ZonedDateTime streakStart, @PositiveOrZero Long streak, ZonedDateTime firstDue)
         implements Serializable {}

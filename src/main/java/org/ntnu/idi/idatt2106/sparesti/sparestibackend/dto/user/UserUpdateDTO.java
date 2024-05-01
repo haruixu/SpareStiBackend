@@ -13,7 +13,8 @@ public record UserUpdateDTO(
         String firstName,
         String lastName,
         String password,
-        @Email(message = "Invalid email format") String email,
+        String username,
+        @Email(message = "Ugyldig mail") String email,
         AccountUpdateDTO spendingAccount,
         AccountUpdateDTO savingAccount)
         implements Serializable {}

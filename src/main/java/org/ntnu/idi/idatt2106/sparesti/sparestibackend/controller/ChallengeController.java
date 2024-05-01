@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +23,17 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundExc
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.ChallengeService;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.FileSystemStorageService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -37,7 +44,10 @@ import org.springframework.web.bind.annotation.*;
 public class ChallengeController {
 
     private final UserService userService;
+
     private final ChallengeService challengeService;
+
+    private final FileSystemStorageService fileSystemStorageService;
 
     @Operation(
             summary = "Get user challenges",
@@ -317,5 +327,34 @@ public class ChallengeController {
     private User getUser(@Parameter(hidden = true) UserDetails userDetails)
             throws UserNotFoundException {
         return userService.findUserByUsername(userDetails.getUsername());
+    }
+
+    @PostMapping("/picture")
+    public ResponseEntity<String> handleFileUpload(
+            @RequestParam String id,
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal UserDetails userDetails)
+            throws IOException {
+        fileSystemStorageService.save(file, id + "-C", userDetails);
+        return ResponseEntity.ok("OK");
+    }
+
+    @GetMapping("/picture")
+    @ResponseBody
+    public ResponseEntity<Resource> findFile(
+            @RequestParam String id, @AuthenticationPrincipal UserDetails userDetails)
+            throws IOException {
+        Resource file = fileSystemStorageService.getImage(id + "-C", userDetails);
+
+        if (file == null) return ResponseEntity.notFound().build();
+
+        String mimeType;
+        try {
+            mimeType = Files.probeContentType(Paths.get(file.getURI()));
+        } catch (IOException e) {
+            mimeType = "application/octet-stream"; // default MIME type if detection fails
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(file);
     }
 }
