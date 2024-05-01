@@ -122,6 +122,8 @@ public class GlobalExceptionHandler {
                 ChallengeAlreadyCompletedException.class,
                 ActiveGoalLimitExceededException.class,
                 NotActiveGoalException.class,
+                StorageException.class,
+                StorageFileNotFoundException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
