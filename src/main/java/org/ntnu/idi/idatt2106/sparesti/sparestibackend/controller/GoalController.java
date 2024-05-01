@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,6 +57,12 @@ public class GoalController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Gets a page of a user's saving goals
+     * @param pageable Config for page object
+     * @param userDetails Current user
+     * @return Page of saving goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "GET a page of saving goals of the currently authenticated (logger in) user",
@@ -87,6 +94,11 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getUserGoals(user, pageable));
     }
 
+    /**
+     * Gets a list of active user goals. Max 10 goals can be active at the same time
+     * @param userDetails Current user
+     * @return List of active goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "GET active saving goals for the currently authenticated (logged in) user",
@@ -120,6 +132,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getActiveUserGoals(user));
     }
 
+    /**
+     * Gets a page of a user's completed saving goals
+     * @param pageable Config for page object
+     * @param userDetails current user
+     * @return Page of completed saving goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary =
@@ -154,6 +172,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getCompletedUserGoals(user, pageable));
     }
 
+    /**
+     * Get specific user's saving goal
+     * @param id Identifies saving goal
+     * @param userDetails current user
+     * @return Specific user goal
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary =
@@ -195,6 +219,15 @@ public class GoalController {
         return ResponseEntity.ok(goalService.findUserGoal(id, user));
     }
 
+    /**
+     * Creates a saving goal
+     * @param goalDTO Wrapper for saving goal info
+     * @param userDetails current user
+     * @return Wrapper for new saving goal info
+     * @throws BadInputException On bad user input
+     * @throws ActiveGoalLimitExceededException If active goal limit of 10 is exceeded.
+     * @throws ObjectNotValidException If goalDTO fields are invalid
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Save a goal",
@@ -238,6 +271,15 @@ public class GoalController {
         return ResponseEntity.ok(goalService.save(goalDTO, user));
     }
 
+    /**
+     * Updates a user's saving goal
+     * @param id Identifies saving goal
+     * @param goalDTO Wrapper for updated saving goal info
+     * @param userDetails Current user
+     * @return Updated saving goal info
+     * @throws BadInputException Upon bad user input
+     * @throws ObjectNotValidException If goalDTO has invalid fields
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Update a goal of the currently authenticated (logged in) user",
@@ -282,6 +324,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.update(id, goalDTO, user));
     }
 
+    /**
+     * Updates goal priority order
+     * @param goalIds List of goal id's ordered by priority
+     * @param userDetails Current user
+     * @return New list of updated goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Updates the priorities of active goals",
@@ -323,6 +371,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.updatePriorities(goalIds, user));
     }
 
+    /**
+     * Deletes a user's saving goal
+     * @param id Identifies saving goal
+     * @param userDetails Current user
+     * @return NADA
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "DELETE a goal of the current authenticated (logged in) user",
@@ -359,6 +413,12 @@ public class GoalController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Completes a user's saving goal
+     * @param id Identifies saving goal
+     * @param userDetails Current user
+     * @return Completed user goal
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Complete a goal of the currently authenticated (logged in) user",
@@ -397,6 +457,29 @@ public class GoalController {
         return ResponseEntity.ok(goalService.completeGoal(id, user));
     }
 
+    /**
+     * Uploads an mage of a goal
+     * @param id Identifies goal
+     * @param userDetails Current user
+     * @return Resource wrapper for image
+     * @throws IOException For IO-errors
+     */
+    @Operation(summary = "Get image", description = "Uploads the image to goal")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successfully get file",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid or expired JWT token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "No JWT token provided",
+                        content = @Content)
+            })
     @PostMapping("/picture")
     public ResponseEntity<String> handleFileUpload(
             @RequestParam String id,
@@ -407,6 +490,29 @@ public class GoalController {
         return ResponseEntity.ok("OK");
     }
 
+    /**
+     * Gets the image of a goal
+     * @param id Identifies goal
+     * @param userDetails Current user
+     * @return Resource wrapper for image
+     * @throws IOException For IO-errors
+     */
+    @Operation(summary = "Get image", description = "Gets the image of a goal")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successfully get file",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid or expired JWT token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "No JWT token provided",
+                        content = @Content)
+            })
     @GetMapping("/picture")
     @ResponseBody
     public ResponseEntity<Resource> findFile(
