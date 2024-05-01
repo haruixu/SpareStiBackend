@@ -59,6 +59,7 @@ public class AuthenticationService {
     private final Map<String, PublicKeyCredentialCreationOptions> requestOptionMap =
             new HashMap<>();
     private final Map<String, AssertionRequest> assertionRequestMap = new HashMap<>();
+    private final CredentialRepository credentialRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
@@ -140,7 +141,7 @@ public class AuthenticationService {
         User user = userService.findUserByUsername(username);
 
         if (Optional.ofNullable(user.getHandle()).isPresent()) {
-            authenticatorRepository.deleteAllByUser(user);
+            authenticatorRepository.removeAllByUser(user);
         }
 
         UserIdentity userIdentity =

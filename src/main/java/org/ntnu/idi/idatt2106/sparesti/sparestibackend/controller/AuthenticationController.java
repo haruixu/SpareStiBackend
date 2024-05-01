@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +50,6 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
-    private final UserService userService;
 
     /**
      * Registers a new user with a given username, password, email, first name and last name
@@ -188,7 +188,6 @@ public class AuthenticationController {
                 "Received POST request to configure biometric auth by '{}'",
                 userDetails.getUsername());
         String registration = authenticationService.bioAuthRegistration(userDetails.getUsername());
-
         logger.info("Successfully returned credential request options: {}", registration);
         return ResponseEntity.ok(registration);
     }
