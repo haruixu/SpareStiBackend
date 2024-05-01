@@ -40,7 +40,7 @@ public enum RegexPattern {
      *  A valid contains can only contain Norwegian letters, white space, comma, period, singe quotes and hyphens
      *  The name must have at least 1 character and at max 30 characters
      */
-    NAME("^[æÆøØåÅa-zA-Z,.'-][æÆøØåÅa-zA-Z ,.'-]{1,29}$");
+    NAME("^[æÆøØåÅa-zA-Z,.'-][æÆøØåÅa-zA-Z ,.'-]{0,29}$");
 
     /**
      * The regex pattern
