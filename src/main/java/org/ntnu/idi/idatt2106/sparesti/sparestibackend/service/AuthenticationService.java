@@ -67,7 +67,6 @@ public class AuthenticationService {
 
     private final UserValidator<RegisterRequest> registerRequestValidator;
     private final ObjectValidator<AuthenticationRequest> authenticationRequestValidator;
-    private final RegistrationService registrationService;
 
     /**
      * Registers a new, valid user. For a user to be valid, they have to
@@ -145,10 +144,7 @@ public class AuthenticationService {
                         .id(ApplicationUtil.generateRandom(32))
                         .build();
 
-
-
         user.setHandle(userIdentity.getId());
-
         userService.save(user);
         StartRegistrationOptions registrationOptions =
                 StartRegistrationOptions.builder().user(userIdentity).build();
