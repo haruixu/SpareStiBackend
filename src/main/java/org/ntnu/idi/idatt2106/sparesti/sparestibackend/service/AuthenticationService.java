@@ -67,6 +67,7 @@ public class AuthenticationService {
 
     private final UserValidator<RegisterRequest> registerRequestValidator;
     private final ObjectValidator<AuthenticationRequest> authenticationRequestValidator;
+    private final AuthenticatorRepository authenticatorRepository;
 
     /**
      * Registers a new, valid user. For a user to be valid, they have to
@@ -137,6 +138,11 @@ public class AuthenticationService {
      */
     public String bioAuthRegistration(String username) throws JsonProcessingException {
         User user = userService.findUserByUsername(username);
+
+        if (Optional.ofNullable(user.getHandle()).isPresent()) {
+            authenticatorRepository.deleteAllByUser(user);
+        }
+
         UserIdentity userIdentity =
                 UserIdentity.builder()
                         .name(user.getUsername())
