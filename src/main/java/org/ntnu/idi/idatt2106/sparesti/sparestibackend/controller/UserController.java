@@ -5,17 +5,24 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.FileSystemStorageService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin
@@ -26,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
+    private final FileSystemStorageService fileSystemStorageService;
 
     @GetMapping
     @Operation(
@@ -88,5 +97,34 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
         log.info("Received GET request for streak by user '{}'", userDetails.getUsername());
         return ResponseEntity.ok(userService.getStreak(userDetails.getUsername()));
+    }
+
+    @PostMapping("/picture")
+    public ResponseEntity<String> handleFileUpload(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam("file") MultipartFile file)
+            throws IOException {
+        fileSystemStorageService.save(file, userDetails.getUsername() + "-P", userDetails);
+        return ResponseEntity.ok("OK");
+    }
+
+    @GetMapping("/picture")
+    @ResponseBody
+    public ResponseEntity<Resource> findFile(@AuthenticationPrincipal UserDetails userDetails)
+            throws IOException {
+
+        Resource file =
+                fileSystemStorageService.getImage(userDetails.getUsername() + "-P", userDetails);
+
+        if (file == null) return ResponseEntity.notFound().build();
+
+        String mimeType;
+        try {
+            mimeType = Files.probeContentType(Paths.get(file.getURI()));
+        } catch (IOException e) {
+            mimeType = "application/octet-stream"; // default MIME type if detection fails
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(file);
     }
 }
