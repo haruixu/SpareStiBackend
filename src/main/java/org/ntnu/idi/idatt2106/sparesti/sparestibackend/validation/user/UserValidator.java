@@ -58,7 +58,7 @@ public class UserValidator<T> extends ObjectValidator<T> {
         if (!RegexValidator.isPasswordStrong(request.password())) {
             throw new BadInputException(
                     "Passordet må være mellom 8 og 30 bokstaver, inkludere numre, store og små"
-                            + " bokstaver og minst et spesielt tegn");
+                            + " bokstaver og minst et spesialtegn");
         }
     }
 
@@ -89,7 +89,7 @@ public class UserValidator<T> extends ObjectValidator<T> {
             if (!RegexValidator.isPasswordStrong(dto.password())) {
                 throw new BadInputException(
                         "Passordet må være mellom 8 og 30 bokstaver, inkludere numre, store og små"
-                                + " bokstaver og minst et spesielt tegn");
+                                + " bokstaver og minst et spesialtegn");
             }
         }
     }
