@@ -479,4 +479,89 @@ public class ChallengeIntegrationTest {
                                 .content(jsonPutRequest))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @WithMockUser
+    void testCompleteChallengeIncrementsStreak() throws Exception {
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/profile/streak")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.streak").value(0));
+
+        challengeCreateDTO =
+                new ChallengeCreateDTO(
+                        "title",
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+
+        jsonPostRequest = objectMapper.writeValueAsString(challengeCreateDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/challenges")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk());
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/profile/streak")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.streak").value(1));
+
+        challengeCreateDTO =
+                new ChallengeCreateDTO(
+                        "title",
+                        BigDecimal.ONE,
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+
+        jsonPostRequest = objectMapper.writeValueAsString(challengeCreateDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/challenges")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk());
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/profile/streak")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.streak").value(1));
+
+        challengeUpdateDTO =
+                new ChallengeUpdateDTO(
+                        "newTitle",
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        BigDecimal.TEN,
+                        null,
+                        ZonedDateTime.now().plusDays(7),
+                        null);
+
+        jsonPutRequest = objectMapper.writeValueAsString(challengeUpdateDTO);
+        mvc.perform(
+                        MockMvcRequestBuilders.put("/challenges/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPutRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/profile/streak")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.streak").value(2));
+    }
 }
