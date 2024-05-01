@@ -68,6 +68,7 @@ public class ChallengeService {
 
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
+        System.out.println("+++++++++++++" + updatedChallenge);
 
         double increment =
                 updatedChallenge.getSaved().doubleValue() - challenge.getSaved().doubleValue();
@@ -120,8 +121,6 @@ public class ChallengeService {
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
         Challenge challenge = findChallengeByIdAndUser(challengeId, user);
 
-        System.out.println("Checking completing on");
-        System.out.println("------------------");
         if (challenge.getCompletedOn() != null) {
             throw new ChallengeAlreadyCompletedException(challengeId);
         }

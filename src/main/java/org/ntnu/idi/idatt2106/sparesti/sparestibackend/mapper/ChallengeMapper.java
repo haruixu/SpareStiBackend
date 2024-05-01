@@ -30,14 +30,7 @@ public interface ChallengeMapper {
                 expression =
                         "java(ApplicationUtil.percent(challengeCreateDTO.saved(),"
                                 + " challengeCreateDTO.target()))"),
-        @Mapping(
-                target = "type",
-                expression =
-                        "java(challengeCreateDTO.type() != null &&"
-                                + " challengeCreateDTO.type().trim().length() > 1 ?"
-                                + " (challengeCreateDTO.type().substring(0,1).toUpperCase() +"
-                                + " challengeCreateDTO.type().substring(1).toLowerCase()).trim() :"
-                                + " null)")
+        @Mapping(target = "type", source = "challengeCreateDTO.type", qualifiedByName = "getType")
     })
     Challenge toEntity(ChallengeCreateDTO challengeCreateDTO, User user);
 
@@ -51,13 +44,23 @@ public interface ChallengeMapper {
                 target = "completion",
                 expression =
                         "java(ApplicationUtil.percent(challengeDTO.saved(),challengeDTO.target()))"),
-        @Mapping(
-                target = "type",
-                expression =
-                        "java(challengeDTO.type() != null && "
-                                + " challengeDTO.type().trim().length() > 1 ?"
-                                + " (challengeDTO.type().substring(0,1).toUpperCase() +"
-                                + " challengeDTO.type().substring(1).toLowerCase()).trim() : null)")
+        @Mapping(target = "type", source = "challengeDTO.type", qualifiedByName = "getType")
     })
     Challenge updateEntity(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO);
+
+    @Named(value = "getType")
+    default String getType(String type) {
+        if (type == null) return null;
+
+        return type.trim().length() > 1
+                ? type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase()
+                : type.toUpperCase();
+    }
+
+    @AfterMapping
+    default void updateType(@MappingTarget Challenge challenge, ChallengeUpdateDTO challengeDTO) {
+        if (challengeDTO.type() == null) {
+            challenge.setType(null);
+        }
+    }
 }
