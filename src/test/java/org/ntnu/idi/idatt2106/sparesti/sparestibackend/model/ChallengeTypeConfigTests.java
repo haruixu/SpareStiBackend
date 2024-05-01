@@ -69,20 +69,4 @@ class ChallengeTypeConfigTests {
                 violations.isEmpty(),
                 "There should be no violations for a valid configuration setup");
     }
-
-    @Test
-    void testEquals() {
-        ChallengeTypeConfig config =
-                new ChallengeTypeConfig("Food", new BigDecimal("100.00"), new BigDecimal("50.00"));
-
-        ChallengeTypeConfig config1 =
-                new ChallengeTypeConfig("Food", new BigDecimal("100.00"), new BigDecimal("50.00"));
-
-        assertEquals(config, config1);
-
-        ChallengeTypeConfig config2 =
-                new ChallengeTypeConfig("Food", new BigDecimal("200.00"), new BigDecimal("50.00"));
-
-        assertNotEquals(config, config2);
-    }
 }

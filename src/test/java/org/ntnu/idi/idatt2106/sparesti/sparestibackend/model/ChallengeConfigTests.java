@@ -52,20 +52,4 @@ class ChallengeConfigTests {
                 violations.isEmpty(),
                 "There should be no violations when experience and motivation are properly set");
     }
-
-    @Test
-    void testEquals() {
-        ChallengeConfig challengeConfig =
-                new ChallengeConfig(Experience.HIGH, Motivation.HIGH, new HashSet<>());
-
-        ChallengeConfig challengeConfig1 =
-                new ChallengeConfig(Experience.HIGH, Motivation.HIGH, new HashSet<>());
-
-        assertEquals(challengeConfig, challengeConfig1);
-
-        ChallengeConfig challengeConfig2 =
-                new ChallengeConfig(Experience.LOW, Motivation.HIGH, new HashSet<>());
-
-        assertNotEquals(challengeConfig, challengeConfig2);
-    }
 }

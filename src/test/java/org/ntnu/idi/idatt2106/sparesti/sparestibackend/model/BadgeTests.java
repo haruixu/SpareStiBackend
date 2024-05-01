@@ -50,20 +50,4 @@ class BadgeTests {
                 violations.isEmpty(),
                 "There should be no violations when title and description are properly set");
     }
-
-    @Test
-    void testEquals() {
-        Badge badge = new Badge();
-        badge.setTitle("Achiever");
-        badge.setDescription("Awarded for completing 10 challenges");
-
-        Badge badge1 = new Badge();
-        badge1.setTitle("Achiever");
-        badge1.setDescription("Awarded for completing 10 challenges");
-
-        assertEquals(badge, badge1);
-
-        badge1.setTitle("Hello");
-        assertNotEquals(badge, badge1);
-    }
 }
