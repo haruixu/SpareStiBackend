@@ -43,7 +43,6 @@ public class ChallengeService {
 
         double increment = persistedChallenge.getSaved().doubleValue();
         if (increment > 0) {
-            // TODO cascade over to goal
             cascadeToGoal(user, increment);
         }
 
@@ -299,8 +298,6 @@ public class ChallengeService {
                                 targetUnits)
                         + descriptionSuffix;
 
-        // TODO: Sende penger inn i goal etter challenge fullføres
-        // TODO: Tillatte overflow mellom goal
         BigDecimal target = new BigDecimal(targetValue);
         BigDecimal perPurchase = new BigDecimal(amountPerUnit);
         long days = weeks * 7L;

@@ -410,8 +410,4 @@ public class ChallengeIntegrationTest {
                                 .content(jsonPutRequest))
                 .andExpect(status().isBadRequest());
     }
-    /*
-    TODO:
-     - Test validation classes (unit)
-     */
 }
