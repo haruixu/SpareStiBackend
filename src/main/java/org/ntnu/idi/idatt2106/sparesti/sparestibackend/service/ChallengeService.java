@@ -66,11 +66,11 @@ public class ChallengeService {
             throw new ChallengeAlreadyCompletedException(challenge.getId());
         }
 
+        double increment =
+                challengeUpdateDTO.saved().doubleValue() - challenge.getSaved().doubleValue();
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
 
-        double increment =
-                updatedChallenge.getSaved().doubleValue() - challenge.getSaved().doubleValue();
         if (increment > 0) {
             cascadeToGoal(user, increment);
         }
@@ -120,8 +120,6 @@ public class ChallengeService {
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
         Challenge challenge = findChallengeByIdAndUser(challengeId, user);
 
-        System.out.println("Checking completing on");
-        System.out.println("------------------");
         if (challenge.getCompletedOn() != null) {
             throw new ChallengeAlreadyCompletedException(challengeId);
         }
@@ -136,12 +134,17 @@ public class ChallengeService {
 
     private void cascadeToGoal(User user, double increment) {
         while (increment > 0) {
-            Optional<Goal> optionalGoal = user.getGoals().stream().findFirst();
+            Optional<Goal> optionalGoal =
+                    user.getGoals().stream()
+                            .filter(goal -> goal.getCompletedOn() == null)
+                            .findFirst();
             // No goals to cascace onto
             if (optionalGoal.isEmpty()) {
                 return;
             }
+
             Goal goal = optionalGoal.get();
+            assert goal.getPriority() == 1;
             double goalDifference = goal.getTarget().doubleValue() - goal.getSaved().doubleValue();
             // Set saved value to original value + overflow
             if (increment < goalDifference) {
@@ -152,6 +155,7 @@ public class ChallengeService {
                 goal.setSaved(goal.getTarget());
                 goalService.completeGoal(goal.getId(), user);
             }
+
             increment = increment - goalDifference;
         }
     }
@@ -197,7 +201,7 @@ public class ChallengeService {
      * @return List of generated challenges
      */
     public List<ChallengeDTO> getGeneratedChallenges(User user) {
-        if (user.getUserConfig().getChallengeConfig() == null) {
+        if (user.getUserConfig().getChallengeConfig().getMotivation() == null) {
             throw new ChallengeConfigNotFoundException(user.getId());
         }
         List<String> types = getAvailableTypes(user);
