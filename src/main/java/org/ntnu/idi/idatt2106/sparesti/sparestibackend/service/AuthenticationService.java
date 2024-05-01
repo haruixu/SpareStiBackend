@@ -59,7 +59,6 @@ public class AuthenticationService {
     private final Map<String, PublicKeyCredentialCreationOptions> requestOptionMap =
             new HashMap<>();
     private final Map<String, AssertionRequest> assertionRequestMap = new HashMap<>();
-    private final CredentialRepository credentialRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 

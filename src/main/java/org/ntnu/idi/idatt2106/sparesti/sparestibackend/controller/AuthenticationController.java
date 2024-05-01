@@ -1,7 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExis
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.AuthenticationService;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
