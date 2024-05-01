@@ -1,9 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig;
@@ -15,16 +12,17 @@ public interface ChallengeTypeConfigMapper {
 
     ChallengeTypeConfigDTO toDTO(ChallengeTypeConfig challengeTypeConfig);
 
-    @Mapping(
-            target = "type",
-            expression =
-                    "java(challengeTypeConfigDTO.type().trim().length() > 1 ?"
-                            + " challengeTypeConfigDTO.type().substring(0,1).toUpperCase() +"
-                            + " challengeTypeConfigDTO.type().substring(1).toLowerCase() :"
-                            + " null)")
+    @Mapping(target = "type", source = "type", qualifiedByName = "getType")
     ChallengeTypeConfig toEntity(ChallengeTypeConfigDTO challengeTypeConfigDTO);
 
     ChallengeTypeConfig updateEntity(
             @MappingTarget ChallengeTypeConfig challengeTypeConfig,
             ChallengeTypeConfigDTO challengeTypeConfigDTO);
+
+    @Named(value = "getType")
+    default String getType(String type) {
+        return type.trim().length() > 1
+                ? type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase()
+                : type.toUpperCase();
+    }
 }

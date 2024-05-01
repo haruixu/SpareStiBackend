@@ -22,5 +22,6 @@ public record UserResponse(
         @NotNull AccountDTO spendingAccount,
         @NotNull AccountDTO savingAccount,
         @NotNull BigDecimal savedAmount,
-        @NotNull Set<BadgeDTO> badges)
+        @NotNull Set<BadgeDTO> badges,
+        @NotNull Boolean hasPasskey)
         implements Serializable {}

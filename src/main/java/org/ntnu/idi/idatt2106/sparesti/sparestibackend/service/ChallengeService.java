@@ -70,6 +70,7 @@ public class ChallengeService {
                 challengeUpdateDTO.saved().doubleValue() - challenge.getSaved().doubleValue();
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
+        System.out.println("+++++++++++++" + updatedChallenge);
 
         if (increment > 0) {
             cascadeToGoal(user, increment);
