@@ -48,7 +48,7 @@ public class ChallengeService {
     }
 
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
-        Challenge challenge = findChallengeByIdAndUser(challengeId, user);
+        Challenge challenge = privateGetChallenge(challengeId, user);
 
         if (!user.getId().equals(challenge.getUser().getId())) {
             throw new ChallengeNotFoundException(challengeId);
@@ -87,12 +87,6 @@ public class ChallengeService {
                 user.setStreakStart(ZonedDateTime.now());
             }
         }
-    }
-
-    private Challenge findChallengeByIdAndUser(Long challengeId, User user) {
-        return challengeRepository
-                .findByIdAndUser(challengeId, user)
-                .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
     }
 
     public ChallengeDTO save(ChallengeCreateDTO challengeCreateDTO, User user)
