@@ -25,6 +25,5 @@ public record RegisterRequest(
         @NotNull(message = "Password cannot be null")
                 @NotBlank(message = "Password cannot be blank")
                 String password,
-        @NotNull(message = "Email cannot be null") @Email(message = "Invalid email format")
-                String email)
+        @NotNull(message = "Email cannot be null") @Email(message = "Ugylig mail") String email)
         implements Serializable {}

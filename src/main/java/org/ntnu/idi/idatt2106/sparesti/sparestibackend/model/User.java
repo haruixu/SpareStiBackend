@@ -69,13 +69,14 @@ public class User implements UserDetails {
 
     @OneToMany(
             mappedBy = "user",
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @SortNatural
     @JsonManagedReference
     @Setter(AccessLevel.NONE)
     private final Set<Goal> goals = new TreeSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private final Set<Challenge> challenges = new HashSet<>();
 
     @AttributeOverride(name = "accNumber", column = @Column(name = "spending_acc_number"))

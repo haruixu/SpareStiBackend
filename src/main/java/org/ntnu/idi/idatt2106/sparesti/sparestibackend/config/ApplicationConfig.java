@@ -40,7 +40,9 @@ public class ApplicationConfig {
                         .orElseThrow(
                                 () ->
                                         new UsernameNotFoundException(
-                                                "User with username '" + username + "' not found"));
+                                                "Bruker med brukernavn '"
+                                                        + username
+                                                        + "' ikke funnet"));
     }
 
     /**
