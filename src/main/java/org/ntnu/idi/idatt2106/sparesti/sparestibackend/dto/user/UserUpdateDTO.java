@@ -13,6 +13,7 @@ public record UserUpdateDTO(
         String firstName,
         String lastName,
         String password,
+        String username,
         @Email(message = "Invalid email format") String email,
         AccountUpdateDTO spendingAccount,
         AccountUpdateDTO savingAccount)

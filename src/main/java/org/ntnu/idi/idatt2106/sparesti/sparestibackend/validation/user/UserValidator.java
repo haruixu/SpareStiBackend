@@ -5,6 +5,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.RegexValidator;
@@ -68,7 +69,7 @@ public class UserValidator<T> extends ObjectValidator<T> {
             if (!RegexValidator.isEmailValid(dto.email())) {
                 throw new BadInputException("The email address is invalid.");
             }
-            if (userExistByEmail(dto.email())) {
+            if (userExistByEmail(dto.email()) && !isEmailOwn(dto.email(), dto.username())) {
                 throw new UserAlreadyExistsException(
                         "User with email: " + dto.email() + " already exists");
             }
@@ -95,6 +96,7 @@ public class UserValidator<T> extends ObjectValidator<T> {
                                 + " special character");
             }
         }
+        // TOOD: validation on length
     }
 
     /**
@@ -113,5 +115,12 @@ public class UserValidator<T> extends ObjectValidator<T> {
      */
     private boolean userExistByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    private boolean isEmailOwn(String email, String username) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) return false;
+
+        return user.getUsername().equals(username);
     }
 }
