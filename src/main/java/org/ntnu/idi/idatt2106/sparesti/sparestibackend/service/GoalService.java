@@ -57,7 +57,7 @@ public class GoalService {
     }
 
     private long getDefaultPriority(User user) {
-        return user.getGoals().size() + 1;
+        return getActiveUserGoals(user).size() + 1;
     }
 
     public GoalResponseDTO update(Long id, GoalUpdateDTO goalDTO, User user)
@@ -139,6 +139,9 @@ public class GoalService {
     private void setNewPriorities(User user) {
         List<Goal> activeGoals =
                 goalRepository.findAllByCompletedOnIsNullAndUserOrderByPriorityAsc(user);
+        System.out.println("-----------------------------");
+        System.out.println("INSIDE SETTING NEW PRIORITIES");
+        System.out.println(activeGoals.size());
         for (int i = 0; i < activeGoals.size(); i++) {
             long priority = (long) i + 1;
             activeGoals.get(i).setPriority(priority);
