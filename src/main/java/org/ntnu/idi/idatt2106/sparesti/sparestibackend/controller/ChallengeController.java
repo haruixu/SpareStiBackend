@@ -174,7 +174,9 @@ public class ChallengeController {
                     UserNotFoundException,
                     BadInputException,
                     ObjectNotValidException {
-        log.info("Received POST request for challenge username: {}", userDetails.getUsername());
+        log.info(
+                "Received POST request for challenge: " + challengeCreateDTO + " for user: {}",
+                userDetails.getUsername());
         User user = getUser(userDetails);
 
         ChallengeDTO createdChallenge = challengeService.save(challengeCreateDTO, user);

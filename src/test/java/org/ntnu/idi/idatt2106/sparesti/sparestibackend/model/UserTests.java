@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import java.math.BigDecimal;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,6 +96,7 @@ class UserTests {
                         .password("password123")
                         .email("john.doe@example.com")
                         .streak(0L)
+                        .savedAmount(BigDecimal.ZERO)
                         .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertTrue(violations.isEmpty(), "There should be no violations for a valid user setup");

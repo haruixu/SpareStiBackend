@@ -35,6 +35,7 @@ public class GoalMapperTest {
                         "testEmail@test.com",
                         null,
                         0L,
+                        BigDecimal.ZERO,
                         new UserConfig(Role.USER, null),
                         new Account(),
                         new Account(),

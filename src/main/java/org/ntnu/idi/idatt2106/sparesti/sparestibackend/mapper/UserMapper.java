@@ -16,6 +16,7 @@ public interface UserMapper {
 
     UserResponse toDTO(User user);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "userConfig", ignore = true),
@@ -26,7 +27,9 @@ public interface UserMapper {
         @Mapping(target = "password", source = "encodedPassword"),
         @Mapping(target = "streakStart", ignore = true),
         @Mapping(target = "streak", ignore = true),
-        @Mapping(target = "handle", ignore = true)
+        @Mapping(target = "handle", ignore = true),
+        @Mapping(target = "savedAmount", ignore = true),
+        @Mapping(target = "username", ignore = true)
     })
     void updateEntity(@MappingTarget User user, UserUpdateDTO updateDTO, String encodedPassword);
 

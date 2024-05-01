@@ -2,7 +2,6 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -11,8 +10,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public record GoalUpdateDTO(
-        @NotEmpty(message = "Title cannot be empty")
-                @NotBlank(message = "Title cannot be blank")
+        @NotBlank(message = "Title cannot be blank")
                 @Size(max = 20, message = "Title can max be 20 characters")
                 String title,
         @PositiveOrZero(message = "Saved amount cannot be negative") BigDecimal saved,

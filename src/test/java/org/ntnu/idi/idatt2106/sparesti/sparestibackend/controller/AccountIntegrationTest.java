@@ -58,7 +58,7 @@ class AccountIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonRequest))
-                .andReturn();
+                .andExpect(status().isOk());
 
         AccountDTO savingAccountDTO =
                 new AccountDTO(AccountType.SAVING, 50L, new BigDecimal("200.55"));

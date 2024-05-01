@@ -11,9 +11,7 @@ import java.time.ZonedDateTime;
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeDTO(
         @NotNull(message = "ID cannot be null") Long id,
-        @NotNull(message = "Title cannot be null")
-                @NotEmpty(message = "Title cannot be empty")
-                @NotBlank(message = "Title cannot be blank")
+        @NotNull(message = "Title cannot be null") @NotBlank(message = "Title cannot be blank")
                 String title,
         @NotNull(message = "Saved amount cannot be null")
                 @PositiveOrZero(message = "Saved amount cannot be negative")
@@ -28,7 +26,6 @@ public record ChallengeDTO(
                 @PositiveOrZero(message = "Completion amount cannot be negative")
                 BigDecimal completion,
         @NotNull(message = "Description cannot be null")
-                @NotEmpty(message = "Description cannot be empty")
                 @NotBlank(message = "Description cannot be blank")
                 String description,
         @Past(message = "Created date must be in the past") ZonedDateTime createdOn,
