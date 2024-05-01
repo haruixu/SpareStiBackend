@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -105,7 +106,36 @@ public class GoalIntegrationTest {
                 .andExpect(jsonPath("$.saved").value(0))
                 .andExpect(jsonPath("$.target").value(1))
                 .andExpect(jsonPath("$.completion").value(0))
+                .andExpect(jsonPath("$.completedOn", nullValue()))
                 .andExpect(jsonPath("$.description").value("description"));
+    }
+
+    @Test
+    @WithMockUser
+    void testPostCompletedGoal() throws Exception {
+        BigDecimal saved = new BigDecimal(100);
+        GoalCreateDTO goalCreateDTO =
+                new GoalCreateDTO(
+                        "title", saved, saved, "description", ZonedDateTime.now().plusDays(1));
+
+        jsonPostRequest = objectMapper.writeValueAsString(goalCreateDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.priority").value(11))
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/goals/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
     }
 
     @Test

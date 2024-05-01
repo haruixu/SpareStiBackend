@@ -42,6 +42,11 @@ public class GoalService {
     public GoalResponseDTO save(GoalCreateDTO goalDTO, User user) throws ObjectNotValidException {
         createValidator.validate(goalDTO);
         Goal goal = GoalMapper.INSTANCE.toEntity(goalDTO, user);
+        if (goal.getSaved().doubleValue() >= goal.getTarget().doubleValue()) {
+            goal.setCompletedOn(ZonedDateTime.now());
+            goal.setPriority(ACTIVE_GOAL_LIMIT + 1L);
+            return GoalMapper.INSTANCE.toDTO(goalRepository.save(goal));
+        }
         long priority = getDefaultPriority(user);
 
         if (priority > ACTIVE_GOAL_LIMIT) throw new ActiveGoalLimitExceededException();
