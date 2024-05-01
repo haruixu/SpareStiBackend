@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     }
 
     private String createErrorResponseMsg(Exception ex) {
-        return ex.getClass().getSimpleName() + ": " + ex.getMessage();
+        return ex.getMessage();
     }
 
     /**
