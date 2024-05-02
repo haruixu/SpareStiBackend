@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.yubico.webauthn.data.ByteArray;
 import java.math.BigDecimal;
@@ -122,6 +123,23 @@ public class GoalMapperTest {
     public void testUpdateEntityWithNullParameters() {
         GoalUpdateDTO dto = new GoalUpdateDTO(null, null, null, null, null);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(goal, dto);
+
+        assertEquals(goal.getTitle(), updatedGoal.getTitle());
+        assertEquals(goal.getSaved(), updatedGoal.getSaved());
+        assertEquals(goal.getTarget(), updatedGoal.getTarget());
+        assertEquals(goal.getDescription(), updatedGoal.getDescription());
+        assertEquals(goal.getDue(), updatedGoal.getDue());
+    }
+
+    @Test
+    public void testToEntityAndToDTOWithNull() {
+        assertNull(GoalMapper.INSTANCE.toDTO(null));
+        assertNull(GoalMapper.INSTANCE.toEntity(null, null));
+    }
+
+    @Test
+    public void testUpdateEntityWithNull() {
+        Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(goal, null);
 
         assertEquals(goal.getTitle(), updatedGoal.getTitle());
         assertEquals(goal.getSaved(), updatedGoal.getSaved());
