@@ -1,6 +1,5 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
