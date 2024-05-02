@@ -1,6 +1,7 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,5 +48,11 @@ public class UserConfigMapperTest {
 
         assertEquals(Role.ADMIN, userConfig.getRole());
         assertEquals(challengeConfig, userConfig.getChallengeConfig());
+    }
+
+    @Test
+    public void testToEntityAndDTOWithNull() {
+        assertNull(userConfigMapper.toDTO(null));
+        assertNull(userConfigMapper.toEntity(null));
     }
 }

@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.token.LoginRegisterResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
@@ -25,6 +26,23 @@ public class RegisterMapperTest {
         assertEquals(request.email(), user.getEmail());
         assertEquals(0, Role.USER.compareTo(user.getUserConfig().getRole()));
         assertNull(user.getUserConfig().getChallengeConfig());
+    }
+
+    @Test
+    public void testToEntityWithNull() {
+        assertNull(RegisterMapper.INSTANCE.toEntity(null, null, null));
+
+        User user = RegisterMapper.INSTANCE.toEntity(null, Role.USER, "encodedPassword");
+        assertNull(user.getFirstName());
+        assertNull(user.getLastName());
+        assertNull(user.getUsername());
+        assertEquals(0L, user.getStreak());
+        assertEquals(BigDecimal.ZERO, user.getSavedAmount());
+    }
+
+    @Test
+    public void testToDTOWithNull() {
+        assertNull(RegisterMapper.INSTANCE.toDTO(null, null, null));
     }
 
     @Test
