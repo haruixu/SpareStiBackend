@@ -36,6 +36,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Default constructor
+     */
+    public GlobalExceptionHandler() {
+
+    }
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
@@ -64,9 +70,7 @@ public class GlobalExceptionHandler {
             value = {
                 UserAlreadyExistsException.class,
                 ChallengeConfigAlreadyExistsException.class,
-                ChallengeTypeConfigAlreadyExistsException.class,
-                AccountAlreadyExistsException.class,
-                PasskeyAlreadyRegisteredException.class
+                AccountAlreadyExistsException.class
             })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
@@ -88,11 +92,10 @@ public class GlobalExceptionHandler {
                 GoalNotFoundException.class,
                 ChallengeConfigNotFoundException.class,
                 ChallengeNotFoundException.class,
-                ChallengeTypeConfigNotFoundException.class,
                 ConfigNotFoundException.class,
                 AccountNotFoundException.class,
                 AssertionRequestNotFoundException.class,
-                UserHandleNotFoundException.class
+                EmailNotFoundException.class
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
@@ -131,6 +134,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
     }
 
+    /**
+     * Exception handler method for BadCredentialsException
+     * @param ex Exception
+     * @return ResponseEntity with error message
+     */
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentialsException(Exception ex) {
         logError(ex);
