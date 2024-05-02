@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.*;
 
-
 /**
  * Embedded class that represents configuration settings specific to a type of challenge within the system.
  * This configuration includes financial thresholds associated with a challenge type, which are used to tailor

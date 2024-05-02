@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-
 /**
  * Represents a request to change a user's password. This entity stores the unique identifiers
  * and timestamp of the password change request to manage and validate user requests securely.

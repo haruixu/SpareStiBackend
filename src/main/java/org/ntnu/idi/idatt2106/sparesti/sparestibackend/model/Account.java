@@ -21,7 +21,6 @@ import org.hibernate.annotations.ColumnDefault;
  * bound to the entity it resides within.
  * @author Y.A Marouga
  */
-
 @Data
 @Embeddable
 public class Account {
