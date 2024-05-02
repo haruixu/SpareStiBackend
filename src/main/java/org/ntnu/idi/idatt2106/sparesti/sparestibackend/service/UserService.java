@@ -51,6 +51,11 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
+    /**
+     * Finds user by their username
+     * @param username Username of user
+     * @return User with matching username
+     */
     public UserResponse findUserByUsernameToDTO(String username) {
         return UserMapper.INSTANCE.toDTO(
                 userRepository
@@ -58,6 +63,12 @@ public class UserService {
                         .orElseThrow(() -> new UserNotFoundException(username)));
     }
 
+    /**
+     * Find user by their email
+     * @param email Email of user
+     * @return User with matching email
+     * @throws EmailNotFoundException If email could not be found
+     */
     public User findUserByEmail(String email) throws EmailNotFoundException {
         return userRepository
                 .findByEmail(email)
@@ -67,6 +78,12 @@ public class UserService {
                                         "User with email: " + email + " not found"));
     }
 
+    /**
+     * Updates a user specified by their username
+     * @param username username of user
+     * @param updateDTO Updated user changes
+     * @return Updated user
+     */
     public UserResponse updateUser(String username, UserUpdateDTO updateDTO) {
         userUpdateValidator.validate(updateDTO);
         User user = findUserByUsername(username);
@@ -89,6 +106,11 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    /**
+     * Updates a user's password
+     * @param userID Identifies a user
+     * @param newPassword New password of user
+     */
     public void updatePassword(Long userID, String newPassword) {
         User user =
                 userRepository
@@ -98,6 +120,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Gets the streak of a user, identified by their username
+     * @param username Username of user
+     * @return Streak of the user
+     * @throws UserNotFoundException If the user could not be found
+     */
     public StreakResponse getStreak(String username) throws UserNotFoundException {
         User user = findUserByUsername(username);
 

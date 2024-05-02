@@ -460,6 +460,7 @@ public class GoalController {
     /**
      * Uploads an mage of a goal
      * @param id Identifies goal
+     * @param file File to be uploaded
      * @param userDetails Current user
      * @return Resource wrapper for image
      * @throws IOException For IO-errors

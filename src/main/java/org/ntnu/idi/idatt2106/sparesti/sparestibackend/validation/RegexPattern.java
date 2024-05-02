@@ -28,7 +28,7 @@ public enum RegexPattern {
     PASSWORD("^(?=.*[0-9])(?=.*[a-zæøå])(?=.*[ÆØÅA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,30}$"),
 
     /**
-     * Valid email must start with Norwegian letters, numbers, underscore, '+', '&', '*', '-'
+     * Valid email must start with Norwegian letters, numbers, underscore, '+', ampersand, '*', '-'
      * Valid email can include must include '@'
      * Must include a period after '@'
      * Must have letters after period of length 2-7 characters

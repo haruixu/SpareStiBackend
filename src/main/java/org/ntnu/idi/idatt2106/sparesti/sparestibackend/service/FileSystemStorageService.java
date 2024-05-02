@@ -34,6 +34,13 @@ public class FileSystemStorageService {
     private final StorageProperties properties;
     private final Path rootLocation;
 
+    /**
+     * Constructor for FileSystemStorageService
+     * @param userService User service for communicating with users
+     * @param challengeRepository Challenge repo for finding challenges
+     * @param goalRepository Goal repo for finding goals
+     * @param properties Storage properties
+     */
     public FileSystemStorageService(
             UserService userService,
             ChallengeRepository challengeRepository,

@@ -31,6 +31,7 @@ public class ApplicationConfig {
 
     /**
      * Creates a bean representing user info
+     * @return UserDetailsService
      */
     @Bean
     public UserDetailsService userDetailsService() {
@@ -78,6 +79,12 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bena for relying part
+     * @param registrationService Registration service
+     * @param authConfig Authentication config
+     * @return Relying party
+     */
     @Bean
     public RelyingParty relyingParty(
             RegistrationService registrationService, WebAuthConfig authConfig) {

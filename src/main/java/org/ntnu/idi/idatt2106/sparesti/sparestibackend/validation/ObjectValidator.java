@@ -25,6 +25,9 @@ public class ObjectValidator<T> {
 
     private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
+    /**
+     * Validator object used for validation
+     */
     protected final Validator validator = validatorFactory.getValidator();
 
     /**
