@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config;
 
 /**
  * Exception thrown for attempting to find non-existent Challenge config

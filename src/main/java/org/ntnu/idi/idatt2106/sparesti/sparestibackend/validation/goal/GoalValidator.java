@@ -2,9 +2,9 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.goal;
 
 import java.util.List;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.springframework.stereotype.Component;
 
