@@ -67,7 +67,7 @@ generatepdf:
     - web
 
 pages:
-  stage: package
+  stage: build
   script:
     - mvn clean package
     - mvn javadoc:javadoc
