@@ -16,6 +16,9 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRe
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.BioAuthRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.BioAuthMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;

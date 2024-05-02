@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.StreakResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserResponse;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.UserUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.FileSystemStorageService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
 import org.springframework.core.io.Resource;

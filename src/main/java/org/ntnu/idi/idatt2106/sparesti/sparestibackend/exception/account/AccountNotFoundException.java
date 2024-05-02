@@ -1,4 +1,4 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.account;
 
 /**
  * Exception that is thrown when putting to an account that does not exist
