@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 /**
  * Class for instantiating beans used during server runtime
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

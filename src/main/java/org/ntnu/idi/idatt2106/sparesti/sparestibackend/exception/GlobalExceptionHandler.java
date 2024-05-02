@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Global exception handler to handle different types of exceptions across the application. It provides centralized
  * exception handling for various types of exceptions that may occur during the execution of the application.
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

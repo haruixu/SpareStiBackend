@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 /**
  * Serviced responsible for business logic related to JWT tokens
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

@@ -19,7 +19,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ApplicationUtil;
  * Mapper interface for converting back and forth
  * from a DTO to a Goal entity.
  *
- * @author Yasin M & Harry X.
+ * @author Yasin M and Harry X.
  * @version 1.0
  * @since 18.4.24
  */
