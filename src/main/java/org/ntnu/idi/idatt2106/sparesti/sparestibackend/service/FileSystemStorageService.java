@@ -1,5 +1,6 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -71,7 +72,6 @@ public class FileSystemStorageService {
     }
 
     private boolean isValidFilename(String filename) {
-        System.out.println("Æ: " + filename);
         return filename.contains("-P") || filename.contains("-C") || filename.contains("-G");
     }
 
@@ -91,6 +91,13 @@ public class FileSystemStorageService {
         } else if (newFilename.contains("-G")
                 && !goalRepository.findByIdAndUser(id, user).isPresent()) {
             throw new StorageException("The goal does not belong to you.");
+        }
+
+        String[] possibleExtensions = {".png", ".jpg", ".jpeg", ".gif"};
+        String baseFilename = newFilename.split("\\.")[0];
+        for (String ext : possibleExtensions) {
+            Path testPath = rootLocation.resolve(baseFilename + ext);
+            Files.deleteIfExists(testPath);
         }
 
         Path destinationFile =
@@ -131,7 +138,12 @@ public class FileSystemStorageService {
             throw new StorageException("The goal does not belong to you.");
         }
 
-        Resource resource = new UrlResource(file.toUri());
+        Resource resource;
+        try {
+            resource = new UrlResource(file.toUri());
+        } catch (Exception e) {
+            throw new StorageFileNotFoundException("File not found.");
+        }
 
         if (!resource.exists() || !resource.isReadable()) {
             throw new StorageFileNotFoundException("Could not read file: " + baseFilename);
