@@ -5,6 +5,11 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Class containing the location of the folder for storing uploaded files.
+ *
+ * @author L.M.L Nilsen
+ */
 @Setter
 @Getter
 @Configuration
