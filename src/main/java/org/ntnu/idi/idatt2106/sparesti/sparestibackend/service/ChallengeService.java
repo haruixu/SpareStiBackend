@@ -25,6 +25,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing challenges. Provides functionality for
+ * creating, updating, retrieving, generating and deleting challenges,
+ * as well as managing challenge-related
+ * operations such as cascading saves to goals and updating user stats.
+ *
+ * @author Y.A. Marouga, H.L Xu and L.M.L Nilsen
+ * @Service Annotation that marks this class as a Spring service, denoting it as a business service facet.
+ * @RequiredArgsConstructor Lombok annotation that generates a constructor requiring arguments for final fields.
+ */
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
@@ -34,6 +44,16 @@ public class ChallengeService {
     private final ChallengeValidator createChallengeValidator;
     private final GoalService goalService;
 
+    /**
+     * Creates and persists a new challenge based on provided DTO and user details.
+     * Calculates initial savings impact and completes the challenge if the saved amount meets the target.
+     *
+     * @param challengeCreateDTO DTO containing challenge creation details.
+     * @param user The user creating the challenge.
+     * @return A ChallengeDTO representing the newly created challenge.
+     * @throws ChallengeNotFoundException if the challenge configuration is not found.
+     * @throws ObjectNotValidException if the challenge details are not valid as per validation constraints.
+     */
     public ChallengeDTO save(ChallengeCreateDTO challengeCreateDTO, User user)
             throws ChallengeNotFoundException, ObjectNotValidException {
         createChallengeValidator.validate(challengeCreateDTO);
@@ -58,6 +78,17 @@ public class ChallengeService {
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
 
+    /**
+     * Updates an existing challenge with new data from a provided DTO if the challenge has not been completed.
+     *
+     * @param id The ID of the challenge to update.
+     * @param challengeUpdateDTO DTO containing update details.
+     * @param user The user associated with the challenge.
+     * @return Updated ChallengeDTO.
+     * @throws ChallengeNotFoundException if the challenge cannot be found.
+     * @throws ObjectNotValidException if the update details are not valid.
+     * @throws ChallengeAlreadyCompletedException if the challenge is already completed.
+     */
     public ChallengeDTO updateChallenge(Long id, ChallengeUpdateDTO challengeUpdateDTO, User user)
             throws ChallengeNotFoundException, ObjectNotValidException {
         updateChallengeValidator.validate(challengeUpdateDTO);
@@ -70,7 +101,6 @@ public class ChallengeService {
                 challengeUpdateDTO.saved().doubleValue() - challenge.getSaved().doubleValue();
         Challenge updatedChallenge =
                 ChallengeMapper.INSTANCE.updateEntity(challenge, challengeUpdateDTO);
-        System.out.println("+++++++++++++" + updatedChallenge);
 
         if (increment > 0) {
             cascadeToGoal(user, increment);
@@ -85,39 +115,93 @@ public class ChallengeService {
         return ChallengeMapper.INSTANCE.toDTO(persistedChallenge);
     }
 
+    /**
+     * Retrieves a specific challenge by ID and user.
+     *
+     * @param challengeId The ID of the challenge.
+     * @param user The user associated with the challenge.
+     * @return ChallengeDTO of the retrieved challenge.
+     * @throws ChallengeNotFoundException if no such challenge exists.
+     */
     public ChallengeDTO getChallenge(Long challengeId, User user)
             throws ChallengeNotFoundException {
         return ChallengeMapper.INSTANCE.toDTO(privateGetChallenge(challengeId, user));
     }
 
+    /**
+     * Deletes a challenge by ID and user, ensuring it is no longer present in the database.
+     *
+     * @param challengeId The ID of the challenge to delete.
+     * @param user The user associated with the challenge.
+     * @throws ChallengeNotFoundException if no such challenge exists to delete.
+     */
     public void deleteChallenge(Long challengeId, User user) throws ChallengeNotFoundException {
         Challenge challenge = privateGetChallenge(challengeId, user);
         challengeRepository.delete(challenge);
     }
 
+    /**
+     * Internal method to retrieve a challenge, ensuring it exists and belongs to the specified user.
+     *
+     * @param challengeId The ID of the challenge.
+     * @param user The user to whom the challenge must belong.
+     * @return The found challenge.
+     * @throws ChallengeNotFoundException if no such challenge is found.
+     */
     private Challenge privateGetChallenge(Long challengeId, User user) {
         return challengeRepository
                 .findByIdAndUser(challengeId, user)
                 .orElseThrow(() -> new ChallengeNotFoundException(challengeId));
     }
 
+    /**
+     * Retrieves all challenges associated with a specific user and paginates the results.
+     *
+     * @param user The user whose challenges are to be retrieved.
+     * @param pageable Pagination and sorting details.
+     * @return A page of ChallengeDTOs representing the user's challenges.
+     * @throws ChallengeNotFoundException If no challenges are found for the user, this exception may be thrown.
+     */
     public Page<ChallengeDTO> getChallengesByUser(User user, Pageable pageable)
             throws ChallengeNotFoundException {
         return challengeRepository.findByUser(user, pageable).map(ChallengeMapper.INSTANCE::toDTO);
     }
 
+    /**
+     * Retrieves all active (not completed) challenges for a specific user and paginates the results.
+     *
+     * @param user The user whose active challenges are to be retrieved.
+     * @param pageable Pagination and sorting details.
+     * @return A page of ChallengeDTOs of active challenges.
+     */
     public Page<ChallengeDTO> getActiveChallenges(User user, Pageable pageable) {
         return challengeRepository
                 .findAllByCompletedOnIsNullAndUser(user, pageable)
                 .map(ChallengeMapper.INSTANCE::toDTO);
     }
 
+    /**
+     * Retrieves all completed challenges for a specific user and paginates the results.
+     *
+     * @param user The user whose completed challenges are to be retrieved.
+     * @param pageable Pagination and sorting details.
+     * @return A page of ChallengeDTOs of completed challenges.
+     */
     public Page<ChallengeDTO> getCompletedChallenges(User user, Pageable pageable) {
         return challengeRepository
                 .findAllByCompletedOnIsNotNullAndUser(user, pageable)
                 .map(ChallengeMapper.INSTANCE::toDTO);
     }
 
+    /**
+     * Marks a challenge as completed, updates user statistics such as saved amounts and streaks,
+     * and persists these changes to the database.
+     *
+     * @param challengeId The ID of the challenge to complete.
+     * @param user The user completing the challenge.
+     * @return ChallengeDTO representing the completed challenge.
+     * @throws ChallengeAlreadyCompletedException If the challenge is already marked as completed.
+     */
     public ChallengeDTO completeChallenge(Long challengeId, User user) {
         Challenge challenge = privateGetChallenge(challengeId, user);
 
@@ -133,6 +217,13 @@ public class ChallengeService {
         return ChallengeMapper.INSTANCE.toDTO(completedChallenge);
     }
 
+    /**
+     * Applies saved amount increments to goals in a cascading manner, ensuring that contributions
+     * are allocated to goals according to their priority until all funds are exhausted.
+     *
+     * @param user The user whose goals are to be updated.
+     * @param increment The amount by which the user's saved funds have increased.
+     */
     private void cascadeToGoal(User user, double increment) {
         while (increment > 0) {
             Optional<Goal> optionalGoal =
@@ -161,6 +252,11 @@ public class ChallengeService {
         }
     }
 
+    /**
+     * Updates the user's streak based on challenge completion relative to its due date and other active challenges.
+     *
+     * @param challenge The challenge being used to update the streak.
+     */
     private void updateStreak(Challenge challenge) {
         User user = challenge.getUser();
 
@@ -186,6 +282,12 @@ public class ChallengeService {
         }
     }
 
+    /**
+     * Updates the total amount saved by the user based on new challenge contributions.
+     *
+     * @param user The user whose saved amount is being updated.
+     * @param increment The amount added to the user's saved total.
+     */
     private void updateUserSavedAmount(User user, double increment) {
         user.setSavedAmount(BigDecimal.valueOf(user.getSavedAmount().doubleValue() + increment));
     }
@@ -274,6 +376,20 @@ public class ChallengeService {
         }
     }
 
+    /**
+     * Creates a challenge object and maps it to a ChallengeDTO. This method calculates the
+     * necessary parameters for a challenge based on provided financial goals and the temporal
+     * scope specified by the user.
+     *
+     * @param title The title of the challenge.
+     * @param amountPerUnit The amount spent per unit involved in the challenge (e.g., per purchase).
+     * @param amountPerWeek The total amount spent per week on this type of challenge.
+     * @param weeks The duration of the challenge, in weeks.
+     * @param targetValue The financial target value that the challenge aims to achieve.
+     * @param type The type of challenge, which could be a category or specific tag related to the user's activities.
+     * @param user The user who is initiating the challenge.
+     * @return A ChallengeDTO that encapsulates the newly created challenge's details.
+     */
     private ChallengeDTO createChallenge(
             String title,
             double amountPerUnit,
