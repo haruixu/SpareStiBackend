@@ -1,38 +1,4 @@
-# Define stages
-stages:
-  - build
-  - linting
-  - test
-
-default:
-  # Cache maven docker image in GitLab
-  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/maven:latest
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - .m2/
-
-# Define variables
-variables:
-  MAVEN_OPTS: >-
-    -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
-  MAVEN_BUILD_CLI_OPTS: >-
-    -DskipTests -Dspotless.check.skip=true
-  MAVEN_TEST_CLI_OPTS: >-
-    -Dspotless.check.skip=true
-
-build:
-  stage: build
-  script:
-    - mvn $MAVEN_BUILD_CLI_OPTS package
-
-test:
-  stage: test
-  script:
-    - mvn $MAVEN_TEST_CLI_OPTS test
-  retry: 1
-
-linting:
-  stage: linting
-  script:
-    - mvn spotless:check
+# The Docker image that will be used to build your app
+image: ubuntu:22.04
+# Functions that should be executed before the build script is run
+before_script: []
