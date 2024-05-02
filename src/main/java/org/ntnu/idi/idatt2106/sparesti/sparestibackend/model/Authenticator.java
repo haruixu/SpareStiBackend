@@ -20,9 +20,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.util.ByteArrayAttributeCo
  * the owner of the authenticator.</p>
  *
  * @author Y.A Marouga
- * @Entity Denotes that this class is a JPA entity.
- * @Getter Lombok annotation to generate getter methods for all fields.
- * @NoArgsConstructor Lombok annotation to generate a no-argument constructor.
  */
 @Entity
 @Getter

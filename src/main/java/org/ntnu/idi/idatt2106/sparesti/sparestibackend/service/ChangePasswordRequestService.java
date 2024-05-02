@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
  * interactions, and ensures user authentication changes are handled securely.
  *
  * @author L.M.L Nilsen
- * @Service Marks this class as a Spring service, indicating it contains business logic.
- * @RequiredArgsConstructor Lombok annotation that generates a constructor with required arguments for final fields.
  */
 @Service
 @RequiredArgsConstructor

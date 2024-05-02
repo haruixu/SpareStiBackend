@@ -17,8 +17,6 @@ import org.hibernate.annotations.ColumnDefault;
  * This class uses Lombok to generate boilerplate code such as getter/setters and
  * toString() methods which aids in keeping the codebase clean and concise.
  *
- * @Embeddable Indicates that this class is not a primary entity and this object's lifecycle is
- * bound to the entity it resides within.
  * @author Y.A Marouga
  */
 @Data

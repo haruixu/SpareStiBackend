@@ -32,8 +32,6 @@ import org.springframework.stereotype.Service;
  * operations such as cascading saves to goals and updating user stats.
  *
  * @author Y.A. Marouga, H.L Xu and L.M.L Nilsen
- * @Service Annotation that marks this class as a Spring service, denoting it as a business service facet.
- * @RequiredArgsConstructor Lombok annotation that generates a constructor requiring arguments for final fields.
  */
 @Service
 @RequiredArgsConstructor

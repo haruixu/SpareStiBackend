@@ -18,12 +18,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
  * is unique within the context of its usage.</p>
  *
  * @author Y.A Marouga
- * @Embeddable Indicates that this class is an embeddable part of another entity and not a standalone table.
- * @NoArgsConstructor Generates a protected no-argument constructor for JPA use.
- * @AllArgsConstructor Lombok annotation to generate a constructor with arguments for all fields.
- * @Data Generates all the boilerplate that is normally associated with simple POJOs (Plain Old Java Objects)
- *      such as getters, setters, equals, hash, and toString methods.
- * @Table Specifies the table name and constraints for the embedded fields when they are persisted as part of another entity.
  */
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

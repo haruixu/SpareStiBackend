@@ -10,11 +10,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
  * such as their role and configuration for challenges, enabling customized user experiences and permissions.
  *
  * @author Y.A Marouga
- * @Embeddable Marks this class as embeddable, meaning it can be embedded into other entities rather than existing independently.
- * @Getter Lombok annotation to generate getters for all fields.
- * @AllArgsConstructor Generates a constructor with one parameter for each field.
- * @NoArgsConstructor Generates a protected no-argument constructor, suitable for JPA.
- * @Table Specifies the table name for this embedded class and includes constraints on the uniqueness of role per user.
  */
 @Embeddable
 @Getter

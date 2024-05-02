@@ -15,11 +15,6 @@ import lombok.*;
  * unique constraints to ensure that each user can have only one configuration per challenge type.</p>
  *
  * @author Y.A Marouga
- * @Embeddable Marks this class as embeddable, meaning it can be embedded into other entities.
- * @AllArgsConstructor Lombok annotation to generate a constructor with one parameter for each field in the class.
- * @NoArgsConstructor Generates a protected no-argument constructor for JPA use.
- * @Data Generates getters, setters, and other typical methods like equals, hashCode from the fields of the class.
- * @Table Specifies the table name and unique constraints for the fields when they are persisted as part of another entity.
  */
 @Embeddable
 @AllArgsConstructor

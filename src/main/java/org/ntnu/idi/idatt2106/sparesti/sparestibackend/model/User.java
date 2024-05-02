@@ -25,13 +25,6 @@ import org.springframework.security.core.userdetails.UserDetails;
  * authentication and authorization functionalities seamlessly.
  *
  * @author L.M.L Nilsen, H.L Xu nad Y.A Marouga
- * @Entity Marks this class as a JPA entity mapped to a database table named "USER".
- * @Builder Implements the builder pattern for this class using Lombok.
- * @NoArgsConstructor Generates a protected no-argument constructor needed for JPA.
- * @AllArgsConstructor Generates a constructor with arguments for all fields.
- * @Getter Lombok annotation to generate getters for all fields.
- * @Setter Lombok annotation to generate setters for applicable fields.
- * @Table Specifies the table name and implies further configuration like unique constraints.
  */
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
