@@ -97,6 +97,35 @@ public class ChallengeMapperTest {
                 challenge.getType());
     }
 
+    @Test
+    public void testToEntityWithNull() {
+        assertNull(challengeMapper.toEntity(null, null));
+    }
+
+    @Test
+    public void testToDTOWithNull() {
+        assertNull(challengeMapper.toDTO(null));
+    }
+
+    @Test
+    public void testUpdateEntityWithNull() {
+        Challenge challenge = createSampleChallenge();
+
+        Challenge updatedChallenge = challengeMapper.updateEntity(challenge, null);
+
+        assertEquals(challenge.getTitle(), updatedChallenge.getTitle());
+        assertEquals(challenge.getDescription(), updatedChallenge.getDescription());
+        assertEquals(challenge.getSaved(), updatedChallenge.getSaved());
+        assertEquals(challenge.getDue(), updatedChallenge.getDue());
+        assertEquals(challenge.getTarget(), updatedChallenge.getTarget());
+        assertEquals(challenge.getPerPurchase(), updatedChallenge.getPerPurchase());
+        assertEquals(
+                challenge.getType().substring(0, 1).toUpperCase()
+                        + challenge.getType().substring(1).toLowerCase(),
+                challenge.getType().substring(0, 1).toUpperCase()
+                        + challenge.getType().substring(1).toLowerCase());
+    }
+
     private Challenge createSampleChallenge() {
         return new Challenge(
                 1L,
