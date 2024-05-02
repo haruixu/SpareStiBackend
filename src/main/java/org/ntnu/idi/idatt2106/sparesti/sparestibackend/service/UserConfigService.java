@@ -2,7 +2,6 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
@@ -11,7 +10,6 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.user.ChallengeConfigValidator;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +27,6 @@ public class UserConfigService {
     private final UserRepository userRepository;
 
     private final ChallengeConfigValidator challengeConfigValidator;
-    private final ObjectValidator<ChallengeTypeConfigDTO> challengeTypeConfigValidator;
-    private final ObjectValidator<UserConfigDTO> userConfigValidator;
 
     /**
      * Gets the config of a user
