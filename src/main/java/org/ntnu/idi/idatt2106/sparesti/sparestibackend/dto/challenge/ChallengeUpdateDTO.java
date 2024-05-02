@@ -7,6 +7,13 @@ import java.time.ZonedDateTime;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge}
+ * @param title Title
+ * @param saved Saved amount
+ * @param target Target amount
+ * @param perPurchase Per unit price
+ * @param description Description
+ * @param due Due date
+ * @param type Type
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeUpdateDTO(

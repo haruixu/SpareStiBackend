@@ -20,6 +20,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller used to manage endpoints related to a user's challenge configuration.
+ *
+ * @author Yasin A.M.
+ * @version 1.0
+ * @since 23.4.24
+ */
 @Slf4j
 @RestController
 @CrossOrigin
@@ -30,6 +37,15 @@ public class ChallengeConfigController {
 
     private final UserConfigService userConfigService;
 
+    /**
+     * Creates a challenge config
+     * @param challengeConfigDTO Wrapper for challenge config
+     * @param userDetails Current user
+     * @return Wrapper for the created challenge config info
+     * @throws UserNotFoundException If the user was not found
+     * @throws BadInputException For bad user input
+     * @throws ObjectNotValidException If supplied config data is invalid
+     */
     @PostMapping
     @Operation(
             summary = "Create challenge config",
@@ -67,6 +83,12 @@ public class ChallengeConfigController {
         return ResponseEntity.ok(newConfig);
     }
 
+    /**
+     * Gets a user's challenge config
+     * @param userDetails Current user
+     * @return The user's challenge config
+     * @throws ChallengeConfigNotFoundException If the user has not registered a challenge config
+     */
     @GetMapping
     @Operation(
             summary = "Get challenge config",
@@ -98,6 +120,15 @@ public class ChallengeConfigController {
         return ResponseEntity.ok(config);
     }
 
+    /**
+     * Updates a user's challenge config
+     * @param challengeConfigDTO Wrapper for the new challenge config data
+     * @param userDetails Current user
+     * @return Wrapper of for the updated challenge config's data
+     * @throws ChallengeConfigNotFoundException If the user's challenge config could not be found
+     * @throws BadInputException On bad user input
+     * @throws ObjectNotValidException If the supplied config data is invalid
+     */
     @PutMapping
     @Operation(
             summary = "Update challenge config",

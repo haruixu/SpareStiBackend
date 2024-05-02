@@ -29,6 +29,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * Class that populates the database with test data
+ *
+ * @author Harry L.X & Lars M.L.N
+ * @version 1.0
+ * @since 5.1.24
  */
 @Component
 @RequiredArgsConstructor
@@ -49,7 +53,8 @@ public class AppStartup implements CommandLineRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * Runs on application startup.
+     * Runs on application startup. Populates database with test data if it
+     * does not already exist
      *
      * @param args Command line arguments
      */
@@ -67,6 +72,10 @@ public class AppStartup implements CommandLineRunner {
         logger.info("Finished setup");
     }
 
+    /**
+     * Creates test user in database on startup
+     * @return Test User
+     */
     private User prepareUser() {
         // Creating user
         RegisterRequest registerRequest =
@@ -98,6 +107,10 @@ public class AppStartup implements CommandLineRunner {
         return user;
     }
 
+    /**
+     * Populates database with goals
+     * @param user User who owns goals
+     */
     private void prepareGoals(User user) {
         GoalCreateDTO hellas =
                 new GoalCreateDTO(
@@ -126,6 +139,10 @@ public class AppStartup implements CommandLineRunner {
         goalService.save(moped, user);
     }
 
+    /**
+     * Populates database with challenges
+     * @param user User who owns challenges
+     */
     private void prepareChallenges(User user) {
         ChallengeCreateDTO kaffe =
                 new ChallengeCreateDTO(

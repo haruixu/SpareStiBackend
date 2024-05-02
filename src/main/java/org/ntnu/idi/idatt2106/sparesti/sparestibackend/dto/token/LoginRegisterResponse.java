@@ -7,7 +7,8 @@ import java.io.Serializable;
 
 /**
  * DTO used returning JWT tokens upon successful login and register
- *
+ * @param accessToken Access JWT token
+ * @param refreshToken Refersh JWT token
  * @author Harry L.X & Lars M.L.N
  * @version 1.0
  * @since 17.4.24

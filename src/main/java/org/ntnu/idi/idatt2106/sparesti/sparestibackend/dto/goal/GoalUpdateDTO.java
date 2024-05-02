@@ -9,6 +9,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+/**
+ * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal}
+ * @param title Title of goal
+ * @param saved Saved amount
+ * @param target Target amount
+ * @param description Description
+ * @param due Due date
+ */
 public record GoalUpdateDTO(
         @NotBlank(message = "Title cannot be blank")
                 @Size(max = 20, message = "Title can max be 20 characters")

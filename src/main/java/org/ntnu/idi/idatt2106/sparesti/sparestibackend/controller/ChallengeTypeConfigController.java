@@ -18,6 +18,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller for managing endpoints for a user's challenge config types
+ *
+ * @author Yasin A.M
+ * @version 1.0
+ * @since 23.4.24
+ */
 @RestController
 @CrossOrigin
 @Slf4j
@@ -30,6 +37,14 @@ public class ChallengeTypeConfigController {
 
     private final UserConfigService userConfigService;
 
+    /**
+     * Creates challenge type config
+     * @param challengeTypeConfigDTO Wrapper for challenge type config info
+     * @param userDetails Current user
+     * @return Wrapper for created challenge type info
+     * @throws ChallengeConfigNotFoundException If user has no config
+     * @throws ObjectNotValidException if challengeTypeConfigDTO fields are invalid
+     */
     @PostMapping
     @Operation(
             summary = "Create Challenge Type Config",
@@ -63,6 +78,13 @@ public class ChallengeTypeConfigController {
         return ResponseEntity.ok(newConfig);
     }
 
+    /**
+     * Gets a spe
+     * @param type
+     * @param userDetails
+     * @return
+     * @throws ChallengeTypeConfigNotFoundException
+     */
     @GetMapping("/{type}")
     @Operation(
             summary = "Get Challenge Type Config",
