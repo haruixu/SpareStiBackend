@@ -4,6 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * DTO for resetting password
+ * @param resetID ID of reset password entry
+ * @param userID User ID
+ * @param newPassword new password
+ */
 public record ResetPasswordRequest(
         @NotNull(message = "Reset ID cannot be null")
                 @NotBlank(message = "Reset ID cannot be blank")

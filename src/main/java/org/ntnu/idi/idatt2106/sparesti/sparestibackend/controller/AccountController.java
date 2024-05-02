@@ -20,6 +20,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller for endpoints related to user bank accounts
+ *
+ * @author Lars M.L.N
+ * @version 1.0
+ * @since 24.4.24
+ */
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
@@ -30,6 +37,13 @@ public class AccountController {
     private final UserService userService;
     private final AccountService accountService;
 
+    /**
+     * Registers a bank account for a user
+     * @param accountDTO Wrapper for account info
+     * @param userDetails Current user
+     * @return Wrapper of the created account info
+     * @throws ObjectNotValidException If data sent is invalid
+     */
     @PostMapping
     @Operation(summary = "Create User Account", description = "Creates a new user account.")
     @ApiResponses(
@@ -56,6 +70,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.saveAccount(accountDTO, user));
     }
 
+    /**
+     * Gets a user's account
+     * @param userDetails Current user
+     * @return Wrapper of account info
+     */
     @GetMapping
     @Operation(
             summary = "Get User Account",
@@ -83,6 +102,13 @@ public class AccountController {
         return ResponseEntity.ok(accountService.findUserAccounts(user));
     }
 
+    /**
+     * Updates a user's account
+     * @param accountUpdateDTO Wrapper for new account info
+     * @param userDetails Current user
+     * @return Wrapper of the new account info
+     * @throws ObjectNotValidException If the new info is invalid
+     */
     @PutMapping
     @Operation(
             summary = "Update User Account",

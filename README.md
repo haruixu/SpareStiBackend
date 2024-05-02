@@ -28,7 +28,7 @@ git clone https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02_b
 ```
 cd idatt2106_2024_02_backend
 ```
-3. Build the application (OBS: Make sure docker is running)
+3. Build the application (OBS: Make sure docker is running). The first time you build the application it will take a few minutes.
 ```
 make build
 ```

@@ -10,6 +10,9 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig}
+ * @param experience Experience
+ * @param motivation Motivation
+ * @param challengeTypeConfigs List of challenge type configs
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeConfigDTO(

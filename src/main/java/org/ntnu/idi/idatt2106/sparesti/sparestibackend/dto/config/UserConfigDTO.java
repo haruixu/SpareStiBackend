@@ -7,6 +7,8 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig}
+ * @param role Role of user
+ * @param challengeConfig Challenge configuration for user
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UserConfigDTO(
