@@ -26,6 +26,10 @@ build:
   stage: build
   script:
     - mvn $MAVEN_BUILD_CLI_OPTS package
+  artifacts:
+    paths:
+      - target/idatt2002demo-1.0-SNAPSHOT-jar-with-dependencies.jar
+
 
 test:
   stage: test
@@ -37,3 +41,43 @@ linting:
   stage: linting
   script:
     - mvn spotless:check
+
+generatepdf:
+  image: ubuntu:20.04
+  stage: build
+  script:
+    - apt-get update
+    - apt-get install -y wget
+    - apt-get install -y fontconfig libfreetype6 libjpeg-turbo8 libpng16-16 libx11-6 libxcb1 libxext6 libxrender1 xfonts-75dpi xfonts-base
+    - wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
+    - dpkg -i wkhtmltox_0.12.6-1.focal_amd64.deb
+    - apt-get -y install nodejs
+    - apt-get -y install npm
+    - npm install -g github-wikito-converter
+    - apt-get -y install git
+    - export my_url="${CI_PROJECT_URL:8}"
+    - export final_url="https://gitlab-ci-token:$CI_JOB_TOKEN@$my_url"
+    - git clone "$final_url.wiki.git"
+    - gwtc $CI_PROJECT_NAME.wiki
+    - wkhtmltopdf documentation.html wiki.pdf
+  artifacts:
+    paths:
+      - wiki.pdf
+  only:
+    - web
+
+pages:
+  stage: package
+  script:
+    - mvn clean package
+    - mvn javadoc:javadoc
+    - mkdir .public
+    - cp -rf target/site/apidocs/* .public
+    - cp -rf target/jacoco/* .public
+    - mv -f .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - web
+
