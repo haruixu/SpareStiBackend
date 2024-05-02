@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @param username Username
  * @param password Password
  * @param email Email
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

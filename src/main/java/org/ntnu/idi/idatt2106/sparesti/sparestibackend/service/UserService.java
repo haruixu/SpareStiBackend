@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * Handles business logic related to the user entity. Adds an extra layer abstraction between
  * controller and the data layer.
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

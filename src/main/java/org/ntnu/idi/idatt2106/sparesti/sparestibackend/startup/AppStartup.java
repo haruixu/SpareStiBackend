@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 /**
  * Class that populates the database with test data
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 5.1.24
  */

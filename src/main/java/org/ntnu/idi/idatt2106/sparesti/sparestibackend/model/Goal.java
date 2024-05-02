@@ -19,11 +19,6 @@ import org.hibernate.annotations.CreationTimestamp;
  * Implements {@link Comparable} to enable sorting based on priority.
  *
  * @author Y.A Marouga
- * @Entity Marks this class as a JPA entity.
- * @Data Lombok annotation to generate getters and setters, as well as other common methods like equals and hashCode.
- * @AllArgsConstructor Generates a constructor with one parameter for each field.
- * @NoArgsConstructor Generates a protected no-argument constructor required by JPA.
- * @Table Specifies the table name for this entity.
  */
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

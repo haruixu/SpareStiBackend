@@ -41,7 +41,7 @@ import org.springframework.web.server.ResponseStatusException;
  * Service responsible for registering a new user, logging in an existing user and refreshing
  * a user's access token
  *
- * @author Harry L.X. & Lars M.L.N
+ * @author Harry L.X. and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

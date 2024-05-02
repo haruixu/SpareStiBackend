@@ -17,6 +17,13 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Service class for handling business logic related to biometric registration and login
+ *
+ * @author Yasin M.
+ * @version 1.0
+ * @since 28.4.24
+ */
 @Getter
 @Repository
 @RequiredArgsConstructor
@@ -26,6 +33,11 @@ public class RegistrationService implements CredentialRepository {
 
     private final AuthenticatorRepository authRepository;
 
+    /**
+     * Gets all associated credential id's for a user, using their username
+     * @param username Username of user
+     * @return Set of Credential Id's
+     */
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String username) {
         User user =
@@ -41,6 +53,11 @@ public class RegistrationService implements CredentialRepository {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Gets the handle of a user, based on the user's username
+     * @param username Username of user
+     * @return Handle of the User entity, if they have one
+     */
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
         User user =
@@ -49,12 +66,23 @@ public class RegistrationService implements CredentialRepository {
         return Optional.of(user.getHandle());
     }
 
+    /**
+     * Gets the username of a User based on their handle
+     * @param userHandle A users unique handle, used for biometric purposes
+     * @return Username of the user, if they exist
+     */
     @Override
     public Optional<String> getUsernameForUserHandle(ByteArray userHandle) {
         User user = userRepo.findByHandle(userHandle);
         return Optional.of(user.getUsername());
     }
 
+    /**
+     * Looks up biometric registration credentials using the credential ID
+     * @param credentialId Identifies biometric entry
+     * @param userHandle User handle
+     * @return RegisteredCredentials of a user, if it exists
+     */
     @Override
     public Optional<RegisteredCredential> lookup(ByteArray credentialId, ByteArray userHandle) {
         Optional<Authenticator> auth = authRepository.findByCredentialId(credentialId);
@@ -68,6 +96,11 @@ public class RegistrationService implements CredentialRepository {
                                 .build());
     }
 
+    /**
+     * Gets a set of Registered credentials using credential Id
+     * @param credentialId Identifies biometric registration entries
+     * @return Set of registered credentials of a user
+     */
     @Override
     public Set<RegisteredCredential> lookupAll(ByteArray credentialId) {
         List<Authenticator> auth = authRepository.findAllByCredentialId(credentialId);

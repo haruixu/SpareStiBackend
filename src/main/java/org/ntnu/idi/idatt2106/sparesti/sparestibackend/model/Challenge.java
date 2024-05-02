@@ -17,11 +17,6 @@ import org.hibernate.annotations.CreationTimestamp;
  * This entity tracks the progress and details of such challenges.
  *
  * @author Y.A Marouga
- * @Entity Marks this class as a JPA entity.
- * @Data Lombok annotation to generate getters, setters, equals, hashCode and toString methods automatically.
- * @AllArgsConstructor Lombok annotation to generate a constructor with arguments for all fields.
- * @NoArgsConstructor Generates a protected no-argument constructor to maintain JPA requirement for entities.
- * @Table Specifies the dedicated table name for this entity.
  */
 @Entity
 @Data

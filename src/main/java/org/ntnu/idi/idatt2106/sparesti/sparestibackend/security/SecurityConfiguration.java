@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * Configuration class for security settings. Whitelists certain url's. The rest
  * are blacklisted and return a status code 403 FORBIDDEN when accessed without authentication.
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */

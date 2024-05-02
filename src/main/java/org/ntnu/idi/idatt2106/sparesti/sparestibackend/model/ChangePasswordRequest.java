@@ -11,11 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
  * and timestamp of the password change request to manage and validate user requests securely.
  *
  * @author L.M.L Nilsen and H.L XU
- * @Entity Indicates that this class is a JPA entity which will be mapped to a database table.
- * @Data Lombok annotation that generates getters and setters, as well as other common methods like equals and hashCode.
- * @Builder Lombok annotation to implement the Builder pattern for creating instances of this class.
- * @NoArgsConstructor Generates a protected no-argument constructor which is a requirement for JPA entities.
- * @AllArgsConstructor Generates an all-arguments constructor.
  */
 @Data
 @Builder
