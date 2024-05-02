@@ -74,7 +74,7 @@ pages:
     - mkdir .public
     - ls -al
     - cp -rf target/site/apidocs/* .public
-    - cp -rf target/jacoco/* .public
+    - cp -rf target/site/jacoco/* .public
     - mv -f .public public
   artifacts:
     paths:
