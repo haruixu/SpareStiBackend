@@ -19,6 +19,11 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAPIConfiguration {
 
     /**
+     * Default constructor
+     */
+    public OpenAPIConfiguration() {}
+
+    /**
      * Defines the OpenAPI bean for Swagger documentation.
      *
      * @return An instance of OpenAPI with configured settings.

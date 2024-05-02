@@ -39,9 +39,8 @@ public class GlobalExceptionHandler {
     /**
      * Default constructor
      */
-    public GlobalExceptionHandler() {
+    public GlobalExceptionHandler() {}
 
-    }
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**

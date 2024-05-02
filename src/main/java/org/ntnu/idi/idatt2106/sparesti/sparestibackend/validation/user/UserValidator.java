@@ -12,13 +12,28 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.RegexValidator
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+/**
+ * Validates DTO's used for registering and editing a User entity
+ * @param <T> Object of type T, being RegisterRequest or UserUpdateDTO
+ *
+ * @author Harry L.X
+ * @version 1.0
+ * @since 30.4.24
+ */
 @Component
 @Qualifier("userValidator")
 @RequiredArgsConstructor
 public class UserValidator<T> extends ObjectValidator<T> {
 
+    /**
+     * Repository for user entity
+     */
     private final UserRepository userRepository;
 
+    /**
+     * Overrides inherited method by adding extra validation check for each field
+     * @param object Object of type T
+     */
     @Override
     public void validate(T object) {
         checkConstraints(object);
@@ -30,6 +45,10 @@ public class UserValidator<T> extends ObjectValidator<T> {
             throw new ClassCastException("Object must be of type RegisterRequest or UserUpdateDTO");
     }
 
+    /**
+     * Validates DTO fields used for creating new user
+     * @param request DTO containing info for new user
+     */
     public void validateRegisterRequestDTO(RegisterRequest request) {
 
         if (!(RegexValidator.isUsernameValid(request.username()))) {
@@ -62,6 +81,10 @@ public class UserValidator<T> extends ObjectValidator<T> {
         }
     }
 
+    /**
+     * Validates dto used for updating User entity
+     * @param dto DTO with new changes for the user
+     */
     public void validateUserUpdateDTO(UserUpdateDTO dto) {
         if (dto.email() != null) {
             if (!RegexValidator.isEmailValid(dto.email())) {

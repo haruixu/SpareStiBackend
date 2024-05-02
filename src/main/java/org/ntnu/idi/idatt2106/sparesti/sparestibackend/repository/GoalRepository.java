@@ -58,6 +58,11 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
      */
     List<Goal> findAllByCompletedOnIsNullAndUserOrderByPriorityAsc(User user);
 
+    /**
+     * Transactional method used for deleting a goal of a user
+     * @param id Identifies the goal
+     * @param user User that owns the Goal
+     */
     @Transactional
     void deleteByIdAndUser(Long id, User user);
 }

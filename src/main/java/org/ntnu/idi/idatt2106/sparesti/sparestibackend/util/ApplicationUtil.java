@@ -12,9 +12,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationUtil {
 
+    /**
+     * Static variable for one hundred
+     */
     public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+
+    /**
+     * Static variable for rounding mode up
+     */
     public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+
+    /**
+     * Static variable for rounding weight (3 decimals)
+     */
     private static final int ROUNDING_SCALE = 3;
+
+    /**
+     * Static variable for random
+     */
     private static final SecureRandom random = new SecureRandom();
 
     /**
