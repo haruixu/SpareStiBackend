@@ -16,9 +16,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Service responsible for uploading and getting images for users, challenges and goals.
+ *
+ * @author L.M.L. Nilsen
+ * @version 1.0
+ * @since 1.5.24
+ */
 @Service
 public class FileSystemStorageService {
 
@@ -40,6 +46,18 @@ public class FileSystemStorageService {
         this.rootLocation = Paths.get(properties.getLocation().trim());
     }
 
+    /**
+     * Save a valid image for a user, challenge or goal depending on the filename.
+     * If the filename has the format {username}-P.png the image belongs to a user,
+     * {goalId}-G.png for goals and {challengeId}-C.png for a challenge.
+     * The valid filetypes are png, jpg, jpeg and gif.
+     *
+     * @param file The image file that is getting saved.
+     * @param identifier The filename without the extension.
+     * @param userDetails UserDetails for user who wants to save image.
+     * @throws IOException If the file is empty.
+     * @throws StorageException If the file type is unsupported, or the filename format is wrong.
+     */
     public void save(MultipartFile file, String identifier, UserDetails userDetails)
             throws IOException {
         if (file.isEmpty()) {
@@ -66,14 +84,35 @@ public class FileSystemStorageService {
         }
     }
 
+    /**
+     * Checks if a file extension is supported.
+     * The supported file extensions are png, jpg, jpeg and gif.
+     * @param extension The file extension being checked.
+     * @return true or false depending on if the extension is valid.
+     */
     private boolean isValidExtension(String extension) {
         return extension.matches("\\.(png|jpg|jpeg|gif)");
     }
 
+    /**
+     * Checks if a filename is supported.
+     * The supported filenames are {username}-P.extension,
+     * {goalId}-G.extension and {challengeId}-C.extension
+     * @param filename The filename being checked
+     * @return true or false depending on if the filename is valid.
+     */
     private boolean isValidFilename(String filename) {
         return filename.contains("-P") || filename.contains("-C") || filename.contains("-G");
     }
 
+    /**
+     * Extracts the ID from a filename.
+     * The id can be either a username,
+     * challengeID or GoalID.
+     * @param filename The filename to extract the ID from.
+     * @return The ID in the filename if the ID format is valid.
+     * @throws StorageException If the ID format is invalid.
+     */
     private long extractId(String filename) throws StorageException {
         try {
             return Long.parseLong(filename.split("-")[0]);
@@ -82,6 +121,16 @@ public class FileSystemStorageService {
         }
     }
 
+    /**
+     * Checks the ownership of goal or challenge, before saving the file.
+     * Used so that only the user that owns the challenge or goal with the given ID can save images for it.
+     * @param file The file to save.
+     * @param user The user wanting to save the file.
+     * @param id The ID of the challenge or goal.
+     * @param newFilename The new filename of the file that is being stored.
+     * @throws IOException If method has problems writing file.
+     * @throws StorageException If the challenge or goal does not belong to the user trying to save it.
+     */
     private void checkOwnershipAndSave(MultipartFile file, User user, long id, String newFilename)
             throws IOException {
         if (newFilename.contains("-C")
@@ -106,7 +155,14 @@ public class FileSystemStorageService {
         }
     }
 
-    public Resource getImage(String baseFilename, UserDetails userDetails) throws IOException {
+    /**
+     * Gets an image for a user, challenge or goal.
+     * @param baseFilename The name of the file, without the file extension.
+     * @param userDetails The UserDetails of the user wanting to get an image.
+     * @return Returns the file as a Resource.
+     * @throws StorageException If the challenge or goal does not belong to the user.
+     */
+    public Resource getImage(String baseFilename, UserDetails userDetails) {
         User user = userService.findUserByUsername(userDetails.getUsername());
         String[] possibleExtensions = {".png", ".jpg", ".jpeg", ".gif"};
 
@@ -118,11 +174,9 @@ public class FileSystemStorageService {
                 break;
             }
         }
-
         if (!isValidFilename(baseFilename)) {
             throw new StorageException("Incorrect file name format.");
         }
-
         long id = 0L;
         if (!baseFilename.contains("-P")) {
             id = extractId(baseFilename);
@@ -149,17 +203,5 @@ public class FileSystemStorageService {
         }
 
         return resource;
-    }
-
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
-    }
-
-    public void init() {
-        try {
-            Files.createDirectories(rootLocation);
-        } catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
-        }
     }
 }
