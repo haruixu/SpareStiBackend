@@ -1,9 +1,9 @@
-package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception;
+package org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.account;
 
 /**
  * Exception that is thrown when creating an account that already exists
  *
- * @author & Lars M.L.N
+ * @author Lars M.L.N
  * @version 1.0
  * @since 24.4.24
  */

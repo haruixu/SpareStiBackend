@@ -6,7 +6,11 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
+ *
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User}
+ * @param streakStart Streak start date
+ * @param streak Streak
+ * @param firstDue Date when streak resets
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record StreakResponse(

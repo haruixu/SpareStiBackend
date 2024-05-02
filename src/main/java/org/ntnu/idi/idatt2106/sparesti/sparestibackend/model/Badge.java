@@ -4,6 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/**
+ * Badge entity used to represent a badge that user's can get after completing
+ * a given amount of challenges
+ *
+ * @author Yasin M.
+ * @version 1.0
+ * @since 18.4.24
+ */
 @Entity
 @Data
 public class Badge {

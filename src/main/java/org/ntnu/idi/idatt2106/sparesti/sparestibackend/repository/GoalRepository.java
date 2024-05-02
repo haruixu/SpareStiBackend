@@ -9,9 +9,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Repository interface responsible for communicating with the data layer in relation to the Goal entity.
+ *
+ * @author Harry X.
+ * @version 1.0
+ * @since 22.4.24
+ */
 public interface GoalRepository extends JpaRepository<Goal, Long> {
+
+    /**
+     * Finds a page of all saving goal entities of a user
+     * @param user User who owns the goals
+     * @param pageable Configures the page parameters
+     * @return Page of all saving goals of a user
+     */
     Page<Goal> findAllByUser(User user, Pageable pageable);
 
+    /**
+     * Finds the goal of a user specified by its id, wrapped by an Optional object.
+     * If the goal does not exist or does not belong to the user, the Optional wraps nothing
+     * @param id Identifies a goal
+     * @param user User who owns the goal
+     * @return Optional of the specified goal, else returns Optional wrapped around nothing
+     */
     Optional<Goal> findByIdAndUser(Long id, User user);
 
     /**
@@ -37,6 +58,11 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
      */
     List<Goal> findAllByCompletedOnIsNullAndUserOrderByPriorityAsc(User user);
 
+    /**
+     * Transactional method used for deleting a goal of a user
+     * @param id Identifies the goal
+     * @param user User that owns the Goal
+     */
     @Transactional
     void deleteByIdAndUser(Long id, User user);
 }

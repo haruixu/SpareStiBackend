@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 /**
  * Class for instantiating beans used during server runtime
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */
@@ -31,6 +31,7 @@ public class ApplicationConfig {
 
     /**
      * Creates a bean representing user info
+     * @return UserDetailsService
      */
     @Bean
     public UserDetailsService userDetailsService() {
@@ -40,7 +41,9 @@ public class ApplicationConfig {
                         .orElseThrow(
                                 () ->
                                         new UsernameNotFoundException(
-                                                "User with username '" + username + "' not found"));
+                                                "Bruker med brukernavn '"
+                                                        + username
+                                                        + "' ikke funnet"));
     }
 
     /**
@@ -76,6 +79,12 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bena for relying part
+     * @param registrationService Registration service
+     * @param authConfig Authentication config
+     * @return Relying party
+     */
     @Bean
     public RelyingParty relyingParty(
             RegistrationService registrationService, WebAuthConfig authConfig) {

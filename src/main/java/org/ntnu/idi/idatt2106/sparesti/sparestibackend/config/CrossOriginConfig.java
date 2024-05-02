@@ -16,6 +16,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CrossOriginConfig {
 
     /**
+     * Default constructor
+     */
+    public CrossOriginConfig() {}
+
+    /**
      * Bean that configures CORS policy. Disable CORS-block on all types of requests on all endpoints
      * @return Bean for configuring CORS.
      */

@@ -7,8 +7,12 @@ import java.io.Serializable;
 
 /**
  * DTO used when registering a new user
- *
- * @author Harry L.X & Lars M.L.N
+ * @param firstName First name
+ * @param lastName last name
+ * @param username Username
+ * @param password Password
+ * @param email Email
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */
@@ -25,6 +29,5 @@ public record RegisterRequest(
         @NotNull(message = "Password cannot be null")
                 @NotBlank(message = "Password cannot be blank")
                 String password,
-        @NotNull(message = "Email cannot be null") @Email(message = "Invalid email format")
-                String email)
+        @NotNull(message = "Email cannot be null") @Email(message = "Ugylig mail") String email)
         implements Serializable {}

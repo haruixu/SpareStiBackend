@@ -6,6 +6,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.AccountType;
 
+/**
+ * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Account}
+ * @param accountType Type of account
+ * @param accNumber Account number
+ * @param balance Account balance
+ */
 public record AccountDTO(
         @NotNull(message = "Account type cannot be null") AccountType accountType,
         @NotNull(message = "Account number cannot be null")

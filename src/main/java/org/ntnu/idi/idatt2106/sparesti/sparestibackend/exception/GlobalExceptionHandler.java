@@ -6,9 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.mail.MessagingException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.account.AccountAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.account.AccountNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.challenge.ChallengeAlreadyCompletedException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.challenge.ChallengeNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ChallengeConfigAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ChallengeConfigNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ConfigNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.GoalNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.NotActiveGoalException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.storage.StorageException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.storage.StorageFileNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +41,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Global exception handler to handle different types of exceptions across the application. It provides centralized
  * exception handling for various types of exceptions that may occur during the execution of the application.
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * Default constructor
+     */
+    public GlobalExceptionHandler() {}
 
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
@@ -50,7 +67,7 @@ public class GlobalExceptionHandler {
     }
 
     private String createErrorResponseMsg(Exception ex) {
-        return ex.getClass().getSimpleName() + ": " + ex.getMessage();
+        return ex.getMessage();
     }
 
     /**
@@ -64,9 +81,7 @@ public class GlobalExceptionHandler {
             value = {
                 UserAlreadyExistsException.class,
                 ChallengeConfigAlreadyExistsException.class,
-                ChallengeTypeConfigAlreadyExistsException.class,
-                AccountAlreadyExistsException.class,
-                PasskeyAlreadyRegisteredException.class
+                AccountAlreadyExistsException.class
             })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
@@ -88,11 +103,10 @@ public class GlobalExceptionHandler {
                 GoalNotFoundException.class,
                 ChallengeConfigNotFoundException.class,
                 ChallengeNotFoundException.class,
-                ChallengeTypeConfigNotFoundException.class,
                 ConfigNotFoundException.class,
                 AccountNotFoundException.class,
                 AssertionRequestNotFoundException.class,
-                UserHandleNotFoundException.class
+                EmailNotFoundException.class
             })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
@@ -122,6 +136,8 @@ public class GlobalExceptionHandler {
                 ChallengeAlreadyCompletedException.class,
                 ActiveGoalLimitExceededException.class,
                 NotActiveGoalException.class,
+                StorageException.class,
+                StorageFileNotFoundException.class
             })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
@@ -129,6 +145,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
     }
 
+    /**
+     * Exception handler method for BadCredentialsException
+     * @param ex Exception
+     * @return ResponseEntity with error message
+     */
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentialsException(Exception ex) {
         logError(ex);

@@ -16,6 +16,9 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.AuthenticationRe
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.BioAuthRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.RegisterRequest;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.BioAuthMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.RegisterMapper;
@@ -39,9 +42,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Service responsible for registering a new user, logging in an existing user and refreshing
- * a users access token
+ * a user's access token
  *
- * @author Harry L.X. & Lars M.L.N
+ * @author Harry L.X. and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */
@@ -67,6 +70,7 @@ public class AuthenticationService {
 
     private final UserValidator<RegisterRequest> registerRequestValidator;
     private final ObjectValidator<AuthenticationRequest> authenticationRequestValidator;
+    private final AuthenticatorRepository authenticatorRepository;
 
     /**
      * Registers a new, valid user. For a user to be valid, they have to
@@ -107,7 +111,7 @@ public class AuthenticationService {
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userService.findUserByUsername(request.username());
-        System.out.println("Generating tokens");
+        System.out.println("Generating tokens for user: " + user);
         String jwtAccessToken = jwtService.generateToken(user, ONE_DAY_IN_MINUTES);
         String jwtRefreshToken = jwtService.generateToken(user, ONE_WEEK_IN_MINUTES);
         return RegisterMapper.INSTANCE.toDTO(user, jwtAccessToken, jwtRefreshToken);
@@ -134,42 +138,13 @@ public class AuthenticationService {
      * @param username The username of the user for whom biometric authentication registration is initiated.
      * @return A JSON string representing the registration request for biometric authentication.
      * @throws JsonProcessingException If an error occurs during JSON processing.
-     * @throws PasskeyAlreadyRegisteredException If the user already has a biometric passkey registered.
      */
-    public String newBioAuthRegistration(String username)
-            throws JsonProcessingException, PasskeyAlreadyRegisteredException {
+    public String bioAuthRegistration(String username) throws JsonProcessingException {
         User user = userService.findUserByUsername(username);
+
         if (Optional.ofNullable(user.getHandle()).isPresent()) {
-            throw new PasskeyAlreadyRegisteredException(username);
+            authenticatorRepository.removeAllByUser(user);
         }
-        return bioAuthRegistration(user);
-    }
-
-    /**
-     * Resets the biometric authentication registration for the specified user.
-     *
-     * @param username The username of the user for whom biometric authentication registration is reset.
-     * @return A JSON string representing the registration request for biometric authentication.
-     * @throws JsonProcessingException If an error occurs during JSON processing.
-     * @throws PasskeyAlreadyRegisteredException If the user does not have a biometric passkey registered.
-     */
-    public String resetBioAuthRegistration(String username)
-            throws JsonProcessingException, PasskeyAlreadyRegisteredException {
-        User user = userService.findUserByUsername(username);
-        if (Optional.ofNullable(user.getHandle()).isEmpty()) {
-            throw new UserHandleNotFoundException(username);
-        }
-        return newBioAuthRegistration(username);
-    }
-
-    /**
-     * Generates a biometric authentication registration for the given user.
-     *
-     * @param user The user for whom the biometric authentication registration is being generated.
-     * @return The JSON representation of the registration credentials.
-     * @throws JsonProcessingException If an error occurs during JSON processing.
-     */
-    private String bioAuthRegistration(User user) throws JsonProcessingException {
 
         UserIdentity userIdentity =
                 UserIdentity.builder()
@@ -179,7 +154,6 @@ public class AuthenticationService {
                         .build();
 
         user.setHandle(userIdentity.getId());
-
         userService.save(user);
         StartRegistrationOptions registrationOptions =
                 StartRegistrationOptions.builder().user(userIdentity).build();

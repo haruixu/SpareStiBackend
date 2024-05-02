@@ -6,9 +6,9 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repository interface for communicating with the data layer
+ * Repository interface for communicating with the data layer related to the user entity
  *
- * @author Harry L.X & Lars M.L.N
+ * @author Harry L.X and Lars M.L.N
  * @version 1.0
  * @since 17.4.24
  */
@@ -28,5 +28,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     Optional<User> findByEmail(String email);
 
+    /**
+     * Finds a user based on their handle, which acts as a unique identifier for the user
+     * @param handle Unique identifier of the user, used for biometric registration/login
+     * @return User with the matching handle
+     */
     User findByHandle(ByteArray handle);
 }

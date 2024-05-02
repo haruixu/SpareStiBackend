@@ -2,22 +2,27 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeTypeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.*;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ChallengeConfigAlreadyExistsException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ChallengeConfigNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ConfigNotFoundException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.user.UserNotFoundException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeConfigMapper;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.ChallengeTypeConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper.UserConfigMapper;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeConfig;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.ChallengeTypeConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.UserConfig;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.repository.UserRepository;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.ObjectValidator;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.validation.user.ChallengeConfigValidator;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for handling business logic related to Userconfig entity and DTO's
+ *
+ * @author Yasin M.
+ * @version 1.0
+ * @since 19.4.24
+ */
 @Service
 @RequiredArgsConstructor
 public class UserConfigService {
@@ -25,9 +30,14 @@ public class UserConfigService {
     private final UserRepository userRepository;
 
     private final ChallengeConfigValidator challengeConfigValidator;
-    private final ObjectValidator<ChallengeTypeConfigDTO> challengeTypeConfigValidator;
-    private final ObjectValidator<UserConfigDTO> userConfigValidator;
 
+    /**
+     * Gets the config of a user
+     * @param username Username of user
+     * @return UserConfig for the user
+     * @throws UserNotFoundException If the user could not be found from the username
+     * @throws ConfigNotFoundException If the user has yet to set up their config
+     */
     public UserConfigDTO getUserConfig(String username)
             throws UserNotFoundException, ConfigNotFoundException {
         User user = findUserByUsername(username);
@@ -43,18 +53,14 @@ public class UserConfigService {
         return UserConfigMapper.INSTANCE.toDTO(user.getUserConfig());
     }
 
-    public UserConfigDTO createUserConfig(String username, UserConfigDTO request)
-            throws UserNotFoundException, ObjectNotValidException {
-        userConfigValidator.validate(request);
-        User user = findUserByUsername(username);
-        UserConfig newConfig = UserConfigMapper.INSTANCE.toEntity(request);
-
-        user.setUserConfig(newConfig);
-        userRepository.save(user);
-
-        return UserConfigMapper.INSTANCE.toDTO(newConfig);
-    }
-
+    /**
+     * Creates a challenge config for a user
+     * @param username Username of user
+     * @param challengeConfigDTO The user's new challenge config info
+     * @return Created config info
+     * @throws UserNotFoundException If the user could not be found by the username
+     * @throws ObjectNotValidException If the config dto fields are invalid
+     */
     public ChallengeConfigDTO createChallengeConfig(
             String username, ChallengeConfigDTO challengeConfigDTO)
             throws UserNotFoundException, ObjectNotValidException {
@@ -75,6 +81,13 @@ public class UserConfigService {
                 persistedUser.getUserConfig().getChallengeConfig());
     }
 
+    /**
+     * Gets the challenge config of a user
+     * @param username Username of user
+     * @return Challenge config of user
+     * @throws ChallengeConfigNotFoundException If the user has yet to set up their challenge config
+     * @throws UserNotFoundException If the user could not be found from the username
+     */
     public ChallengeConfigDTO getChallengeConfig(String username)
             throws ChallengeConfigNotFoundException, UserNotFoundException {
         User user = findUserByUsername(username);
@@ -90,6 +103,11 @@ public class UserConfigService {
     /**
      * Method will reset all challenge type configs. make sure to send intact challenge type configs in the dto.
      * This behaviour can be disabled, by ignoring the challenge type dtos in the mapper.
+     * @param username Username of user
+     * @param challengeConfigDTO Challenge config with new changes
+     * @return Updated challenge config
+     * @throws UserNotFoundException If the user could not be found from the username
+     * @throws ObjectNotValidException If the dto fields are invalid
      */
     public ChallengeConfigDTO updateChallengeConfig(
             String username, ChallengeConfigDTO challengeConfigDTO)
@@ -110,82 +128,25 @@ public class UserConfigService {
         return ChallengeConfigMapper.INSTANCE.toDTO(updatedChallengeConfig);
     }
 
-    public ChallengeTypeConfigDTO createChallengeTypeConfig(
-            String username, ChallengeTypeConfigDTO challengeTypeConfigDTO)
-            throws ObjectNotValidException {
-        challengeTypeConfigValidator.validate(challengeTypeConfigDTO);
-        User user = findUserByUsername(username);
-
-        if (!challengeConfigExists(user)) {
-            throw new ChallengeConfigNotFoundException(user.getId());
-        }
-
-        String type = challengeTypeConfigDTO.type();
-
-        if (challengeTypeConfigExists(type, user)) {
-            throw new ChallengeTypeConfigAlreadyExistsException(user.getId(), type);
-        }
-
-        ChallengeTypeConfig newConfig =
-                ChallengeTypeConfigMapper.INSTANCE.toEntity(challengeTypeConfigDTO);
-        user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().add(newConfig);
-
-        userRepository.save(user);
-
-        return ChallengeTypeConfigMapper.INSTANCE.toDTO(newConfig);
-    }
-
-    public ChallengeTypeConfigDTO updateChallengeTypeConfig(
-            String username, ChallengeTypeConfigDTO challengeTypeConfigDTO)
-            throws ObjectNotValidException {
-        challengeTypeConfigValidator.validate(challengeTypeConfigDTO);
-        final User user = findUserByUsername(username);
-        final String type = challengeTypeConfigDTO.type();
-
-        ChallengeTypeConfig oldConfig = getConfig(type, user);
-
-        ChallengeTypeConfig updatedConfig =
-                ChallengeTypeConfigMapper.INSTANCE.updateEntity(oldConfig, challengeTypeConfigDTO);
-
-        userRepository.save(user);
-        return ChallengeTypeConfigMapper.INSTANCE.toDTO(updatedConfig);
-    }
-
-    public ChallengeTypeConfigDTO getChallengeTypeConfig(String type, String username) {
-        User user = findUserByUsername(username);
-        ChallengeTypeConfig config = getConfig(type, user);
-        return ChallengeTypeConfigMapper.INSTANCE.toDTO(config);
-    }
-
-    public void deleteChallengeTypeConfig(String type, String username)
-            throws UserNotFoundException, ChallengeTypeConfigNotFoundException {
-        User user = findUserByUsername(username);
-        ChallengeTypeConfig config = getConfig(type, user);
-
-        user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().remove(config);
-        userRepository.save(user);
-    }
-
+    /**
+     * Checks if challenge config exists for user
+     * @param user The user
+     * @return Returns true, if it exists
+     */
     private boolean challengeConfigExists(User user) {
         ChallengeConfig config = user.getUserConfig().getChallengeConfig();
         return config.getExperience() != null || config.getMotivation() != null;
     }
 
+    /**
+     * Finds a user by the username
+     * @param username Username of user
+     * @return User with matching username
+     * @throws UserNotFoundException User could not be found from the username User could not be found from the username
+     */
     private User findUserByUsername(String username) throws UserNotFoundException {
         return userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-    }
-
-    private ChallengeTypeConfig getConfig(String type, User user) {
-        return user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
-                .filter(_config -> _config.getType().equalsIgnoreCase(type))
-                .findAny()
-                .orElseThrow(() -> new ChallengeTypeConfigNotFoundException(type));
-    }
-
-    private boolean challengeTypeConfigExists(String type, User user) {
-        return user.getUserConfig().getChallengeConfig().getChallengeTypeConfigs().stream()
-                .anyMatch(config -> type.equalsIgnoreCase(config.getType()));
     }
 }
