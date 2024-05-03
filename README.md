@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02_backend" target="_blank">
-        <img width="30%" src="https://m.media-amazon.com/images/I/51ckv2myWXL.jpg" alt="Sparesti logo">
+        <img width="50%" src="https://media.discordapp.net/attachments/1229758481150640209/1235586776824021103/avatar1.png?ex=6635921b&is=6634409b&hm=8818fe5e10a69e6df7b9da102e5fb65dcdbd962b2614d392be2578d6542822c4&=&format=webp&quality=lossless&width=1135&height=1137">
     </a>
     </p>
 <h1 align="center">
@@ -17,6 +17,32 @@ To run the application, you need the following installed:
 - Git
 
 ### ⚙ Setup
+<<<<<<< Updated upstream
+=======
+#### The following setup is mandatory before running the project
+The application is dependent on certain environment variables in order to run.
+
+Add the following .env file to the root directory after cloning the project:
+```
+# Insert the following .env file to root directory after cloning
+
+DB_NAME=sparesti_db
+MYSQL_URL=jdbc:mysql://db:3306/${DB_NAME}
+MYSQL_USERNAME=root
+MYSQL_ROOT_PASSWORD=password
+
+SECRET_KEY=87EF7185F1C9A5053F5D0B25CCDF039FA3DEF82C0504ACDC9110FC444237BC57
+
+EMAIL_USERNAME=sparestigruppe2@gmail.com
+EMAIL_PASSWORD=wakd klwc nivw whzl
+```
+
+### 🚗 Running the application
+#### The application can be run with one command in the following joint repository: [Joint-Repository](https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02)
+
+#### If you want to run the backend independently, follow these instructions:
+
+>>>>>>> Stashed changes
 1. Clone the repository
 ```
 git clone https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02_backend
