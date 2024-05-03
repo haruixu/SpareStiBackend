@@ -85,6 +85,8 @@ pages:
 deploy:
   stage: deploy
   image: docker:latest
+  tag:
+    - dind
   services:
     - name: docker:dind
       alias: thedockerhost
