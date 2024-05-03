@@ -59,6 +59,14 @@ public class AccountController {
                                     schema = @Schema(implementation = AccountDTO.class))
                         }),
                 @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
                         responseCode = "400",
                         description = "Invalid input or request body",
                         content = @Content)
@@ -91,6 +99,14 @@ public class AccountController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = AccountResponseDTO.class))
                         }),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
                 @ApiResponse(
                         responseCode = "404",
                         description = "Account not found",
@@ -128,6 +144,14 @@ public class AccountController {
                 @ApiResponse(
                         responseCode = "400",
                         description = "Invalid input or request body",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
                         content = @Content),
                 @ApiResponse(
                         responseCode = "404",
