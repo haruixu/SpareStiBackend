@@ -27,7 +27,7 @@ services:
       mysql:
         condition: service_healthy
     build: .
-    # Make app container to wait on mysql container to spin up by restarting it
+    # Make app container wait on mysql container to spin up by restarting it until mysql container is healthy
     restart: always
     volumes:
       - ./images:/upload-dir
