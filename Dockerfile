@@ -9,5 +9,6 @@ RUN mvn -f pom.xml package -DskipTests -Dspotless.check.skip=true
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/src ./src
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
