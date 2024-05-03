@@ -465,6 +465,7 @@ public class GoalController {
      * @return Resource wrapper for image
      * @throws IOException For IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Uploads the image to goal")
     @ApiResponses(
             value = {
@@ -498,6 +499,7 @@ public class GoalController {
      * @return Resource wrapper for image
      * @throws IOException For IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Gets the image of a goal")
     @ApiResponses(
             value = {

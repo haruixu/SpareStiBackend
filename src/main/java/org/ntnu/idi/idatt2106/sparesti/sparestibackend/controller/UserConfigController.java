@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.config.ConfigNotFoundException;
@@ -27,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/config")
 @RequiredArgsConstructor
+@Tag(
+        name = "User and challenge configuration",
+        description = "Endpoints for managing user and challenge configurations")
 public class UserConfigController {
 
     private final UserConfigService userConfigService;

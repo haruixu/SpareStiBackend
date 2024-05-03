@@ -412,6 +412,7 @@ public class ChallengeController {
      * @return OK-string
      * @throws IOException For IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Uploads a picture", description = "Uploads a picture for a challenge")
     @ApiResponses(
             value = {
@@ -447,6 +448,7 @@ public class ChallengeController {
      * @return Resource wrapper for image
      * @throws IOException For IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Gets the image of a challenge")
     @ApiResponses(
             value = {

@@ -431,6 +431,13 @@ public class ChallengeService {
         return ChallengeMapper.INSTANCE.toDTO(challenge);
     }
 
+    /**
+     * Calculates an appropriate number of weeks for a challenge to take place over, using
+     * per week cost and per unit cost
+     * @param amountPerWeek Average cost per week
+     * @param amountPerUnit Average cost per unit
+     * @return The number of weeks
+     */
     private int calculateWeeks(double amountPerWeek, double amountPerUnit) {
         // In case amountPerWeek < amountPerUnit, e.g use 1000kr each shopping trip but use 500kr
         // each week

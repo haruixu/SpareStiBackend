@@ -131,6 +131,7 @@ public class UserController {
      * @return Resource wrapper for image
      * @throws IOException Upon IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Get profile pic")
     @ApiResponses(
             value = {
@@ -162,6 +163,7 @@ public class UserController {
      * @return Resource wrapper for image
      * @throws IOException Upon IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Upload image", description = "Uploaded profile pic")
     @ApiResponses(
             value = {

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.account.AccountResponseDTO;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
 @CrossOrigin
+@Tag(name = "Saving accounts", description = "Endpoints for managing a user's saving accounts")
 public class AccountController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

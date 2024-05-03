@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(
-        name = "authentication",
+        name = "Authentication",
         description =
                 "Endpoints for user authentication including registration, login, and token"
                         + " management.")
