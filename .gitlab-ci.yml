@@ -91,7 +91,7 @@ deploy:
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_IMAGE_NAME: $CI_REGISTRY_USER/idatt2106_2024_02_backend-app
-    DOCKER_HOST: tcp://thedockerhost:2375/
+    DOCKER_HOST: tcp://thedockerhost:2376
     DOCKER_TLS_CERTDIR: ""
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
