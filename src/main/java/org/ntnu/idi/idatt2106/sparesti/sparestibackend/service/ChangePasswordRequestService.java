@@ -166,7 +166,7 @@ public class ChangePasswordRequestService {
         message.setText(
                 "Hei🐷\n\n"
                         + "Trykk på linken for å endre passordet ditt og logg på SpareSti!\n"
-                        + "\nhttp://localhost:5173/forgotPassword?resetID="
+                        + "\nhttp://129.241.98.22:5173/forgotPassword?resetID="
                         + uniqueKey
                         + "&userID="
                         + userID);
