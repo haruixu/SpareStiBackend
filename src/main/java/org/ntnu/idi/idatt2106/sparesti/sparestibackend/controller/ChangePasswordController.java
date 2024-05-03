@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.user.ChangePasswordRequestRequest;
@@ -25,6 +26,9 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/forgotPassword")
 @RequiredArgsConstructor
+@Tag(
+        name = "Change password endpoints",
+        description = "Endpoints for requesting password requests and resetting passwords")
 public class ChangePasswordController {
 
     private final ChangePasswordRequestService changePasswordRequestService;

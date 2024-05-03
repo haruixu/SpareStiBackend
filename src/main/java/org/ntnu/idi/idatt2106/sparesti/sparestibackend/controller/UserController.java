@@ -61,7 +61,14 @@ public class UserController {
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(implementation = UserResponse.class))),
-                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "User is not authenticated.",
+                        content = @Content)
             })
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("Received GET request for user by user '{}'", userDetails.getUsername());
@@ -86,7 +93,14 @@ public class UserController {
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(implementation = UserResponse.class))),
-                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "User is not authenticated",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
             })
     public ResponseEntity<UserResponse> updateUser(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -116,7 +130,14 @@ public class UserController {
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(implementation = StreakResponse.class))),
-                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "User is not authenticated.",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content)
             })
     public ResponseEntity<StreakResponse> getStreak(
             @AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
@@ -131,6 +152,7 @@ public class UserController {
      * @return Resource wrapper for image
      * @throws IOException Upon IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Get profile pic")
     @ApiResponses(
             value = {
@@ -162,13 +184,18 @@ public class UserController {
      * @return Resource wrapper for image
      * @throws IOException Upon IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Upload image", description = "Uploaded profile pic")
     @ApiResponses(
             value = {
                 @ApiResponse(
                         responseCode = "200",
                         description = "Successfully get file",
-                        content = @Content),
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Resource.class))
+                        }),
                 @ApiResponse(
                         responseCode = "401",
                         description = "Invalid or expired JWT token",

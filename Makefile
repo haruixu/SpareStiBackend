@@ -5,6 +5,7 @@ help:
 	@echo Available targets:
 	@echo   build   : Build the application
 	@echo   run     : Run the application
+	@echo   destroy : Destroy the containers of the application
 	@echo   restart : Stop and rerun the application
 	@echo   format  : Format the source code of the application
 	@echo   compile : Compile the source code

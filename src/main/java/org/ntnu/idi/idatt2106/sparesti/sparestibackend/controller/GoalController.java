@@ -233,7 +233,7 @@ public class GoalController {
             summary = "Save a goal",
             description =
                     "Saves a goal under the currently authenticated (logged in) user. Up to 10"
-                            + " active goalscan be saved. All goals start off as active",
+                            + " active goalscan be saved. All goals start of as active",
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -465,6 +465,7 @@ public class GoalController {
      * @return Resource wrapper for image
      * @throws IOException For IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Uploads the image to goal")
     @ApiResponses(
             value = {
@@ -498,13 +499,18 @@ public class GoalController {
      * @return Resource wrapper for image
      * @throws IOException For IO-errors
      */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
     @Operation(summary = "Get image", description = "Gets the image of a goal")
     @ApiResponses(
             value = {
                 @ApiResponse(
                         responseCode = "200",
                         description = "Successfully get file",
-                        content = @Content),
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Resource.class))
+                        }),
                 @ApiResponse(
                         responseCode = "401",
                         description = "Invalid or expired JWT token",

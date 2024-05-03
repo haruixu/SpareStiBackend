@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(
-        name = "authentication",
+        name = "Authentication",
         description =
                 "Endpoints for user authentication including registration, login, and token"
                         + " management.")
@@ -206,7 +206,7 @@ public class AuthenticationController {
                             + " authenticated user",
             responses = {
                 @ApiResponse(
-                        responseCode = "204",
+                        responseCode = "200",
                         description = "Registration completed successfully",
                         content = @Content)
             })
@@ -225,7 +225,7 @@ public class AuthenticationController {
         logger.info(
                 "Successfully finished registration for '{}'. Credentials have been saved.",
                 userDetails.getUsername());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     /**
