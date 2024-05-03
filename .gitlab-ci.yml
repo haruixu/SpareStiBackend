@@ -73,8 +73,8 @@ pages:
     - mvn clean package
     - mvn javadoc:javadoc
     - mkdir .public
-    - cp -rf target/site/jacoco/* .public
-    - cp -rf target/site/apidocs/* .public
+    - cp -rf target/site/jacoco/* .public/coverage
+    - cp -rf target/site/apidocs/* .public/javadoc
     - mv -f .public public
   artifacts:
     paths:
