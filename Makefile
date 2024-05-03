@@ -15,7 +15,6 @@ help:
 	@echo   site    : Generate project site documentation
 	@echo Usage: make 'target' e.g make build
 # Run containers
-# todo: change to "docker compose up" for final delivery
 run:
 	make destroy
 	make build

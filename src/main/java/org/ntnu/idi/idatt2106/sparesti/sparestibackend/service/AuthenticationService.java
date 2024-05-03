@@ -111,7 +111,7 @@ public class AuthenticationService {
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userService.findUserByUsername(request.username());
-        System.out.println("Generating tokens for user: " + user);
+        logger.info("Generating tokens for user: " + user);
         String jwtAccessToken = jwtService.generateToken(user, ONE_DAY_IN_MINUTES);
         String jwtRefreshToken = jwtService.generateToken(user, ONE_WEEK_IN_MINUTES);
         return RegisterMapper.INSTANCE.toDTO(user, jwtAccessToken, jwtRefreshToken);
