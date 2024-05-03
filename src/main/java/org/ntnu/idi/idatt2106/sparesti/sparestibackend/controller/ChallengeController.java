@@ -546,7 +546,11 @@ public class ChallengeController {
                 @ApiResponse(
                         responseCode = "200",
                         description = "Successfully get file",
-                        content = @Content),
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Resource.class))
+                        }),
                 @ApiResponse(
                         responseCode = "401",
                         description = "Invalid or expired JWT token",
