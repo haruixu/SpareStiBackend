@@ -126,4 +126,58 @@ class GoalTests {
         assertTrue(goal1.compareTo(goal2) < 0, "goal1 should have a higher priority than goal2");
         assertTrue(goal2.compareTo(goal1) > 0, "goal2 should have a lower priority than goal1");
     }
+
+    @Test
+    void testEquals() {
+        User user = new User();
+        ZonedDateTime now = ZonedDateTime.now();
+        Goal goal =
+                new Goal(
+                        null,
+                        "Goal 1",
+                        new BigDecimal("50"),
+                        new BigDecimal("100"),
+                        "Description",
+                        1L,
+                        now,
+                        now,
+                        new BigDecimal("50"),
+                        now,
+                        user);
+        Goal goal1 =
+                new Goal(
+                        null,
+                        "Goal 1",
+                        new BigDecimal("50"),
+                        new BigDecimal("100"),
+                        "Description",
+                        1L,
+                        now,
+                        now,
+                        new BigDecimal("50"),
+                        now,
+                        user);
+
+        assertEquals(goal, goal1);
+        assertEquals(goal.hashCode(), goal1.hashCode());
+
+        Goal goal2 =
+                new Goal(
+                        null,
+                        "Goal 2",
+                        new BigDecimal("60"),
+                        new BigDecimal("150"),
+                        "Description",
+                        2L,
+                        ZonedDateTime.now(),
+                        ZonedDateTime.now(),
+                        new BigDecimal("60"),
+                        ZonedDateTime.now(),
+                        new User());
+        assertNotEquals(goal, goal2);
+        assertNotEquals(goal.hashCode(), goal2.hashCode());
+
+        assertNotEquals(null, goal2);
+        assertNotEquals(goal2, null);
+    }
 }
