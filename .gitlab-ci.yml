@@ -99,4 +99,4 @@ deploy:
     - docker build -t $DOCKER_IMAGE_NAME:latest .
     - docker push $DOCKER_IMAGE_NAME:latest
   only:
-    - main
+    - production
