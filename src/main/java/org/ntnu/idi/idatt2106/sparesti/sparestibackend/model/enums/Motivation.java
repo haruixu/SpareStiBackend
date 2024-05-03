@@ -1,18 +1,42 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+/**
+ * Classifies a user's motivation to save into 5 distinct levels
+ *
+ * @author Yasin A.M
+ * @version 1.0
+ * @since 17.4.24
+ */
 @Getter
+@RequiredArgsConstructor
 public enum Motivation {
-    VERY_HIGH(5),
-    HIGH(4),
-    MEDIUM(3),
-    LOW(2),
-    VERY_LOW(1);
+    /**
+     * Very high motivation
+     */
+    VERY_HIGH(0.8),
 
-    private final int val;
+    /**
+     * High motivation
+     */
+    HIGH(0.65),
 
-    Motivation(int val) {
-        this.val = val;
-    }
+    /**
+     * Average motivation
+     */
+    MEDIUM(0.5),
+
+    /**
+     * Low motivation
+     */
+    LOW(0.35),
+
+    /**
+     * Very low motivation
+     */
+    VERY_LOW(0.25);
+
+    private final double val;
 }

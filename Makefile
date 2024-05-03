@@ -1,9 +1,19 @@
 .DEFAULT_GOAL := help
 .PHONY: help run destroy format test
 
+# Prints all available commands
 help:
-	@echo he needs some milk
-
+	@echo Available targets:
+	@echo   build   : Build the application
+	@echo   run     : Run the application
+	@echo   destroy : Destroy the containers of the application
+	@echo   restart : Stop and rerun the application
+	@echo   format  : Format the source code of the application
+	@echo   compile : Compile the source code
+	@echo   test    : Run all unit and integration tests
+	@echo   install : Install the application
+	@echo   site    : Generate project site documentation
+	@echo Usage: make 'target' e.g make build
 # Run containers
 run:
 	docker compose up
@@ -21,8 +31,22 @@ restart:
 	make build
 	make run
 
+# Format the source code
 format:
 	mvn spotless:apply
 
+# Run all unit and integration test
 test:
 	mvn clean test
+
+# Compile source code
+compile:
+	mvn clean compile
+
+# Install the application to be used as dependency for other projects
+install:
+	mvn clean install
+
+# Generate site documentation for source code
+site:
+	mvn clean site

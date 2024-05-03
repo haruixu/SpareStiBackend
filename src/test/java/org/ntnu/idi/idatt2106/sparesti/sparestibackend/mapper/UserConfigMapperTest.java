@@ -1,14 +1,10 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.ChallengeConfigDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.config.UserConfigDTO;
@@ -21,14 +17,7 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Role;
 @ExtendWith(MockitoExtension.class)
 public class UserConfigMapperTest {
 
-    @Mock private ChallengeConfigMapper challengeConfigMapper;
-
-    @InjectMocks private UserConfigMapper userConfigMapper = UserConfigMapper.INSTANCE;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
+    private final UserConfigMapper userConfigMapper = UserConfigMapper.INSTANCE;
 
     @Test
     public void testToDTO() {
@@ -37,8 +26,6 @@ public class UserConfigMapperTest {
                 new ChallengeConfig(Experience.MEDIUM, Motivation.MEDIUM, null);
         ChallengeConfigDTO challengeConfigDTO =
                 new ChallengeConfigDTO(Experience.MEDIUM, Motivation.MEDIUM, null);
-
-        when(challengeConfigMapper.toDTO(challengeConfig)).thenReturn(challengeConfigDTO);
 
         UserConfig userConfig = new UserConfig(Role.USER, challengeConfig);
 
@@ -55,13 +42,17 @@ public class UserConfigMapperTest {
         ChallengeConfig challengeConfig =
                 new ChallengeConfig(Experience.MEDIUM, Motivation.MEDIUM, null);
 
-        when(challengeConfigMapper.toEntity(challengeConfigDTO)).thenReturn(challengeConfig);
-
         UserConfigDTO userConfigDTO = new UserConfigDTO(Role.ADMIN, challengeConfigDTO);
 
         UserConfig userConfig = userConfigMapper.toEntity(userConfigDTO);
 
         assertEquals(Role.ADMIN, userConfig.getRole());
         assertEquals(challengeConfig, userConfig.getChallengeConfig());
+    }
+
+    @Test
+    public void testToEntityAndDTOWithNull() {
+        assertNull(userConfigMapper.toDTO(null));
+        assertNull(userConfigMapper.toEntity(null));
     }
 }

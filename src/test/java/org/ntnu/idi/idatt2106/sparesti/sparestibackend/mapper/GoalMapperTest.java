@@ -1,11 +1,13 @@
 package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.yubico.webauthn.data.ByteArray;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
@@ -21,7 +23,7 @@ public class GoalMapperTest {
 
     private Goal goal;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // User
         user =
@@ -32,9 +34,13 @@ public class GoalMapperTest {
                         "testUsername",
                         "testPassword123!",
                         "testEmail@test.com",
+                        null,
+                        0L,
+                        BigDecimal.ZERO,
                         new UserConfig(Role.USER, null),
                         new Account(),
-                        new Account());
+                        new Account(),
+                        new ByteArray(new byte[0]));
 
         // Goal
         String title = "title";
@@ -117,6 +123,23 @@ public class GoalMapperTest {
     public void testUpdateEntityWithNullParameters() {
         GoalUpdateDTO dto = new GoalUpdateDTO(null, null, null, null, null);
         Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(goal, dto);
+
+        assertEquals(goal.getTitle(), updatedGoal.getTitle());
+        assertEquals(goal.getSaved(), updatedGoal.getSaved());
+        assertEquals(goal.getTarget(), updatedGoal.getTarget());
+        assertEquals(goal.getDescription(), updatedGoal.getDescription());
+        assertEquals(goal.getDue(), updatedGoal.getDue());
+    }
+
+    @Test
+    public void testToEntityAndToDTOWithNull() {
+        assertNull(GoalMapper.INSTANCE.toDTO(null));
+        assertNull(GoalMapper.INSTANCE.toEntity(null, null));
+    }
+
+    @Test
+    public void testUpdateEntityWithNull() {
+        Goal updatedGoal = GoalMapper.INSTANCE.updateEntity(goal, null);
 
         assertEquals(goal.getTitle(), updatedGoal.getTitle());
         assertEquals(goal.getSaved(), updatedGoal.getSaved());
