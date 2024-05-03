@@ -12,7 +12,6 @@
 To run the application, you need the following installed: 
 - Java 17
 - Maven
-- Maven >= **3.8**
 - Make
 - Docker
 - Git
@@ -107,3 +106,5 @@ Run ```make help``` to get a list of all possible commands, along with a short e
 - ```make test```: Test the application
 - ```make destroy```: Tear down the application
 - ```make format```: Format the source code
+- ```make build```: Build the containers that the application runs in
+- ```make compile```: Compile the source code
