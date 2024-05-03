@@ -118,7 +118,6 @@ class ChallengeTests {
                         new BigDecimal(1));
 
         Set<ConstraintViolation<Challenge>> violations = validator.validate(challenge);
-        System.out.println(violations);
         assertTrue(violations.isEmpty());
     }
 }
