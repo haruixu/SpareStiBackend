@@ -398,15 +398,18 @@ public class ChallengeService {
             User user) {
         double unitsPerWeek = amountPerWeek / amountPerUnit;
         double targetUnits = targetValue / amountPerUnit;
-        String descriptionSuffix = weeks == 1 ? "den neste uka." : "de neste " + weeks + " ukene.";
+        String descriptionSuffix =
+                weeks == 1 ? "de neste 7 dagene." : "de neste " + weeks + " ukene.";
         String description =
                 String.format(
-                                "Du bruker %.2fkr hver du kjøper denne typen. Per uke bruker du i"
-                                        + " snitt %.2fkr (%.1f enheter). Din utfordring vil være å"
-                                        + " spare %.2fkr (%.1f enheter) ",
+                                "Du bruker %.0fkr hver gang du kjøper %s. Du bruker  %.0fkr (%.1f"
+                                    + " enheter) i snitt, per uke på %s. Din utfordring vil være å"
+                                    + " spare %.0fkr (%.1f enheter) ",
                                 amountPerUnit,
+                                type,
                                 amountPerWeek,
                                 unitsPerWeek,
+                                type,
                                 targetValue,
                                 targetUnits)
                         + descriptionSuffix;
