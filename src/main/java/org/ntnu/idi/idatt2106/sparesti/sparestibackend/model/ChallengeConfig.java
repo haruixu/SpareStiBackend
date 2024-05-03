@@ -22,7 +22,8 @@ import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.enums.Motivation;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(
         uniqueConstraints = {
             @UniqueConstraint(columnNames = {"USER_ID", "EXPERIENCE", "MOTIVATION"})

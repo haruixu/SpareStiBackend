@@ -12,10 +12,11 @@ import org.hibernate.annotations.CreationTimestamp;
  *
  * @author L.M.L Nilsen and H.L XU
  */
-@Data
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Setter
+@Getter
 @Entity
 public class ChangePasswordRequest {
 
