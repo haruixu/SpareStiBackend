@@ -98,3 +98,5 @@ deploy:
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
     - docker build -t $DOCKER_IMAGE_NAME:latest .
     - docker push $DOCKER_IMAGE_NAME:latest
+  only:
+    - main
