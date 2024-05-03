@@ -6,6 +6,7 @@
 <h1 align="center">
                 Sparesti backend 
 </h1>
+Sparesti is an application that is tailored towards making saving money easy and fun! It was developed in the course IDATT2106 at NTNU. This repository serves as the server API of the application.
 
 ## 🚀 Getting started
 ### Requirements
