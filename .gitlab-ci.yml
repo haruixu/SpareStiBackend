@@ -96,7 +96,7 @@ deploy:
     DOCKER_HOST: tcp://docker:2375
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
-    - docker build -t $DOCKER_IMAGE_NAME:latest .
+    - docker build -t $DOCKER_IMAGE_NAME .
     - docker push $DOCKER_IMAGE_NAME
   only:
     - production
