@@ -52,7 +52,7 @@ NOTE: If you don't have Make installed, use the following command instead:
 docker compose up
 ```
 
-#### 🛑 Exiting the application
+##### Exiting the application
 
 To exit the application, use CTRL+C. You can rerun the application by using 
 ```make run``` again.
