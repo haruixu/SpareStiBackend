@@ -68,8 +68,8 @@ You can run unit and integration tests with:
 ```
 make test
 ```
-This is generate a ```target``` folder with test coverage data. You can find the report 
-by navigating the folder structure: ```target -> site -> jacoco -> index.html```
+This will generate a ```target``` folder with test coverage data. You can now find the report 
+by navigating the folder structure: ```target -> site -> jacoco -> index.html``` or by using [this link](http://localhost:63342/SpareStiBackend/target/site/jacoco/index.html).
 
 ### 🗎 Documentation
 #### REST endpoints
