@@ -90,8 +90,7 @@ deploy:
     DOCKER_DRIVER: overlay2
     DOCKER_IMAGE_NAME: $CI_REGISTRY_USER/idatt2106_2024_02_backend-app
   before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER"
-    - password-stdin
+    - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
   script:
     - docker build -t $DOCKER_IMAGE_NAME:latest .
     - docker push $DOCKER_IMAGE_NAME:latest
