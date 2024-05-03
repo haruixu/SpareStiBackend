@@ -47,7 +47,12 @@ public class UserConfigMapperTest {
         UserConfig userConfig = userConfigMapper.toEntity(userConfigDTO);
 
         assertEquals(Role.ADMIN, userConfig.getRole());
-        assertEquals(challengeConfig, userConfig.getChallengeConfig());
+
+        assertEquals(challengeConfig.getExperience(), challengeConfigDTO.experience());
+        assertEquals(challengeConfig.getMotivation(), challengeConfigDTO.motivation());
+        assertEquals(
+                challengeConfig.getChallengeTypeConfigs(),
+                challengeConfigDTO.challengeTypeConfigs());
     }
 
     @Test
