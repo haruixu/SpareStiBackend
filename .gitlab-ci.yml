@@ -4,6 +4,7 @@ stages:
   - build
   - linting
 #  -  test
+  - find_docker_port
   - deploy
 
 default:
@@ -97,3 +98,11 @@ deploy:
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
     - docker build -t $DOCKER_IMAGE_NAME:latest .
     - docker push $DOCKER_IMAGE_NAME:latest
+
+find_docker_port:
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - apk add nmap
+    - nmap -sT -p- docker
