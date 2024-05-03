@@ -83,14 +83,14 @@ pages:
     - web
 
 deploy:
-  image: docker:latest
+  image: docker:19.03.12  # Example specific version
   services:
-    - docker:dind
+    - docker:19.03.12-dind  # Matching version for Docker-in-Docker
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_IMAGE_NAME: $CI_REGISTRY_USER/idatt2106_2024_02_backend-app
+    DOCKER_TLS_CERTDIR: "/certs"  # Added TLS directory configuration
   script:
-    - unset DOCKER_HOST
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
     - docker build -t $DOCKER_IMAGE_NAME:latest .
     - docker push $DOCKER_IMAGE_NAME:latest
