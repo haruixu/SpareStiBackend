@@ -85,7 +85,7 @@ pages:
 deploy:
   stage: deploy
   image: docker:latest
-  tag:
+  tags:
     - dind
   services:
     - name: docker:dind
