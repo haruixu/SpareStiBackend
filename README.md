@@ -11,14 +11,13 @@
 ### Requirements
 To run the application, you need the following installed: 
 - Java 17
+- Maven
 - Maven >= **3.8**
 - Make
 - Docker
 - Git
 
 ### ⚙ Setup
-<<<<<<< Updated upstream
-=======
 #### The following setup is mandatory before running the project
 The application is dependent on certain environment variables in order to run.
 
@@ -42,7 +41,6 @@ EMAIL_PASSWORD=wakd klwc nivw whzl
 
 #### If you want to run the backend independently, follow these instructions:
 
->>>>>>> Stashed changes
 1. Clone the repository
 ```
 git clone https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02_backend
