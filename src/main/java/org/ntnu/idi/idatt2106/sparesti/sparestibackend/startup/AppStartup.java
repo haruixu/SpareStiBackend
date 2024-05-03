@@ -93,7 +93,10 @@ public class AppStartup implements CommandLineRunner {
                                 new ChallengeTypeConfigDTO(
                                         "Kaffe", BigDecimal.valueOf(210), BigDecimal.valueOf(30)),
                                 new ChallengeTypeConfigDTO(
-                                        "Snus", BigDecimal.valueOf(120), BigDecimal.valueOf(40))));
+                                        "Snus", BigDecimal.valueOf(120), BigDecimal.valueOf(40)),
+                                new ChallengeTypeConfigDTO(
+                                    "Godteri", BigDecimal.valueOf(100), BigDecimal.valueOf(100)
+                                )));
         userConfigService.createChallengeConfig(user.getUsername(), challengeConfigDTO);
 
         User configuredUser = userRepository.findByUsername("username").get();
@@ -154,16 +157,16 @@ public class AppStartup implements CommandLineRunner {
                         BigDecimal.valueOf(30),
                         "Drikk mindre kaffe",
                         ZonedDateTime.now().plusDays(14),
-                        "Kaffe");
-        ChallengeCreateDTO kaffe2 =
+                    null);
+        ChallengeCreateDTO nuts =
                 new ChallengeCreateDTO(
-                        "Mindre kaffe",
-                        BigDecimal.valueOf(630),
-                        BigDecimal.valueOf(6000),
+                        "Mindre nøtter",
+                        BigDecimal.valueOf(0),
+                        BigDecimal.valueOf(90),
                         BigDecimal.valueOf(30),
-                        "Drikk mindre kaffe",
-                        ZonedDateTime.now().plusDays(340),
-                        "Kaffe");
+                        "Spis mindre nøtter",
+                        ZonedDateTime.now().plusDays(7),
+                        "Nøtter");
         ChallengeCreateDTO bensin =
                 new ChallengeCreateDTO(
                         "Bensin",
@@ -193,18 +196,18 @@ public class AppStartup implements CommandLineRunner {
                         "Kiosken");
         ChallengeCreateDTO godteri =
                 new ChallengeCreateDTO(
-                        "Mindre godteri",
+                        "Mindre Snop",
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(300),
                         BigDecimal.valueOf(60),
-                        "Spis mindre godteri",
+                        "Spis mindre Snop",
                         ZonedDateTime.now().plusDays(28),
-                        "godteri");
+                        "Snop");
 
         challengeService.save(kaffe, user);
         challengeService.save(monster, user);
         challengeService.save(kiosk, user);
-        challengeService.save(kaffe2, user);
+        challengeService.save(nuts, user);
         challengeService.save(bensin, user);
         challengeService.save(godteri, user);
     }
