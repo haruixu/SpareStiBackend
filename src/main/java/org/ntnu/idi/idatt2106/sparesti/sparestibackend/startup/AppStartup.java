@@ -96,15 +96,17 @@ public class AppStartup implements CommandLineRunner {
                                         "Snus", BigDecimal.valueOf(120), BigDecimal.valueOf(40))));
         userConfigService.createChallengeConfig(user.getUsername(), challengeConfigDTO);
 
+        User configuredUser = userRepository.findByUsername("username").get();
+
         // Creating accounts
         AccountDTO spendingAccount =
                 new AccountDTO(AccountType.SPENDING, 11111111112L, BigDecimal.ZERO);
         AccountDTO savingAccount =
                 new AccountDTO(AccountType.SAVING, 11111111111L, BigDecimal.ZERO);
 
-        accountService.saveAccount(spendingAccount, user);
-        accountService.saveAccount(savingAccount, user);
-        return user;
+        accountService.saveAccount(spendingAccount, configuredUser);
+        accountService.saveAccount(savingAccount, configuredUser);
+        return userRepository.findByUsername("username").get();
     }
 
     /**
