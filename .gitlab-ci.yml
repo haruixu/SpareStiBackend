@@ -88,7 +88,6 @@ deploy:
     - dind
   services:
     - name: docker:dind
-      alias: thedockerhost
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_IMAGE_NAME: $CI_REGISTRY_USER/idatt2106_2024_02_backend-app
