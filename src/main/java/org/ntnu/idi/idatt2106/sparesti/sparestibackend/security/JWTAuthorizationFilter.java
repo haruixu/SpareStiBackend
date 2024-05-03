@@ -84,7 +84,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             logger.info("Continue filter chain");
             filterChain.doFilter(request, response);
         } catch (JwtException | ServletException e) {
-            // TODO: remove e.getMessage() before delivery, only for debugging
             logger.error("Caught exception in filter: {}", e.getMessage());
             String responseMsg = "Invalid or expired JWT token";
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

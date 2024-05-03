@@ -62,7 +62,6 @@ public class GlobalExceptionHandler {
      *            The exception to be logged.
      */
     private void logError(Exception ex) {
-        ex.printStackTrace();
         logger.error("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
     }
 

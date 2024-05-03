@@ -1,8 +1,10 @@
 # Define stages
+
 stages:
   - build
   - linting
   - test
+  - deploy
 
 default:
   # Cache maven docker image in GitLab
@@ -28,7 +30,6 @@ build:
     - mvn $MAVEN_BUILD_CLI_OPTS package
   artifacts:
     paths:
-      - target/idatt2002demo-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 
 test:
@@ -72,6 +73,7 @@ pages:
     - mvn clean package
     - mvn javadoc:javadoc
     - mkdir .public
+    - cp -rf target/site/jacoco/* .public
     - cp -rf target/site/apidocs/* .public
     - mv -f .public public
   artifacts:
@@ -80,3 +82,21 @@ pages:
   only:
     - web
 
+deploy:
+  stage: deploy
+  image: docker:latest
+  tags:
+    - dind
+  services:
+    - name: docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_IMAGE_NAME: $CI_REGISTRY_USER/idatt2106_2024_02_backend-app
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin
+    - docker build -t $DOCKER_IMAGE_NAME:latest .
+    - docker push $DOCKER_IMAGE_NAME:latest
+  only:
+    - main
