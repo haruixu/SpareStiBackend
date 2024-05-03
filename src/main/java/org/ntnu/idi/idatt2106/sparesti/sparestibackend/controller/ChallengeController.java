@@ -77,7 +77,18 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "Challenges or user not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenges or user not found",
+                        content = @Content)
             })
     @GetMapping
     public ResponseEntity<Page<ChallengeDTO>> getUserChallenges(
@@ -112,7 +123,18 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "User not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "User not found",
+                        content = @Content)
             })
     @GetMapping("/active")
     public ResponseEntity<Page<ChallengeDTO>> getActiveChallenges(
@@ -143,7 +165,18 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "User not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "User not found",
+                        content = @Content)
             })
     @GetMapping("/completed")
     public ResponseEntity<Page<ChallengeDTO>> getCompletedChallenges(
@@ -176,7 +209,18 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "Challenge or user not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenge or user not found",
+                        content = @Content)
             })
     @GetMapping("/{id}")
     public ResponseEntity<ChallengeDTO> getUserChallenge(
@@ -216,8 +260,19 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "User not found"),
-                @ApiResponse(responseCode = "400", description = "Bad input")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "User not found",
+                        content = @Content),
+                @ApiResponse(responseCode = "400", description = "Bad input", content = @Content)
             })
     @PostMapping
     public ResponseEntity<ChallengeDTO> createChallenge(
@@ -258,7 +313,18 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "Challenge not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenge not found",
+                        content = @Content)
             })
     @PutMapping("/{id}/complete")
     public ResponseEntity<ChallengeDTO> completeChallenge(
@@ -302,8 +368,19 @@ public class ChallengeController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ChallengeDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "Challenge or user not found"),
-                @ApiResponse(responseCode = "400", description = "Bad input")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenge or user not found",
+                        content = @Content),
+                @ApiResponse(responseCode = "400", description = "Bad input", content = @Content)
             })
     @PutMapping("/{id}")
     public ResponseEntity<ChallengeDTO> updateChallenge(
@@ -338,8 +415,22 @@ public class ChallengeController {
             description = "Deletes a specific challenge for the authenticated user by ID.")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "204", description = "Challenge deleted"),
-                @ApiResponse(responseCode = "404", description = "Challenge or user not found")
+                @ApiResponse(
+                        responseCode = "204",
+                        description = "Challenge deleted",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenge or user not found",
+                        content = @Content)
             })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteChallenge(

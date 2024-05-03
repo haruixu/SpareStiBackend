@@ -55,7 +55,18 @@ public class UserConfigController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = UserConfigDTO.class))
                         }),
-                @ApiResponse(responseCode = "404", description = "User or configuration not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "User or configuration not found",
+                        content = @Content)
             })
     @GetMapping
     public ResponseEntity<UserConfigDTO> getUserConfig(

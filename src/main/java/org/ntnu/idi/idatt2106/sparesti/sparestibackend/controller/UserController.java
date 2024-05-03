@@ -61,7 +61,14 @@ public class UserController {
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(implementation = UserResponse.class))),
-                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "User is not authenticated.",
+                        content = @Content)
             })
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("Received GET request for user by user '{}'", userDetails.getUsername());
@@ -86,7 +93,14 @@ public class UserController {
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(implementation = UserResponse.class))),
-                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "User is not authenticated",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
             })
     public ResponseEntity<UserResponse> updateUser(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -116,7 +130,14 @@ public class UserController {
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(implementation = StreakResponse.class))),
-                @ApiResponse(responseCode = "401", description = "User is not authenticated.")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "User is not authenticated.",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content)
             })
     public ResponseEntity<StreakResponse> getStreak(
             @AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {

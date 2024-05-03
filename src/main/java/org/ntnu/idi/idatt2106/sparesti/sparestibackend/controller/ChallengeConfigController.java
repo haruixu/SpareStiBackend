@@ -65,8 +65,19 @@ public class ChallengeConfigController {
                                                 @Schema(
                                                         implementation =
                                                                 ChallengeConfigDTO.class))),
-                @ApiResponse(responseCode = "404", description = "User not found"),
-                @ApiResponse(responseCode = "400", description = "Bad input")
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "User not found",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(responseCode = "400", description = "Bad input", content = @Content)
             })
     public ResponseEntity<ChallengeConfigDTO> createChallengeConfig(
             @Parameter(description = "Challenge config details to create") @RequestBody
@@ -108,7 +119,18 @@ public class ChallengeConfigController {
                                                 @Schema(
                                                         implementation =
                                                                 ChallengeConfigDTO.class))),
-                @ApiResponse(responseCode = "404", description = "Challenge config not found")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenge config not found",
+                        content = @Content)
             })
     public ResponseEntity<ChallengeConfigDTO> getChallengeConfig(
             @Parameter(description = "Details of the authenticated user") @AuthenticationPrincipal
@@ -148,8 +170,19 @@ public class ChallengeConfigController {
                                                 @Schema(
                                                         implementation =
                                                                 ChallengeConfigDTO.class))),
-                @ApiResponse(responseCode = "404", description = "Challenge config not found"),
-                @ApiResponse(responseCode = "400", description = "Bad input")
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "The JWT token is expired or its format is invalid",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Attempt of accessing secure endpoint without token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Challenge config not found",
+                        content = @Content),
+                @ApiResponse(responseCode = "400", description = "Bad input", content = @Content)
             })
     public ResponseEntity<ChallengeConfigDTO> updateChallengeConfig(
             @Parameter(description = "Updated challenge config details") @RequestBody

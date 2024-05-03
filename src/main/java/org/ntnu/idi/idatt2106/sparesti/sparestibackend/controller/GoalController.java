@@ -233,7 +233,7 @@ public class GoalController {
             summary = "Save a goal",
             description =
                     "Saves a goal under the currently authenticated (logged in) user. Up to 10"
-                            + " active goalscan be saved. All goals start off as active",
+                            + " active goalscan be saved. All goals start of as active",
             responses = {
                 @ApiResponse(
                         responseCode = "200",
