@@ -42,7 +42,7 @@ EMAIL_PASSWORD=wakd klwc nivw whzl
 
 1. Clone the repository
 ```
-git clone https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02_backend
+git clone git@gitlab.stud.idi.ntnu.no:idatt2106-gruppe-2/idatt2106_2024_02_backend.git
 ```
 2. Navigate to the project root folder
 ```
