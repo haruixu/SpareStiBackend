@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02_backend" target="_blank">
-        <img width="50%" src="https://media.discordapp.net/attachments/1229758481150640209/1235586776824021103/avatar1.png?ex=6635921b&is=6634409b&hm=8818fe5e10a69e6df7b9da102e5fb65dcdbd962b2614d392be2578d6542822c4&=&format=webp&quality=lossless&width=1135&height=1137">
+        <img width="40%" src="https://cdn.discordapp.com/attachments/1229758495767658566/1235997795555475529/image.png?ex=66366826&is=663516a6&hm=45dc1766b8463011e2a354bbfe837cd8da5f9f8150cc68fde30f66cc5230c252&">
     </a>
     </p>
 <h1 align="center">
