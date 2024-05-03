@@ -1,8 +1,10 @@
 # Define stages
+
 stages:
   - build
   - linting
   - test
+  - deploy
 
 default:
   # Cache maven docker image in GitLab
@@ -30,6 +32,12 @@ build:
     paths:
       - target/idatt2002demo-1.0-SNAPSHOT-jar-with-dependencies.jar
 
+
+services:
+  - docker:dind
+
+before_script:
+  - echo “$CI_REGISTRY_PASSWORD” | docker login -u “$CI_REGISTRY_USER” - password-stdin
 
 test:
   stage: test
@@ -80,3 +88,8 @@ pages:
   only:
     - web
 
+  deploy:
+    image: docker:latest
+    variables:
+      - DOCKER_DRIVER: overlay2
+      - DOCKER_IMAGE_NAME: $CI_REGISTRY_USER/idatt2106_2024_02_backend-app
