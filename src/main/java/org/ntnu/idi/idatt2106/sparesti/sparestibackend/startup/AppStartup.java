@@ -95,8 +95,9 @@ public class AppStartup implements CommandLineRunner {
                                 new ChallengeTypeConfigDTO(
                                         "Snus", BigDecimal.valueOf(120), BigDecimal.valueOf(40)),
                                 new ChallengeTypeConfigDTO(
-                                    "Godteri", BigDecimal.valueOf(100), BigDecimal.valueOf(100)
-                                )));
+                                        "Godteri",
+                                        BigDecimal.valueOf(100),
+                                        BigDecimal.valueOf(50))));
         userConfigService.createChallengeConfig(user.getUsername(), challengeConfigDTO);
 
         User configuredUser = userRepository.findByUsername("username").get();
@@ -157,7 +158,7 @@ public class AppStartup implements CommandLineRunner {
                         BigDecimal.valueOf(30),
                         "Drikk mindre kaffe",
                         ZonedDateTime.now().plusDays(14),
-                    null);
+                        "Kaffedrikke");
         ChallengeCreateDTO nuts =
                 new ChallengeCreateDTO(
                         "Mindre nøtter",
