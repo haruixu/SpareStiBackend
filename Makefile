@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := help
 .PHONY: help run destroy format test
 
+# Prints all available commands
 help:
 	@echo Available targets:
 	@echo   build   : Build the application
@@ -34,17 +35,22 @@ restart:
 	make build
 	make run
 
+# Format the source code
 format:
 	mvn spotless:apply
 
+# Run all unit and integration test
 test:
 	mvn clean test
 
+# Compile source code
 compile:
 	mvn clean compile
 
+# Install the application to be used as dependency for other projects
 install:
 	mvn clean install
 
+# Generate site documentation for source code
 site:
 	mvn clean site

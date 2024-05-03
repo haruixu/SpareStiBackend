@@ -50,7 +50,7 @@ public class ChallengeConfig {
      * A collection of {@link ChallengeTypeConfig} objects that define specific configurations for different types of challenges.
      * This set is not updatable directly through setters to maintain integrity.
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "CHALLENGETYPE_CONFIG")
     @Setter(AccessLevel.NONE)
     Set<ChallengeTypeConfig> challengeTypeConfigs = new HashSet<>();
