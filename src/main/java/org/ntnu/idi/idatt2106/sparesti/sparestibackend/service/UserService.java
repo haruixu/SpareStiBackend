@@ -150,6 +150,7 @@ public class UserService {
                 user.getChallenges().stream()
                         .map(Challenge::getDue)
                         .filter(due -> due.isAfter(ZonedDateTime.now()))
+                        .sorted()
                         .findFirst()
                         .orElse(null);
 
