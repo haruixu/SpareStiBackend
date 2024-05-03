@@ -7,6 +7,16 @@ import java.time.ZonedDateTime;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Goal}
+ * @param id Id of goal
+ * @param title Title of goal
+ * @param saved Saved amount
+ * @param target Target amount
+ * @param completion Completion percentage
+ * @param description Description
+ * @param priority Goal priority
+ * @param createdOn Created on date
+ * @param completedOn Completed on date
+ * @param due Due date
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record GoalResponseDTO(

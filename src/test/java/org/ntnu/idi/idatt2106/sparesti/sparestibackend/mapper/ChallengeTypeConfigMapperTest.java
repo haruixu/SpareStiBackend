@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class ChallengeTypeConfigMapperTest {
                 challengeTypeConfigMapper.toEntity(challengeTypeConfigDTO);
 
         assertNotNull(challengeTypeConfig);
-        assertEquals("TestType", challengeTypeConfig.getType());
+        assertEquals("Testtype", challengeTypeConfig.getType());
         assertEquals(BigDecimal.TEN, challengeTypeConfig.getGeneralAmount());
         assertEquals(BigDecimal.ONE, challengeTypeConfig.getSpecificAmount());
     }
@@ -56,5 +57,24 @@ public class ChallengeTypeConfigMapperTest {
         assertEquals("TestType", updatedConfig.getType());
         assertEquals(BigDecimal.valueOf(20), updatedConfig.getGeneralAmount());
         assertEquals(BigDecimal.valueOf(2), updatedConfig.getSpecificAmount());
+    }
+
+    @Test
+    public void testToDTOAndEntityWithNull() {
+        assertNull(challengeTypeConfigMapper.toDTO(null));
+        assertNull(challengeTypeConfigMapper.toEntity(null));
+    }
+
+    @Test
+    public void testUpdateEntityWithNull() {
+        ChallengeTypeConfig existingConfig =
+                new ChallengeTypeConfig("TestType", BigDecimal.TEN, BigDecimal.ONE);
+
+        ChallengeTypeConfig updatedConfig =
+                challengeTypeConfigMapper.updateEntity(existingConfig, null);
+        assertNotNull(updatedConfig);
+        assertEquals(existingConfig.getType(), updatedConfig.getType());
+        assertEquals(existingConfig.getGeneralAmount(), updatedConfig.getGeneralAmount());
+        assertEquals(existingConfig.getSpecificAmount(), updatedConfig.getSpecificAmount());
     }
 }

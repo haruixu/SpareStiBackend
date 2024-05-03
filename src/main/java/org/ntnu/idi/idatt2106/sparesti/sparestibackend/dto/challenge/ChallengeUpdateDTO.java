@@ -7,10 +7,18 @@ import java.time.ZonedDateTime;
 
 /**
  * DTO for {@link org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.Challenge}
+ * @param title Title
+ * @param saved Saved amount
+ * @param target Target amount
+ * @param perPurchase Per unit price
+ * @param description Description
+ * @param due Due date
+ * @param type Type
  */
 // @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChallengeUpdateDTO(
-        @NotEmpty(message = "Title cannot be empty") @NotBlank(message = "Title cannot be blank")
+        @NotBlank(message = "Title cannot be blank")
+                @Size(max = 20, message = "Title can max have 20 characters")
                 String title,
         @NotNull(message = "Saved amount cannot be null")
                 @PositiveOrZero(message = "Saved amount cannot be negative")
@@ -21,7 +29,8 @@ public record ChallengeUpdateDTO(
         @NotNull(message = "Per purchase amount cannot be null")
                 @Positive(message = "Per purchase amount cannot be less than or equal to zero")
                 BigDecimal perPurchase,
-        String description,
+        @Size(max = 280, message = "Description can at most have 280 characters")
+                String description,
         @Future(message = "Due date must be in the future") ZonedDateTime due,
         String type)
         implements Serializable {}

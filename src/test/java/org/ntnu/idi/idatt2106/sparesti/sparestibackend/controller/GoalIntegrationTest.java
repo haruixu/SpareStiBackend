@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,7 +96,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testPostUser() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -105,7 +106,36 @@ public class GoalIntegrationTest {
                 .andExpect(jsonPath("$.saved").value(0))
                 .andExpect(jsonPath("$.target").value(1))
                 .andExpect(jsonPath("$.completion").value(0))
+                .andExpect(jsonPath("$.completedOn", nullValue()))
                 .andExpect(jsonPath("$.description").value("description"));
+    }
+
+    @Test
+    @WithMockUser
+    void testPostCompletedGoal() throws Exception {
+        BigDecimal saved = new BigDecimal(100);
+        GoalCreateDTO goalCreateDTO =
+                new GoalCreateDTO(
+                        "title", saved, saved, "description", ZonedDateTime.now().plusDays(1));
+
+        jsonPostRequest = objectMapper.writeValueAsString(goalCreateDTO);
+
+        mvc.perform(
+                        MockMvcRequestBuilders.post("/goals")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonPostRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.priority").value(11))
+                .andExpect(jsonPath("$.completedOn", notNullValue()));
+
+        mvc.perform(
+                        MockMvcRequestBuilders.get("/goals/completed")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
     }
 
     @Test
@@ -114,18 +144,19 @@ public class GoalIntegrationTest {
         GoalCreateDTO goalCreateDTO = new GoalCreateDTO(null, null, null, null, null);
         jsonPostRequest = objectMapper.writeValueAsString(goalCreateDTO);
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
     @WithMockUser
     void testGetAllGoals() throws Exception {
         // Create goal
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -133,7 +164,7 @@ public class GoalIntegrationTest {
 
         // Check goal has been added to goals
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals")
+                        MockMvcRequestBuilders.get("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -144,7 +175,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testGetSpecificGoal() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -152,7 +183,7 @@ public class GoalIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1L));
 
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/1")
+                        MockMvcRequestBuilders.get("/goals/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -169,7 +200,7 @@ public class GoalIntegrationTest {
     void testGetSpecificGoalNotOwnedByUser() throws Exception {
         // Post goal under mock user
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -200,7 +231,7 @@ public class GoalIntegrationTest {
 
         // Attempt to get goal with new user
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/1")
+                        MockMvcRequestBuilders.get("/goals/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -210,7 +241,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testGetActiveGoals() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -219,7 +250,7 @@ public class GoalIntegrationTest {
 
         // Verify the newly posted goal is active
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/active")
+                        MockMvcRequestBuilders.get("/goals/active")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -227,7 +258,7 @@ public class GoalIntegrationTest {
 
         // Test completed size is 0
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                        MockMvcRequestBuilders.get("/goals/completed")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -238,7 +269,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testGetCompleteGoals() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -247,21 +278,21 @@ public class GoalIntegrationTest {
 
         // Set completedOn value
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals/1/complete")
+                        MockMvcRequestBuilders.put("/goals/1/complete")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.completedOn", notNullValue()));
 
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                        MockMvcRequestBuilders.get("/goals/completed")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)));
 
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/active")
+                        MockMvcRequestBuilders.get("/goals/active")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -272,7 +303,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testSetCompleted() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -281,7 +312,7 @@ public class GoalIntegrationTest {
 
         // Verify that no completed goals exist yet
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                        MockMvcRequestBuilders.get("/goals/completed")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -289,7 +320,7 @@ public class GoalIntegrationTest {
 
         // Set completedOn value
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals/1/complete")
+                        MockMvcRequestBuilders.put("/goals/1/complete")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -297,7 +328,7 @@ public class GoalIntegrationTest {
 
         // Verify goal was completed
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/completed")
+                        MockMvcRequestBuilders.get("/goals/completed")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -308,7 +339,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testPutGoal() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -318,7 +349,7 @@ public class GoalIntegrationTest {
         jsonPutRequest = objectMapper.writeValueAsString(goalUpdateDTO);
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals/1")
+                        MockMvcRequestBuilders.put("/goals/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPutRequest))
@@ -334,7 +365,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testPutGoalWithTitleIsNull() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -345,7 +376,7 @@ public class GoalIntegrationTest {
         GoalUpdateDTO goalUpdateDTO = new GoalUpdateDTO(null, null, null, null, null);
         jsonPutRequest = objectMapper.writeValueAsString(goalUpdateDTO);
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPutRequest))
@@ -356,7 +387,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testPutWithNullValuesDoesNothingToOriginalValues() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -367,7 +398,7 @@ public class GoalIntegrationTest {
         jsonPutRequest = objectMapper.writeValueAsString(goalUpdateDTO1);
 
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals/1")
+                        MockMvcRequestBuilders.put("/goals/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPutRequest))
@@ -384,7 +415,7 @@ public class GoalIntegrationTest {
     void testDeleteGoal() throws Exception {
         // Post goal
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -392,7 +423,7 @@ public class GoalIntegrationTest {
 
         // Assert size
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals")
+                        MockMvcRequestBuilders.get("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -400,7 +431,7 @@ public class GoalIntegrationTest {
 
         // Delete goal
         mvc.perform(
-                        MockMvcRequestBuilders.delete("/users/me/goals/1")
+                        MockMvcRequestBuilders.delete("/goals/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPutRequest))
@@ -408,7 +439,7 @@ public class GoalIntegrationTest {
 
         // Assert size
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals")
+                        MockMvcRequestBuilders.get("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -420,7 +451,7 @@ public class GoalIntegrationTest {
     void testDeletingGoalOfOtherUserDoesNothing() throws Exception {
         // Post goal
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -428,7 +459,7 @@ public class GoalIntegrationTest {
 
         // Assert size
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals")
+                        MockMvcRequestBuilders.get("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -458,7 +489,7 @@ public class GoalIntegrationTest {
 
         // Perform delete under new user
         mvc.perform(
-                        MockMvcRequestBuilders.delete("/users/me/goals/1")
+                        MockMvcRequestBuilders.delete("/goals/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPutRequest))
@@ -473,7 +504,7 @@ public class GoalIntegrationTest {
 
         // Assert size has not changed
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals")
+                        MockMvcRequestBuilders.get("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -484,7 +515,7 @@ public class GoalIntegrationTest {
     @WithMockUser
     void testSetGoalPriority() throws Exception {
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -492,7 +523,7 @@ public class GoalIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1L));
 
         mvc.perform(
-                        MockMvcRequestBuilders.post("/users/me/goals")
+                        MockMvcRequestBuilders.post("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))
@@ -506,14 +537,14 @@ public class GoalIntegrationTest {
 
         String jsonPutRequest = objectMapper.writeValueAsString(goalIds);
         mvc.perform(
-                        MockMvcRequestBuilders.put("/users/me/goals")
+                        MockMvcRequestBuilders.put("/goals")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPutRequest))
                 .andExpect(status().isOk());
         // Verify priority of second goal is bumped up
         mvc.perform(
-                        MockMvcRequestBuilders.get("/users/me/goals/2")
+                        MockMvcRequestBuilders.get("/goals/2")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(jsonPostRequest))

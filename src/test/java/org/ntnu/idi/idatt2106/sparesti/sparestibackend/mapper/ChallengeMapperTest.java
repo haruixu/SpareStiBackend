@@ -2,6 +2,7 @@ package org.ntnu.idi.idatt2106.sparesti.sparestibackend.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.yubico.webauthn.data.ByteArray;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +31,13 @@ public class ChallengeMapperTest {
                         "username",
                         "password",
                         "test@mail.com",
+                        null,
+                        0L,
+                        BigDecimal.ZERO,
                         new UserConfig(Role.USER, null),
                         new Account(),
-                        new Account());
+                        new Account(),
+                        new ByteArray(new byte[0]));
     }
 
     @Test
@@ -63,7 +68,10 @@ public class ChallengeMapperTest {
         assertEquals(createDTO.saved(), challenge.getSaved());
         assertEquals(createDTO.due(), challenge.getDue());
         assertEquals(createDTO.perPurchase(), challenge.getPerPurchase());
-        assertEquals(createDTO.type(), challenge.getType());
+        assertEquals(
+                createDTO.type().substring(0, 1).toUpperCase()
+                        + createDTO.type().substring(1).toLowerCase(),
+                challenge.getType());
         assertEquals(createDTO.target(), challenge.getTarget());
         assertEquals(user, challenge.getUser());
         assertEquals(new BigDecimal("10.000"), challenge.getCompletion());
@@ -83,7 +91,39 @@ public class ChallengeMapperTest {
         assertEquals(updateDTO.due(), updatedChallenge.getDue());
         assertEquals(updateDTO.target(), updatedChallenge.getTarget());
         assertEquals(updateDTO.perPurchase(), updatedChallenge.getPerPurchase());
-        assertEquals(updateDTO.type(), updatedChallenge.getType());
+        assertEquals(
+                updateDTO.type().substring(0, 1).toUpperCase()
+                        + updateDTO.type().substring(1).toLowerCase(),
+                challenge.getType());
+    }
+
+    @Test
+    public void testToEntityWithNull() {
+        assertNull(challengeMapper.toEntity(null, null));
+    }
+
+    @Test
+    public void testToDTOWithNull() {
+        assertNull(challengeMapper.toDTO(null));
+    }
+
+    @Test
+    public void testUpdateEntityWithNull() {
+        Challenge challenge = createSampleChallenge();
+
+        Challenge updatedChallenge = challengeMapper.updateEntity(challenge, null);
+
+        assertEquals(challenge.getTitle(), updatedChallenge.getTitle());
+        assertEquals(challenge.getDescription(), updatedChallenge.getDescription());
+        assertEquals(challenge.getSaved(), updatedChallenge.getSaved());
+        assertEquals(challenge.getDue(), updatedChallenge.getDue());
+        assertEquals(challenge.getTarget(), updatedChallenge.getTarget());
+        assertEquals(challenge.getPerPurchase(), updatedChallenge.getPerPurchase());
+        assertEquals(
+                challenge.getType().substring(0, 1).toUpperCase()
+                        + challenge.getType().substring(1).toLowerCase(),
+                challenge.getType().substring(0, 1).toUpperCase()
+                        + challenge.getType().substring(1).toLowerCase());
     }
 
     private Challenge createSampleChallenge() {

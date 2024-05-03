@@ -5,34 +5,34 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalCreateDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalResponseDTO;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.dto.goal.GoalUpdateDTO;
-import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.goal.ActiveGoalLimitExceededException;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.BadInputException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.exception.validation.ObjectNotValidException;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.model.User;
+import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.FileSystemStorageService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.GoalService;
 import org.ntnu.idi.idatt2106.sparesti.sparestibackend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Handles all requests directed to goal endpoints. All the endpoints
@@ -46,15 +46,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/users/me/goals")
+@RequestMapping("/goals")
 public class GoalController {
 
     private final GoalService goalService;
 
     private final UserService userService;
 
+    private final FileSystemStorageService fileSystemStorageService;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Gets a page of a user's saving goals
+     * @param pageable Config for page object
+     * @param userDetails Current user
+     * @return Page of saving goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "GET a page of saving goals of the currently authenticated (logger in) user",
@@ -86,6 +94,11 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getUserGoals(user, pageable));
     }
 
+    /**
+     * Gets a list of active user goals. Max 10 goals can be active at the same time
+     * @param userDetails Current user
+     * @return List of active goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "GET active saving goals for the currently authenticated (logged in) user",
@@ -119,6 +132,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getActiveUserGoals(user));
     }
 
+    /**
+     * Gets a page of a user's completed saving goals
+     * @param pageable Config for page object
+     * @param userDetails current user
+     * @return Page of completed saving goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary =
@@ -153,6 +172,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getCompletedUserGoals(user, pageable));
     }
 
+    /**
+     * Get specific user's saving goal
+     * @param id Identifies saving goal
+     * @param userDetails current user
+     * @return Specific user goal
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary =
@@ -194,12 +219,21 @@ public class GoalController {
         return ResponseEntity.ok(goalService.findUserGoal(id, user));
     }
 
+    /**
+     * Creates a saving goal
+     * @param goalDTO Wrapper for saving goal info
+     * @param userDetails current user
+     * @return Wrapper for new saving goal info
+     * @throws BadInputException On bad user input
+     * @throws ActiveGoalLimitExceededException If active goal limit of 10 is exceeded.
+     * @throws ObjectNotValidException If goalDTO fields are invalid
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Save a goal",
             description =
                     "Saves a goal under the currently authenticated (logged in) user. Up to 10"
-                            + " active goalscan be saved. All goals start off as active",
+                            + " active goalscan be saved. All goals start of as active",
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -237,6 +271,15 @@ public class GoalController {
         return ResponseEntity.ok(goalService.save(goalDTO, user));
     }
 
+    /**
+     * Updates a user's saving goal
+     * @param id Identifies saving goal
+     * @param goalDTO Wrapper for updated saving goal info
+     * @param userDetails Current user
+     * @return Updated saving goal info
+     * @throws BadInputException Upon bad user input
+     * @throws ObjectNotValidException If goalDTO has invalid fields
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Update a goal of the currently authenticated (logged in) user",
@@ -281,6 +324,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.update(id, goalDTO, user));
     }
 
+    /**
+     * Updates goal priority order
+     * @param goalIds List of goal id's ordered by priority
+     * @param userDetails Current user
+     * @return New list of updated goals
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Updates the priorities of active goals",
@@ -322,6 +371,12 @@ public class GoalController {
         return ResponseEntity.ok(goalService.updatePriorities(goalIds, user));
     }
 
+    /**
+     * Deletes a user's saving goal
+     * @param id Identifies saving goal
+     * @param userDetails Current user
+     * @return NADA
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "DELETE a goal of the current authenticated (logged in) user",
@@ -358,6 +413,12 @@ public class GoalController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Completes a user's saving goal
+     * @param id Identifies saving goal
+     * @param userDetails Current user
+     * @return Completed user goal
+     */
     @Tag(name = "Saving goal", description = "CRUD methods for saving goal")
     @Operation(
             summary = "Complete a goal of the currently authenticated (logged in) user",
@@ -394,5 +455,87 @@ public class GoalController {
         logger.info("Received PUT request for completing a goal with id {}", id);
         User user = userService.findUserByUsername(userDetails.getUsername());
         return ResponseEntity.ok(goalService.completeGoal(id, user));
+    }
+
+    /**
+     * Uploads an mage of a goal
+     * @param id Identifies goal
+     * @param file File to be uploaded
+     * @param userDetails Current user
+     * @return Resource wrapper for image
+     * @throws IOException For IO-errors
+     */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
+    @Operation(summary = "Get image", description = "Uploads the image to goal")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successfully get file",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid or expired JWT token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "No JWT token provided",
+                        content = @Content)
+            })
+    @PostMapping("/picture")
+    public ResponseEntity<String> handleFileUpload(
+            @RequestParam String id,
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal UserDetails userDetails)
+            throws IOException {
+        fileSystemStorageService.save(file, id + "-G", userDetails);
+        return ResponseEntity.ok("OK");
+    }
+
+    /**
+     * Gets the image of a goal
+     * @param id Identifies goal
+     * @param userDetails Current user
+     * @return Resource wrapper for image
+     * @throws IOException For IO-errors
+     */
+    @Tag(name = "File upload", description = "Endpoints for uploading images")
+    @Operation(summary = "Get image", description = "Gets the image of a goal")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successfully get file",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Resource.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid or expired JWT token",
+                        content = @Content),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "No JWT token provided",
+                        content = @Content)
+            })
+    @GetMapping("/picture")
+    @ResponseBody
+    public ResponseEntity<Resource> findFile(
+            @RequestParam String id, @AuthenticationPrincipal UserDetails userDetails)
+            throws IOException {
+        Resource file = fileSystemStorageService.getImage(id + "-G", userDetails);
+
+        if (file == null) return ResponseEntity.notFound().build();
+
+        String mimeType;
+        try {
+            mimeType = Files.probeContentType(Paths.get(file.getURI()));
+        } catch (IOException e) {
+            mimeType = "application/octet-stream"; // default MIME type if detection fails
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(file);
     }
 }
