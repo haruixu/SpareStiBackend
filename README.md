@@ -6,6 +6,7 @@
 <h1 align="center">
                 Sparesti backend 
 </h1>
+Sparesti is an application that is tailored towards making saving money easy and fun! It was developed in the course IDATT2106 at NTNU. This repository serves as the server API of the application.
 
 ## 🚀 Getting started
 ### Requirements
@@ -57,20 +58,17 @@ If you are on Windows Command Prompt use:
 copy .env.example .env
 ```
 
-NOTE: We are fully aware that this file should not be public and that the user should 
+> **_NOTE_**: We are fully aware that this file should not be public and that the user should 
 use their own configuration parameters, but 
 for the ease of the examiners we have chosen to do it this way.
 
-
-### 🚗 Running the application
-
-1. Run the application (OBS: Make sure docker is running). It will take a few minutes the first time you run the application. 
+4. Run the application (OBS: Make sure docker is running). It will take a few minutes the first time you run the application. 
 ```
 make run
 ```
 The application is now running on port 8080.
 
-NOTE: If you don't have Make installed, use the following command instead: 
+> **_NOTE_**: If you don't have Make installed, use the following command instead: 
 ```
 docker compose up
 ```
