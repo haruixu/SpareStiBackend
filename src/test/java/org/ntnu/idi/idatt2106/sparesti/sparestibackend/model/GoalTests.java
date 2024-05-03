@@ -175,7 +175,7 @@ class GoalTests {
                         ZonedDateTime.now(),
                         new User());
         assertNotEquals(goal, goal2);
-        assertNotEquals(goal.hashCode(), goal1.hashCode());
+        assertNotEquals(goal.hashCode(), goal2.hashCode());
 
         assertNotEquals(null, goal2);
         assertNotEquals(goal2, null);

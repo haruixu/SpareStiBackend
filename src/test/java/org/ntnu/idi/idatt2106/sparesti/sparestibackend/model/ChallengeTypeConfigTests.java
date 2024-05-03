@@ -85,7 +85,7 @@ class ChallengeTypeConfigTests {
                 new ChallengeTypeConfig("Food", new BigDecimal("200.00"), new BigDecimal("50.00"));
 
         assertNotEquals(config, config2);
-        assertNotEquals(config.hashCode(), config1.hashCode());
+        assertNotEquals(config.hashCode(), config2.hashCode());
 
         assertNotEquals(null, config2);
         assertNotEquals(config2, null);
