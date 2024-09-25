@@ -37,7 +37,7 @@ EMAIL_PASSWORD=wakd klwc nivw whzl
 ```
 
 ### 🚗 Running the application
-#### The application can be run with one command in the following joint repository: [Joint-Repository](https://gitlab.stud.idi.ntnu.no/idatt2106-gruppe-2/idatt2106_2024_02)
+#### The application can be run with one command in the following joint repository: [Joint-Repository](https://github.com/haruixu/SpareSti)
 
 #### If you want to run the backend independently, follow these instructions:
 
